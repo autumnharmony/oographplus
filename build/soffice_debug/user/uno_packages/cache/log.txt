@@ -1,46 +1,23 @@
-###### Progress log entry 2012-03-16 00:55:42 ######
-ERROR: (com.sun.star.lang.IllegalArgumentException) { { Message = "\X0420\X0430\X0441\X0448\X0438\X0440\X0435\X043d\X0438\X0435 \X043d\X0435 \X0443\X0441\X0442\X0430\X043d\X043e\X0432\X043b\X0435\X043d\X043e: ru.ssau.graphplus.AddOn4", Context = (com.sun.star.uno.XInterface) @-4b6fc868 }, ArgumentPosition = (short) -1 }
-ERROR: (com.sun.star.lang.IllegalArgumentException) { { Message = "\X0420\X0430\X0441\X0448\X0438\X0440\X0435\X043d\X0438\X0435 \X043d\X0435 \X0443\X0441\X0442\X0430\X043d\X043e\X0432\X043b\X0435\X043d\X043e: ru.ssau.graphplus.AddOn4", Context = (com.sun.star.uno.XInterface) @-4b6fc868 }, ArgumentPosition = (short) -1 }
+###### Progress log entry 2012-03-23 13:30:18 ######
+ERROR: (com.sun.star.lang.IllegalArgumentException) { { Message = "\X0420\X0430\X0441\X0448\X0438\X0440\X0435\X043d\X0438\X0435 \X043d\X0435 \X0443\X0441\X0442\X0430\X043d\X043e\X0432\X043b\X0435\X043d\X043e: ru.ssau.graphplus.AddOn4", Context = (com.sun.star.uno.XInterface) @-4b72b868 }, ArgumentPosition = (short) -1 }
+ERROR: (com.sun.star.lang.IllegalArgumentException) { { Message = "\X0420\X0430\X0441\X0448\X0438\X0440\X0435\X043d\X0438\X0435 \X043d\X0435 \X0443\X0441\X0442\X0430\X043d\X043e\X0432\X043b\X0435\X043d\X043e: ru.ssau.graphplus.AddOn4", Context = (com.sun.star.uno.XInterface) @-4b72b868 }, ArgumentPosition = (short) -1 }
 Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-16 13:43:08 ######
+###### Progress log entry 2012-03-23 13:36:04 ######
 Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-16 13:44:19 ######
-###### Progress log entry 2012-03-16 14:24:24 ######
+###### Progress log entry 2012-03-25 00:55:08 ######
 Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-16 22:50:36 ######
+###### Progress log entry 2012-03-25 01:11:34 ######
 Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-16 22:54:19 ######
-###### Progress log entry 2012-03-16 23:03:31 ######
+###### Progress log entry 2012-03-25 01:52:14 ######
 Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-16 23:04:20 ######
-###### Progress log entry 2012-03-16 23:29:00 ######
-###### Progress log entry 2012-03-16 23:29:17 ######
-###### Progress log entry 2012-03-16 23:43:47 ######
+###### Progress log entry 2012-03-25 01:54:41 ######
+###### Progress log entry 2012-03-25 01:56:41 ######
 Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-16 23:44:05 ######
-###### Progress log entry 2012-03-16 23:54:34 ######
+###### Progress log entry 2012-03-25 02:01:35 ######
 Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-16 23:54:48 ######
-###### Progress log entry 2012-03-17 00:02:18 ######
+###### Progress log entry 2012-03-25 02:04:05 ######
+###### Progress log entry 2012-03-25 02:04:30 ######
 Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-17 00:02:37 ######
-###### Progress log entry 2012-03-17 00:03:30 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-17 00:03:43 ######
-###### Progress log entry 2012-03-17 01:28:42 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-17 01:29:23 ######
-###### Progress log entry 2012-03-17 01:31:49 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-17 01:32:18 ######
-###### Progress log entry 2012-03-17 01:34:36 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-17 01:41:13 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-17 01:41:42 ######
-###### Progress log entry 2012-03-17 01:44:10 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-17 01:44:32 ######
-###### Progress log entry 2012-03-17 01:50:39 ######
-###### Progress log entry 2012-03-17 01:51:00 ######
+###### Progress log entry 2012-03-25 02:08:55 ######
+###### Progress log entry 2012-03-25 02:09:42 ######
 Копирование: AddOn4.oxt

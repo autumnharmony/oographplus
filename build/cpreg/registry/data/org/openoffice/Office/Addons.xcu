@@ -127,7 +127,8 @@
           </node>
           <node oor:name="m8" oor:op="replace">
             <prop oor:name="URL" oor:type="xs:string">
-              <value>ru.ssau.graphplus.addon4:Command3</value>
+              <!--<value>ru.ssau.graphplus.addon4:Command3</value>-->
+              <value>.uno:Connector</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value/>
@@ -222,7 +223,7 @@
       </node>
       <node oor:name="m4" oor:op="replace">
         <prop oor:name="URL" oor:type="xs:string">
-          <value>ru.ssau.graphplus.addon4:Command3</value>
+          <value>.uno:Ellipse</value>
         </prop>
         <prop oor:name="ImageIdentifier" oor:type="xs:string">
           <value/>
@@ -240,7 +241,7 @@
       </node>
       <node oor:name="m5" oor:op="replace">
         <prop oor:name="URL" oor:type="xs:string">
-          <value>ru.ssau.graphplus.addon4:Command4</value>
+          <value>.uno:ConnectorCurveArrowEnd</value>
         </prop>
         <prop oor:name="ImageIdentifier" oor:type="xs:string">
           <value/>

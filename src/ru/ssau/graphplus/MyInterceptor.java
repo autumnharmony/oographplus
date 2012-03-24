@@ -39,7 +39,7 @@ public class MyInterceptor implements XDispatchProviderInterceptor {
 //      } else if(arg0.Complete.equals(".uno:Paste")) {
 //         // return your paste command handler
 //      }
-
+      
       System.out.println(arg0.Name + arg0.Arguments+ arg0.Complete + arg0.Main + arg0.Mark+ arg0.Password+ arg0.Path + arg0.Server +" "+arg1+ " "+ arg2);
 
       return getSlaveDispatchProvider().queryDispatch(arg0, arg1, arg2); // to get next command url.
