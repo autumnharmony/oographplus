@@ -13,16 +13,13 @@ import com.sun.star.awt.XItemListener;
 import com.sun.star.awt.XTextComponent;
 import com.sun.star.awt.XToolkit;
 import com.sun.star.awt.XWindow;
-import com.sun.star.beans.XMultiPropertySet;
+import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.container.XNameContainer;
 import com.sun.star.container.XNamed;
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
-import com.sun.star.frame.XController;
-import com.sun.star.frame.XDesktop;
-import com.sun.star.frame.XFrame;
-import com.sun.star.frame.XModel;
+import com.sun.star.frame.XDispatchProviderInterception;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.IndexOutOfBoundsException;
 import com.sun.star.lang.WrappedTargetException;
@@ -40,19 +37,34 @@ import com.sun.star.text.ControlCharacter;
 import com.sun.star.text.XText;
 import com.sun.star.text.XTextCursor;
 import com.sun.star.text.XTextRange;
-import com.sun.star.uno.Type;
+import com.sun.star.ui.XContextMenuInterceptor;
 import com.sun.star.util.XModifiable;
 import com.sun.star.util.XModifyListener;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Comment;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public final class AddOn4 extends WeakBase
         implements com.sun.star.lang.XInitialization,
@@ -106,148 +118,170 @@ public final class AddOn4 extends WeakBase
     // com.sun.star.frame.XDispatch:
     public void dispatch(com.sun.star.util.URL aURL,
             com.sun.star.beans.PropertyValue[] aArguments) {
-        if (aURL.Protocol.compareTo("ru.ssau.graphplus.addon4:") == 0) {
-            if (aURL.Path.compareTo("Command0") == 0) {
+
+        try {
+
+            if (aURL.Protocol.compareTo("ru.ssau.graphplus.addon4:") == 0) {
+                if (aURL.Path.compareTo("Command0") == 0) {
 
 
-                if (xDrawDoc == null) {
+                    if (xDrawDoc == null) {
 
-                    xDrawDoc = openDraw(m_xContext);
+                        xDrawDoc = openDraw(m_xContext);
 
-                    try {
-                        System.out.println("getting Drawpage");
-                        com.sun.star.drawing.XDrawPagesSupplier xDPS =
-                                (com.sun.star.drawing.XDrawPagesSupplier) UnoRuntime.queryInterface(
-                                com.sun.star.drawing.XDrawPagesSupplier.class, xDrawDoc);
-                        com.sun.star.drawing.XDrawPages xDPn = xDPS.getDrawPages();
-                        com.sun.star.container.XIndexAccess xDPi =
-                                (com.sun.star.container.XIndexAccess) UnoRuntime.queryInterface(
-                                com.sun.star.container.XIndexAccess.class, xDPn);
-                        xDrawPage = (com.sun.star.drawing.XDrawPage) UnoRuntime.queryInterface(
-                                com.sun.star.drawing.XDrawPage.class, xDPi.getByIndex(0));
-                        XModifiable xMod = (XModifiable) UnoRuntime.queryInterface(
-                                XModifiable.class, xDrawDoc);
+                        try {
+                            System.out.println("getting Drawpage");
+                            com.sun.star.drawing.XDrawPagesSupplier xDPS =
+                                    (com.sun.star.drawing.XDrawPagesSupplier) UnoRuntime.queryInterface(
+                                    com.sun.star.drawing.XDrawPagesSupplier.class, xDrawDoc);
+                            com.sun.star.drawing.XDrawPages xDPn = xDPS.getDrawPages();
+                            com.sun.star.container.XIndexAccess xDPi =
+                                    (com.sun.star.container.XIndexAccess) UnoRuntime.queryInterface(
+                                    com.sun.star.container.XIndexAccess.class, xDPn);
+                            xDrawPage = (com.sun.star.drawing.XDrawPage) UnoRuntime.queryInterface(
+                                    com.sun.star.drawing.XDrawPage.class, xDPi.getByIndex(0));
+                            XModifiable xMod = (XModifiable) UnoRuntime.queryInterface(
+                                    XModifiable.class, xDrawDoc);
 
-                        xMod.addModifyListener(new XModifyListener() {
+                            xMod.addModifyListener(new XModifyListener() {
 
-                            public void modified(com.sun.star.lang.EventObject arg0) {
-                                System.out.println("modified");
+                                public void modified(com.sun.star.lang.EventObject arg0) {
+                                    System.out.println("modified");
 
-                                System.out.println(arg0.toString());
+                                    System.out.println(arg0.toString());
 
-                                if (xDrawPage.getCount() > count) {
+                                    if (xDrawPage.getCount() > count) {
 
-                                    System.out.println("added new shape");
+                                        System.out.println("added new shape");
 
 
-                                    // берем последний
-                                    Object obj = null;
-                                    try {
-                                        obj = xDrawPage.getByIndex(xDrawPage.getCount() - 1);
-                                    } catch (IndexOutOfBoundsException ex) {
-                                        Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
-                                    } catch (WrappedTargetException ex) {
-                                        Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
-                                    XShape xShape = (XShape) UnoRuntime.queryInterface(XShape.class, obj);
-                                    System.out.println(xShape.getShapeType());
-                                    if (xShape.getShapeType().equals("com.sun.star.drawing.ConnectorShape")) {
-                                        count++;
-
-                                        System.out.println("ConnectorShape added");
-                                        XConnectorShape xConnSh = UnoRuntime.queryInterface(XConnectorShape.class, xShape);
-
-                                        xMCF = m_xContext.getServiceManager();
-                                        xMSF = UnoRuntime.queryInterface(XMultiServiceFactory.class, xMCF);
-
+                                        // берем последний
+                                        Object obj = null;
                                         try {
+                                            obj = xDrawPage.getByIndex(xDrawPage.getCount() - 1);
+                                        } catch (IndexOutOfBoundsException ex) {
+                                            Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+                                        } catch (WrappedTargetException ex) {
+                                            Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+                                        }
+                                        XShape xShape = (XShape) UnoRuntime.queryInterface(XShape.class, obj);
+                                        System.out.println(xShape.getShapeType());
+                                        if ( xShape.getShapeType().equals("CnnectorShape")) {
+                                            count++;
+
+                                            System.out.println("ConnectorShape added");
+                                            XConnectorShape xConnSh = UnoRuntime.queryInterface(XConnectorShape.class, xShape);
+
+                                            xMCF = m_xContext.getServiceManager();
+                                            xMSF = UnoRuntime.queryInterface(XMultiServiceFactory.class, xMCF);
+
+                                            try {
 
 
-                                            //Object shobj = xMSF.createInstanceWithArguments("ConnectorShape",new Object[] {xConnSh} );
-                                            XPropertySet xShapeProps = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xConnSh);
-                                            Object startShape = xShapeProps.getPropertyValue("StartShape");
-                                            Object endShape = xShapeProps.getPropertyValue("EndShape");
-                                            XShape xShStart = (XShape) UnoRuntime.queryInterface(XShape.class, startShape);
-                                            XShape xShEnd = (XShape) UnoRuntime.queryInterface(XShape.class, endShape);
+                                                //Object shobj = xMSF.createInstanceWithArguments("ConnectorShape",new Object[] {xConnSh} );
+                                                XPropertySet xShapeProps = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xConnSh);
+                                                Object startShape = xShapeProps.getPropertyValue("StartShape");
+                                                Object endShape = xShapeProps.getPropertyValue("EndShape");
+                                                XShape xShStart = (XShape) UnoRuntime.queryInterface(XShape.class, startShape);
+                                                XShape xShEnd = (XShape) UnoRuntime.queryInterface(XShape.class, endShape);
 
-                                            System.out.println("start shape " + xShStart.getShapeType());
+                                                System.out.println("start shape " + xShStart.getShapeType());
 
-                                            XPropertySet xShStartProps = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xShStart);
+                                                XPropertySet xShStartProps = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xShStart);
 
-                                            System.out.println("props " + xShStartProps.getPropertyValue("Name"));
+                                                System.out.println("props " + xShStartProps.getPropertyValue("Name"));
 
-                                            System.out.println("end shape " + xShEnd.getShapeType());
+                                                System.out.println("end shape " + xShEnd.getShapeType());
 
 
 
-                                            XPropertySet xShEndProps = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xShEnd);
+                                                XPropertySet xShEndProps = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xShEnd);
 
-                                            System.out.println("props " + xShEndProps.getPropertyValue("Name"));
+                                                System.out.println("props " + xShEndProps.getPropertyValue("Name"));
 //                                            com.sun.star.lang.XMultiServiceFactory xMSF =
 //                                                    (com.sun.star.lang.XMultiServiceFactory) UnoRuntime.queryInterface(
 //                                                    com.sun.star.lang.XMultiServiceFactory.class, xDocComp);
-                                            //UnoRuntime.
-                                            XNamed xNamedConnector = UnoRuntime.queryInterface(XNamed.class, xConnSh);
+                                                //UnoRuntime.
+                                                XNamed xNamedConnector = UnoRuntime.queryInterface(XNamed.class, xConnSh);
+                                                Misc.tagShapeAsLink(xShape);
+                                                createDialog(xNamedConnector, xConnSh);
 
-                                            createDialog(xNamedConnector, xConnSh);
-
-                                            //xConnSh.
-                                        } catch (Exception ex) {
-                                            Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
-                                        }
-                                    } else {
-
-                                        if (xShape.getShapeType().equals("com.sun.star.drawing.EllipseShape")) {
-                                            count++;
-                                            System.out.println("Not Connector shape");
-                                            XPropertySet xShapeProps = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xShape);
-
-
-
-
-                                            //xShapeProps.setPropertyValue("Name", lastEnteredName);
-                                            String s;
-                                            XNamed xNamed = UnoRuntime.queryInterface(
-                                                    XNamed.class, xShape);
-                                            try {
-                                                createDialog(xNamed, xShape);
+                                                //xConnSh.
                                             } catch (Exception ex) {
                                                 Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
                                             }
+                                        } else {
 
-
-                                            //System.out.println("lastEnteredName" + lastEnteredName);
-                                            ///xNamed.setName(lastEnteredName);
-
-
-                                            ///String name = (String) xNamed.getName();
-                                            //System.out.println(name);
+                                            if ( xShape.getShapeType().equals("EllipseShape")) {
+                                                count++;
+                                                System.out.println("Not Connector shape");
+                                                XPropertySet xShapeProps = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xShape);
 
 
 
 
+                                                //xShapeProps.setPropertyValue("Name", lastEnteredName);
+                                                String s;
+                                                XNamed xNamed = UnoRuntime.queryInterface(
+                                                        XNamed.class, xShape);
+                                                Misc.tagShapeAsNode(xShape);
+                                                try {
+                                                    createDialog(xNamed, xShape);
+                                                } catch (Exception ex) {
+                                                    Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+                                                }
+
+
+                                                //System.out.println("lastEnteredName" + lastEnteredName);
+                                                ///xNamed.setName(lastEnteredName);
+
+
+                                                ///String name = (String) xNamed.getName();
+                                                //System.out.println(name);
+
+
+
+
+                                            }
                                         }
+
                                     }
 
                                 }
 
-                            }
-
-                            public void disposing(com.sun.star.lang.EventObject arg0) {
-                                System.out.println("disposing");
-                            }
-                        });
+                                public void disposing(com.sun.star.lang.EventObject arg0) {
+                                    System.out.println("disposing");
+                                }
+                            });
 
 
-                    } catch (Exception e) {
-                        System.err.println("Couldn't create document" + e);
-                        e.printStackTrace(System.err);
+                        } catch (Exception e) {
+                            System.err.println("Couldn't create document" + e);
+                            e.printStackTrace(System.err);
 
+
+
+
+
+                        }
+
+                        return;
 
 
 
 
                     }
+                }
+                if (aURL.Path.compareTo("Command1") == 0) {
+                XDispatchProviderInterception xDPI = (XDispatchProviderInterception) UnoRuntime.queryInterface(XDispatchProviderInterception.class, m_xFrame);
+                MyInterceptor interceptor = new MyInterceptor();
+                xDPI.registerDispatchProviderInterceptor(interceptor);
+
+                    //generateXML2();
+
+
+
+
 
                     return;
 
@@ -255,29 +289,24 @@ public final class AddOn4 extends WeakBase
 
 
                 }
-            }
-            if (aURL.Path.compareTo("Command1") == 0) {
-//                XDispatchProviderInterception xDPI = (XDispatchProviderInterception) UnoRuntime.queryInterface(XDispatchProviderInterception.class, m_xFrame);
-//                MyInterceptor interceptor = new MyInterceptor();
-//                xDPI.registerDispatchProviderInterceptor(interceptor);
-
-                generateXML();
 
 
 
 
+                if (aURL.Path.compareTo("Command2") == 0) {
 
-                return;
+                XDispatchProviderInterception xDPI = (XDispatchProviderInterception) UnoRuntime.queryInterface(XDispatchProviderInterception.class, m_xFrame);
+                MyInterceptor interceptor = new MyInterceptor();
+                xDPI.registerDispatchProviderInterceptor(interceptor);
+                Object oContMenuInterceptor;
+                    try {
+                        oContMenuInterceptor = xMCF.createInstanceWithContext("com.sun.star.ui.ContextMenuInterceptor", m_xContext);
+                        XContextMenuInterceptor xContMenuInterceptor = (XContextMenuInterceptor) UnoRuntime.queryInterface(XContextMenuInterceptor.class, oContMenuInterceptor);
 
-
-
-
-            }
-
-
-
-
-            if (aURL.Path.compareTo("Command2") == 0) {
+                    } catch (Exception ex) {
+                        Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                
 //                try {
 //                    //createDialog();
 //
@@ -289,23 +318,26 @@ public final class AddOn4 extends WeakBase
 //                } catch (Exception ex) {
 //                    Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
 //                }
+                }
+                if (aURL.Path.compareTo("Command3") == 0) {
+                    // add your own code here
+                    return;
+
+
+
+
+                }
+                if (aURL.Path.compareTo("Command4") == 0) {
+                    // add your own code here
+                    return;
+
+
+
+
+                }
             }
-            if (aURL.Path.compareTo("Command3") == 0) {
-                // add your own code here
-                return;
-
-
-
-
-            }
-            if (aURL.Path.compareTo("Command4") == 0) {
-                // add your own code here
-                return;
-
-
-
-
-            }
+        } catch (com.sun.star.uno.RuntimeException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -372,6 +404,17 @@ public final class AddOn4 extends WeakBase
 
             }
             if (aURL.Path.compareTo("Command1") == 0) {
+//                try {
+//
+////                    XDispatchHelper xDH;
+////                    Object oDH = m_xContext.getServiceManager().createInstanceWithContext("com.sun.star.frame.DispatchHelper", m_xContext);
+////                    xDH = (XDispatchHelper) UnoRuntime.queryInterface(XDispatchHelper.class, oDH);
+////                    xDH.executeDispatch(this, ".uno:EllipseShape", "", 0, new PropertyValue[1]);
+//
+//                } catch (Exception ex) {
+//                    Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+
                 return this;
 
 
@@ -435,6 +478,11 @@ public final class AddOn4 extends WeakBase
 
     }
 
+    /**
+     * Открывает новый документ OO Draw
+     * @param xContext
+     * @return
+     */
     public static com.sun.star.lang.XComponent openDraw(
             com.sun.star.uno.XComponentContext xContext) {
         com.sun.star.frame.XComponentLoader xCLoader;
@@ -482,6 +530,12 @@ public final class AddOn4 extends WeakBase
     private static final String _textfieldName = "TextField1";
     private static final String _checkboxName = "Checkbox1";
 
+    /**
+     * Открывает диалоговое окно и меняет имя XNmd после нажатия
+     * @param xNmd
+     * @param xShp
+     * @throws com.sun.star.uno.Exception
+     */
     private void createDialog(final XNamed xNmd, XShape xShp) throws com.sun.star.uno.Exception {
 
         XComponentContext _xComponentContext = m_xContext;
@@ -503,8 +557,12 @@ public final class AddOn4 extends WeakBase
                 "Width", new Integer(150));
         xPSetDialog.setPropertyValue(
                 "Height", new Integer(100));
+
+        //XPropertySet xPropSet = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xShape);
+
+
         xPSetDialog.setPropertyValue(
-                "Title", new String("Свойства элемента"));
+                "Title", new String("Свойства " + Misc.getGraphElementType(xShp)));
 
         // get the service manager from the dialog model
         XMultiServiceFactory xMultiServiceFactory = (XMultiServiceFactory) UnoRuntime.queryInterface(
@@ -549,7 +607,7 @@ public final class AddOn4 extends WeakBase
         xPSetEdit.setPropertyValue(
                 "Name", _textfieldName);
         xPSetEdit.setPropertyValue(
-                "TabIndex", new Short((short) 1));
+                "TabIndex", new Short((short) 0));
 
         //
 
@@ -565,7 +623,7 @@ public final class AddOn4 extends WeakBase
         xPSetCheckBox.setPropertyValue(
                 "Name", _checkboxName);
         xPSetCheckBox.setPropertyValue(
-                "TabIndex", new Short((short) 2));
+                "TabIndex", new Short((short) 1));
 
         xPSetCheckBox.setPropertyValue(
                 "Label", "Автоинкремент");
@@ -589,7 +647,7 @@ public final class AddOn4 extends WeakBase
         xPSetCancelButton.setPropertyValue(
                 "Name", _cancelButtonName);
         xPSetCancelButton.setPropertyValue(
-                "TabIndex", new Short((short) 3));
+                "TabIndex", new Short((short) 2));
         xPSetCancelButton.setPropertyValue(
                 "PushButtonType", new Short((short) 2));
         xPSetCancelButton.setPropertyValue(
@@ -599,23 +657,12 @@ public final class AddOn4 extends WeakBase
         ///
 
 
-        Object oCBModel = xMultiServiceFactory.createInstance("com.sun.star.awt.UnoControlCheckBoxModel");
-        // Set the properties at the model - keep in mind to pass the property names in alphabetical order!
-        XMultiPropertySet xCBMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, oCBModel);
-
-        xCBMPSet.setPropertyValues(
-                new String[]{"Height",
-                    "Label", "Name", "PositionX", "PositionY", "State", "TriState", "Width"},
-                new Object[]{new Integer(8), "Auto", _checkboxName,
-                    new Integer(50), new Integer(50), new Short((short) 1), Boolean.TRUE,
-                    new Integer(10)
-                });
-
+       
         // add the model to the NameContainer of the dialog model
         // insert the control models into the dialog model
         XNameContainer xNameCont = (XNameContainer) UnoRuntime.queryInterface(
                 XNameContainer.class, dialogModel);
-        xNameCont.insertByName(_checkboxName, oCBModel);
+        
         xNameCont.insertByName(_buttonName, buttonModel);
         xNameCont.insertByName(_textfieldName, editModel);
         //xNameCont.insertByName(_checkboxName, cbModel);
@@ -798,11 +845,14 @@ public final class AddOn4 extends WeakBase
                     }
                     XNamed xN = (XNamed) UnoRuntime.queryInterface(XNamed.class, xSh);
 
-                    if (xSh.getShapeType().equals("com.sun.star.drawing.EllipseShape"))out.writeStartElement("node");
-                    if (xSh.getShapeType().equals("com.sun.star.drawing.ConnectorShape")) {
-                        
+                    if (xSh.getShapeType().equals("com.sun.star.drawing.EllipseShape")) {
+                        out.writeStartElement("node");
                     }
-                    if (xSh.getShapeType().equals("com.sun.star.drawing.ConnectorShape"))out.writeStartElement("link");
+                    if (xSh.getShapeType().equals("com.sun.star.drawing.ConnectorShape")) {
+                    }
+                    if (xSh.getShapeType().equals("com.sun.star.drawing.ConnectorShape")) {
+                        out.writeStartElement("link");
+                    }
                     if (xN != null) {
                         out.writeAttribute("id", xN.getName());
                     }
@@ -821,50 +871,231 @@ public final class AddOn4 extends WeakBase
             outputStream.flush();
 
             outputStream.close();
-        
-        
+
+
         } catch (IndexOutOfBoundsException ex) {
             Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
         } catch (WrappedTargetException ex) {
             Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
-        
+
         } //catch (Exception ex) {
 //            Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 
 
 
+    }
+
+    public void generateXML2() {
+        try {
+            DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
+            Document doc = docBuilder.newDocument();
+            ////////////////////////
+            //Creating the XML tree
+            //create the root element and add it to the document
+            Element root = doc.createElement("graph");
+            doc.appendChild(root);
+            //create a comment and put it in the root element
+            Comment comment = doc.createComment("Just a thought");
+            root.appendChild(comment);
+
+            com.sun.star.drawing.XDrawPagesSupplier xDPS =
+                    (com.sun.star.drawing.XDrawPagesSupplier) UnoRuntime.queryInterface(
+                    com.sun.star.drawing.XDrawPagesSupplier.class, xDrawDoc);
+            com.sun.star.drawing.XDrawPages xDPn = xDPS.getDrawPages();
+            com.sun.star.container.XIndexAccess xDPi =
+                    (com.sun.star.container.XIndexAccess) UnoRuntime.queryInterface(
+                    com.sun.star.container.XIndexAccess.class, xDPn);
+            xDrawPage = (com.sun.star.drawing.XDrawPage) UnoRuntime.queryInterface(
+                    com.sun.star.drawing.XDrawPage.class, xDPi.getByIndex(0));
+
+
+            for (int i = 0; i < xDrawPage.getCount(); i++) {
+                System.out.println(i);
+                XShape xSh = null;
+                try {
+                    xSh = (XShape) UnoRuntime.queryInterface(XShape.class, xDrawPage.getByIndex(i));
+                } catch (IndexOutOfBoundsException ex) {
+                    Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (WrappedTargetException ex) {
+                    Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                XNamed xN = (XNamed) UnoRuntime.queryInterface(XNamed.class, xSh);
+
+                if (xSh.getShapeType().equals("com.sun.star.drawing.EllipseShape")) {
+                    Element n = doc.createElement("node");
+                    //n.setUserData("XShape", xSh, null);
+
+                    if (xN != null) {
+                        n.setAttribute("id", xN.getName());
+                        n.setIdAttribute("id", true);
+                    }
+                    root.appendChild(n);
+                }
+                if (xSh.getShapeType().equals("com.sun.star.drawing.ConnectorShape")) {
+                    Element l = doc.createElement("link");
+
+                    XConnectorShape xConnSh = (XConnectorShape) UnoRuntime.queryInterface(XConnectorShape.class, xSh);
+
+
+
+                    //Object shobj = xMSF.createInstanceWithArguments("ConnectorShape",new Object[] {xConnSh} );
+                    XPropertySet xShapeProps = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xConnSh);
+                    Object startShape;
+                    Object endShape;
+                    try {
+                        startShape = xShapeProps.getPropertyValue("StartShape");
+                        endShape = xShapeProps.getPropertyValue("EndShape");
+                        XNamed xNConnSh = (XNamed) UnoRuntime.queryInterface(XNamed.class, xConnSh);
+                        XShape xShStart = (XShape) UnoRuntime.queryInterface(XShape.class, startShape);
+                        XNamed xNamedStart = (XNamed) UnoRuntime.queryInterface(XNamed.class, startShape);
+                        XShape xShEnd = (XShape) UnoRuntime.queryInterface(XShape.class, endShape);
+                        XNamed xNamedEnd = (XNamed) UnoRuntime.queryInterface(XNamed.class, endShape);
+                        l.setAttribute("id", xNConnSh.getName());
+                        l.setIdAttribute("id", true);
+                        l.setAttribute("nodeid", xNamedEnd.getName());
+                        //l.setUserData("XConnectorShape", xConnSh, null);
+
+                        Element w = doc.getElementById(xNamedStart.getName());
+                        w.appendChild(l);
+
+                    } catch (UnknownPropertyException ex) {
+                        Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+
+
+
+                }
+
+
+            }
+
+
+
+
+            //create child element, add an attribute, and add to root
+//            Element child = doc.createElement("node");
+//            child.setAttribute("id", "node1");
+//            root.appendChild(child);
+//            //add a text element to the child
+////            Text text = doc.createTextNode("Filler, ... I could have had a foo!");
+////            child.appendChild(text);
+//
+//            child = doc.createElement("node");
+//            child.setAttribute("id", "node2");
+//            root.appendChild(child);
+//
+//            NodeList nodeList = root.getElementsByTagName("node");
+//            for (int i = 0; i < nodeList.getLength(); i++){
+//                Node n = nodeList.item(i);
+//                if (n.getAttributes().getNamedItem("id").getNodeValue().equals("node1")) n.appendChild(doc.createElement("link"));
+//
+//            }
+
+
+
+            /////////////////
+            //Output the XML
+            //set up a transformer
+            TransformerFactory transfac = TransformerFactory.newInstance();
+            Transformer trans = transfac.newTransformer();
+            trans.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            trans.setOutputProperty(OutputKeys.INDENT, "yes");
+
+
+
+            //create string from xml tree
+            StringWriter sw = new StringWriter();
+            StreamResult result = new StreamResult(sw);
+            DOMSource source = new DOMSource(doc);
+            trans.transform(source, result);
+            String xmlString = sw.toString();
+            //print xml
+            System.out.println("Here's the xml:\n\n" + xmlString);
+
+            OutputStream outputStream = null;
+
+
+
+
+            File f = null;
+            FileWriter fw = null;
+
+
+            JFileChooser c = new JFileChooser();
+            String path = "not init";
+
+            int rVal = c.showOpenDialog(null);
+            if (rVal == JFileChooser.APPROVE_OPTION) {
+
+                path = c.getCurrentDirectory().toString() + File.separatorChar + c.getSelectedFile().getName();
+            }
+            if (rVal == JFileChooser.CANCEL_OPTION) {
+                //filename.setText("You pressed cancel");
+                //dir.setText("");
+            }
+
+            System.out.println(path);
+            //if (fileDialog.)
+            f = new File(path);
+
+
+
+
+
+            if (!f.exists()) {
+                try {
+                    f.createNewFile();
 
 
 
 
 
 
+                } catch (IOException ex) {
+                    Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
 
 
 
 
+            }
+            try {
+                outputStream = new FileOutputStream(f);
+                System.out.println(f.getCanonicalPath());
+                fw = new FileWriter(f);
+                fw.append(xmlString);
+
+            } catch (IOException ex) {
+                Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    fw.close();
+                } catch (java.lang.Exception ignore) {
+                }
+
+
+            }
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        } catch (IndexOutOfBoundsException ex) {
+            Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (WrappedTargetException ex) {
+            Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(AddOn4.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+        }
     }
 
     public class ActionListenerImpl
@@ -900,4 +1131,6 @@ public final class AddOn4 extends WeakBase
             _xControlCont = null;
         }
     }
+
+    
 }
