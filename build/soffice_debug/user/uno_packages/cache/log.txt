@@ -1,23 +1,10 @@
-###### Progress log entry 2012-03-23 13:30:18 ######
-ERROR: (com.sun.star.lang.IllegalArgumentException) { { Message = "\X0420\X0430\X0441\X0448\X0438\X0440\X0435\X043d\X0438\X0435 \X043d\X0435 \X0443\X0441\X0442\X0430\X043d\X043e\X0432\X043b\X0435\X043d\X043e: ru.ssau.graphplus.AddOn4", Context = (com.sun.star.uno.XInterface) @-4b72b868 }, ArgumentPosition = (short) -1 }
-ERROR: (com.sun.star.lang.IllegalArgumentException) { { Message = "\X0420\X0430\X0441\X0448\X0438\X0440\X0435\X043d\X0438\X0435 \X043d\X0435 \X0443\X0441\X0442\X0430\X043d\X043e\X0432\X043b\X0435\X043d\X043e: ru.ssau.graphplus.AddOn4", Context = (com.sun.star.uno.XInterface) @-4b72b868 }, ArgumentPosition = (short) -1 }
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-23 13:36:04 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-25 00:55:08 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-25 01:11:34 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-25 01:52:14 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-25 01:54:41 ######
-###### Progress log entry 2012-03-25 01:56:41 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-25 02:01:35 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-25 02:04:05 ######
-###### Progress log entry 2012-03-25 02:04:30 ######
-Копирование: AddOn4.oxt
-###### Progress log entry 2012-03-25 02:08:55 ######
-###### Progress log entry 2012-03-25 02:09:42 ######
-Копирование: AddOn4.oxt
+###### Progress log entry 2013-03-05 03:32:27 ######
+ERROR: (com.sun.star.lang.IllegalArgumentException) { { Message = "There is no such extension deployed: ru.ssau.graphplus.oograph", Context = (com.sun.star.uno.XInterface) @7fb3dc18ee10 }, ArgumentPosition = (short) -1 }
+ERROR: (com.sun.star.lang.IllegalArgumentException) { { Message = "There is no such extension deployed: ru.ssau.graphplus.oograph", Context = (com.sun.star.uno.XInterface) @7fb3dc18ee10 }, ArgumentPosition = (short) -1 }
+Copying: oograph.oxt
+###### Progress log entry 2013-03-05 13:27:00 ######
+Copying: oograph.oxt
+###### Progress log entry 2013-03-05 13:27:45 ######
+###### Progress log entry 2013-03-05 13:28:03 ######
+Copying: oograph.oxt
+###### Progress log entry 2013-03-05 13:28:22 ######
