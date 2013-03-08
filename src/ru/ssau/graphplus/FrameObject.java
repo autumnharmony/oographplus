@@ -11,15 +11,15 @@ package ru.ssau.graphplus;
 
 import com.sun.star.frame.XFrame;
 
-// store pairs of XFrame and Controller
+// store pairs of XFrame and DiagramController
 public class FrameObject {
 
     private XFrame      m_xFrame        = null;
-    private Controller  m_Controller    = null;
+    private DiagramController m_Diagram_Controller = null;
 
-    FrameObject(XFrame xFrame, Controller controller){
+    FrameObject(XFrame xFrame, DiagramController diagramController){
         m_xFrame = xFrame;
-        m_Controller = controller;
+        m_Diagram_Controller = diagramController;
     }
 
     public XFrame getXFrame(){
@@ -30,12 +30,12 @@ public class FrameObject {
         m_xFrame = xFrame ;
     }
 
-    public Controller getController(){
-        return m_Controller;
+    public DiagramController getController(){
+        return m_Diagram_Controller;
     }
 
-    public void setController(Controller controller){
-        m_Controller = controller ;
+    public void setController(DiagramController diagramController){
+        m_Diagram_Controller = diagramController;
     }
 
 }

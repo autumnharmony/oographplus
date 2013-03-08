@@ -250,6 +250,10 @@ public class QI {
     } 
     static public XSelectionSupplier XSelectionSupplier( Object obj ) { 
         return (XSelectionSupplier) UnoRuntime.queryInterface( XSelectionSupplier.class, obj ); 
-    } 
+    }
+
+    static public XDispatchProviderInterception XDispatchProviderInterception( Object object) {
+        return  (XDispatchProviderInterception) UnoRuntime.queryInterface(XDispatchProviderInterception.class, object);
+    }
     
 } 

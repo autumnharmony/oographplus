@@ -16,12 +16,6 @@ import java.util.Collection;
  */
 public interface ShapeBuilder {
     
-    XShape buildShape(XMultiServiceFactory xMSF);
-    
-    XShape buildShape(XMultiServiceFactory xMSF, XDrawPage xDP, XComponent xDrawDoc);
-    
-    
-    // for complex links
-    Collection<XShape> buildShapes(XMultiServiceFactory xMSF, XDrawPage xDP, XComponent xDrawDoc);
+//
     
 }
