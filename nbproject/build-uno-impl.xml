@@ -16,9 +16,18 @@
       
         <!-- set variablers from SDK and Office -->
         <echo message="setting up UNO environment ..."/>
+
+        <property name="office.program.dir" value="/opt/libreoffice4.0/program" />
+        <property name="oo.sdk.dir" value="/opt/libreoffice4.0/sdk" />
+        <property name="office.program.dir" value="/opt/libreoffice4.0/program" />
         <property name="office.unopkg" value="${office.program.dir}${file.separator}unopkg"/>
-        <property name="office.soffice" value="${office.program.dir}${file.separator}soffice"/>
-        
+        <property name="office.soffice" value="soffice --draw" />
+
+
+        <property name="sdk.bin.dir" value="${oo.sdk.dir}${file.separator}bin"/>
+        <property name="ure.bin.dir" value="/opt/libreoffice4.0/ure/bin"/>
+        <property name="oo.version.number" value="4.0"/>
+
         <property name="sdk.idl.dir" location="${oo.sdk.dir}${file.separator}idl"/> 
         <property name="sdk.idlc" value="${sdk.bin.dir}${file.separator}idlc"/>
         <property name="sdk.regmerge" value="${ure.bin.dir}${file.separator}regmerge"/>
@@ -431,7 +440,7 @@
 
     <target name="-oo-debug">
         <!-- security fail for executing this without netbeans -->
-        <fail unless="netbeans.home">This target can only run inside the NetBeans IDE.</fail>
+        <!--<fail unless="netbeans.home">This target can only run inside the NetBeans IDE.</fail>-->
         <!-- start debugger and get connection address jpda.address -->
         <nbjpdastart name="Debug Office" addressproperty="jpda.address" transport="dt_socket">
             <classpath path="${build.classes.dir}"/>
