@@ -95,7 +95,7 @@ public final class OOGraph extends WeakBase
         if (object.length > 0) {
             
             
-            
+
             m_xFrame = (com.sun.star.frame.XFrame) UnoRuntime.queryInterface(com.sun.star.frame.XFrame.class, object[0]);
 
             XDispatchProviderInterception dispatchProviderInterception = QI.XDispatchProviderInterception(m_xFrame);
@@ -103,6 +103,7 @@ public final class OOGraph extends WeakBase
 
 
             XController xController = m_xFrame.getController();
+
             XContextMenuInterception xContMenuInterception =
                     (XContextMenuInterception) UnoRuntime.queryInterface(XContextMenuInterception.class, xController);
             xContMenuInterception.registerContextMenuInterceptor(new ContextMenuInterceptor(m_xContext));
@@ -120,6 +121,7 @@ public final class OOGraph extends WeakBase
             xEB.addEventListener(new XEventListener() {
 
                 public void notifyEvent(EventObject arg0) {
+                    System.out.println("notifyEvent m_xComponent");
                     System.out.print(arg0.EventName);
                 }
 
@@ -151,8 +153,19 @@ public final class OOGraph extends WeakBase
             if (isNewFrame) {
                 try {
                     m_xFrame.addFrameActionListener(this);
-                    XEventBroadcaster xEB2 = (XEventBroadcaster) UnoRuntime.queryInterface(XEventBroadcaster.class, m_xFrame);
-
+//                    XEventBroadcaster xEB2 = (XEventBroadcaster) UnoRuntime.queryInterface(XEventBroadcaster.class, m_xFrame);
+//                    xEB2.addEventListener(new XEventListener() {
+//                        @Override
+//                        public void notifyEvent(EventObject eventObject) {
+//                            System.out.println(" m_xFrame notifyEvent");
+//                            System.out.print(eventObject.EventName);
+//                        }
+//
+//                        @Override
+//                        public void disposing(com.sun.star.lang.EventObject eventObject) {
+//
+//                        }
+//                    });
 
                     xDrawDoc = (XComponent) UnoRuntime.queryInterface(
                             XComponent.class, m_xComponent);
@@ -160,7 +173,20 @@ public final class OOGraph extends WeakBase
 
                     xDrawPage = DrawHelper.getDrawPageByIndex(m_xComponent, 0);
 
-                    XEventBroadcaster xEB3 = (XEventBroadcaster) UnoRuntime.queryInterface(XEventBroadcaster.class, xDrawPage);
+//                    XEventBroadcaster xEB3 = (XEventBroadcaster) UnoRuntime.queryInterface(XEventBroadcaster.class, xDrawPage);
+//                    xEB3.addEventListener(new XEventListener() {
+//                        @Override
+//                        public void notifyEvent(EventObject eventObject) {
+//                            System.out.println("notifyEvent");
+//                            System.out.print(eventObject.EventName);
+//                        }
+//
+//                        @Override
+//                        public void disposing(com.sun.star.lang.EventObject eventObject) {
+//
+//                        }
+//                    });
+
                     XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class,
                             xDrawPage);
 
@@ -460,13 +486,31 @@ public final class OOGraph extends WeakBase
         }
     }
     
-        public void printInfo(Object obj) {
+        public static void printInfo(Object obj) {
         XPropertySet xPropSet = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, obj);
         XPropertySetInfo xPSI = xPropSet.getPropertySetInfo();
         Property[] props = xPSI.getProperties();
         for (Property prop : props) {
             System.out.println(prop.Name);
             System.out.println(prop.Type);
+            try {
+                Object propertyValue = xPropSet.getPropertyValue(prop.Name);
+                if (propertyValue instanceof Size){
+                    Size size = (Size) propertyValue;
+                    System.out.println(size.Height);
+                    System.out.println(size.Width);
+                }
+                if (propertyValue instanceof Point){
+                    Point point = (Point) propertyValue;
+                    System.out.println(point.X);
+                    System.out.println(point.Y);
+                }
+            } catch (UnknownPropertyException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (WrappedTargetException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
             System.out.println("=======");
         }
         System.out.println("===END====");

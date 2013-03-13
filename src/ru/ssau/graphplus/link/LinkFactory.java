@@ -4,6 +4,11 @@
  */
 package ru.ssau.graphplus.link;
 
+import com.sun.star.beans.PropertyChangeEvent;
+import com.sun.star.beans.UnknownPropertyException;
+import com.sun.star.beans.XPropertyChangeListener;
+import com.sun.star.lang.EventObject;
+import com.sun.star.lang.WrappedTargetException;
 import ru.ssau.graphplus.link.Link.LinkType;
 import com.sun.star.drawing.XDrawPage;
 import com.sun.star.drawing.XShape;
@@ -36,6 +41,43 @@ public class LinkFactory {
                 link  = new MessageLink(xmsf, xDP, xComp);
                 break;
         }
+
+        try {
+            link.xPS1.addPropertyChangeListener("StartShape", new XPropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+                    System.out.println("OMGOMGOMG");
+                }
+
+                @Override
+                public void disposing(EventObject eventObject) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+            });
+        } catch (UnknownPropertyException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (WrappedTargetException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        try {
+            link.xPS2.addPropertyChangeListener("EndShape", new XPropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+                    System.out.println("OMGOMGOMG");
+                }
+
+                @Override
+                public void disposing(EventObject eventObject) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+            });
+        } catch (UnknownPropertyException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (WrappedTargetException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
 
         return link;
     }

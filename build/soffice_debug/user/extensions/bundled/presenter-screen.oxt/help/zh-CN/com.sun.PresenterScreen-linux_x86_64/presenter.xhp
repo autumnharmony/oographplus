@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<helpdocument version="1.0">
+
+<!--***********************************************************
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ ***********************************************************-->
+
+
+
+
+<meta>
+      <topic id="textpresenterxml" indexer="include" status="PUBLISH">
+         <title xml-lang="zh-CN" id="tit" l10n="NEW">Presenter Console 键盘快捷键</title>
+         <filename>/com.sun.PresenterScreen-linux_x86_64/presenter.xhp</filename>
+      </topic>
+   </meta>
+   <body>
+<bookmark xml-lang="en-US" branch="hid/com.sun.PresenterScreen" id="bm_id3138439" localize="false"/>
+<bookmark xml-lang="zh-CN" branch="index" id="bm_id0921200912285678"><bookmark_value>Presenter Console 快捷键</bookmark_value></bookmark>
+<paragraph xml-lang="zh-CN" id="hd_id0921201912165661" role="heading" level="1" l10n="NEW">Presenter Console 键盘快捷键</paragraph>
+      <paragraph xml-lang="zh-CN" id="par_id0921201912165656" role="paragraph" l10n="NEW">使用 Presenter Console 演示幻灯片时，您可以使用以下键：</paragraph>
+      <table id="tbl_id0921200901051232">
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104028" role="tablehead" l10n="NEW">操作</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104093" role="tablehead" l10n="NEW">一个或多个键</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id092120090110418" role="tablecontent" l10n="NEW">下一张幻灯片，或下一个效果</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104120" role="tablecontent" l10n="NEW">单击鼠标左键，向右方向键，向下方向键，空格键，Page Down 键，Enter 键，Return 键，&quot;N&quot;</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104165" role="tablecontent" l10n="NEW">上一张幻灯片，或上一个效果</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104115" role="tablecontent" l10n="NEW">单击鼠标右键，向左方向键，向上方向键，Page Up 键，Backspace 键，&quot;P&quot;</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104164" role="tablecontent" l10n="NEW">第一张幻灯片</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104148" role="tablecontent" l10n="NEW">Home 键</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104221" role="tablecontent" l10n="NEW">最后一张幻灯片</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104277" role="tablecontent" l10n="NEW">End 键</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104279" role="tablecontent" l10n="NEW">上一张幻灯片，不包含效果</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id092120090110423" role="tablecontent" l10n="NEW">Alt+Page Up 组合键</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id092120090110427" role="tablecontent" l10n="NEW">下一张幻灯片，不包含效果</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104261" role="tablecontent" l10n="NEW">Alt+Page Down 组合键</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104383" role="tablecontent" l10n="NEW">使屏幕变黑/使屏幕还原</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id092120090110431" role="tablecontent" l10n="NEW">'B', '.'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104311" role="tablecontent" l10n="NEW">使屏幕变白/使屏幕还原</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104359" role="tablecontent" l10n="NEW">'W', ','</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104336" role="tablecontent" l10n="NEW">结束幻灯片放映</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104419" role="tablecontent" l10n="NEW">Esc，'-'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104460" role="tablecontent" l10n="NEW">转至幻灯片编号</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id092120090110440" role="tablecontent" l10n="NEW">编号，后跟 Enter 键</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104427" role="tablecontent" l10n="NEW">增大/缩小备注字体的大小</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104442" role="tablecontent" l10n="NEW">'G', 'S'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104473" role="tablecontent" l10n="NEW">向上/向下滚动备注</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id092120090110459" role="tablecontent" l10n="NEW">'A', 'Z</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id092120090110456" role="tablecontent" l10n="NEW">将备注视图中的插入记号前移/后移</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id092120090110457" role="tablecontent" l10n="NEW">'H', 'L'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104566" role="tablecontent" l10n="NEW">显示 Presenter Console</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104544" role="tablecontent" l10n="NEW">Ctrl-'1' 组合键</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104535" role="tablecontent" l10n="NEW">显示演示文稿备注</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104680" role="tablecontent" l10n="NEW">Ctrl-'2' 组合键</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104634" role="tablecontent" l10n="NEW">显示幻灯片摘要</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="zh-CN" id="par_id0921200901104632" role="tablecontent" l10n="NEW">Ctrl-'3' 组合键</paragraph>
+            </tablecell>
+         </tablerow>
+      </table>
+
+   </body>
+</helpdocument>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<helpdocument version="1.0">
+
+<!--***********************************************************
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ ***********************************************************-->
+
+
+
+
+<meta>
+      <topic id="textpresenterxml" indexer="include" status="PUBLISH">
+         <title xml-lang="ar" id="tit" l10n="NEW">Presenter Console Keyboard Shortcuts</title>
+         <filename>/com.sun.PresenterScreen-linux_x86_64/presenter.xhp</filename>
+      </topic>
+   </meta>
+   <body>
+<bookmark xml-lang="en-US" branch="hid/com.sun.PresenterScreen" id="bm_id3138439" localize="false"/>
+<bookmark xml-lang="ar" branch="index" id="bm_id0921200912285678"><bookmark_value>Presenter Console shortcuts</bookmark_value></bookmark>
+<paragraph xml-lang="ar" id="hd_id0921201912165661" role="heading" level="1" l10n="NEW">Presenter Console Keyboard Shortcuts</paragraph>
+      <paragraph xml-lang="ar" id="par_id0921201912165656" role="paragraph" l10n="NEW">When running a slide show using the Presenter Console, you can use the following keys:</paragraph>
+      <table id="tbl_id0921200901051232">
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104028" role="tablehead" l10n="NEW">الإجراء</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104093" role="tablehead" l10n="NEW">مفتاح أو مفاتيح</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id092120090110418" role="tablecontent" l10n="NEW">الشريحة التالية أو التأثير التالي</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104120" role="tablecontent" l10n="NEW">النقر بزر الماوس الأيسر، سهم لليمين، سهم لأسفل، مفتاح المسافة، مفتاح Page Down، مفتاح Enter، الرجوع، 'N'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104165" role="tablecontent" l10n="NEW">الشريحة السابقة أو التأثير السابق</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104115" role="tablecontent" l10n="NEW">النقر بزر الماوس الأيمن، سهم لليسار، سهم لأعلى، المفتاح Page Up، المفتاح Backspace، 'P'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104164" role="tablecontent" l10n="NEW">الشريحة الأولى</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104148" role="tablecontent" l10n="NEW">الصفحة الرئيسية</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104221" role="tablecontent" l10n="NEW">الشريحة الأخيرة</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104277" role="tablecontent" l10n="NEW">إنهاء</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104279" role="tablecontent" l10n="NEW">الشريحة السابقة بدون تأثيرات</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id092120090110423" role="tablecontent" l10n="NEW">Alt+Page Up</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id092120090110427" role="tablecontent" l10n="NEW">الشريحة التالية بدون تأثيرات</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104261" role="tablecontent" l10n="NEW">Alt+Page Down</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104383" role="tablecontent" l10n="NEW">شاشة سوداء/غير سوداء</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id092120090110431" role="tablecontent" l10n="NEW">'B', '.'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104311" role="tablecontent" l10n="NEW">شاشة بيضاء/غير بيضاء</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104359" role="tablecontent" l10n="NEW">'W'، ','</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104336" role="tablecontent" l10n="NEW">إنهاء عرض الشرائح</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104419" role="tablecontent" l10n="NEW">Esc، '-'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104460" role="tablecontent" l10n="NEW">الانتقال إلى الشريحة رقم</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id092120090110440" role="tablecontent" l10n="NEW">العدد يتبعه Enter</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104427" role="tablecontent" l10n="NEW">زيادة/تقليص حجم خط الملاحظات</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104442" role="tablecontent" l10n="NEW">&quot;G&quot;، &quot;S&quot;</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104473" role="tablecontent" l10n="NEW">تمرير الملاحظات لأعلى/لأسفل</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id092120090110459" role="tablecontent" l10n="NEW">'A'، 'Z'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id092120090110456" role="tablecontent" l10n="NEW">تحريك علامة الإقحام في طريقة عرض الملاحظات للخلف/للأمام</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id092120090110457" role="tablecontent" l10n="NEW">'H', 'L'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104566" role="tablecontent" l10n="NEW">Show the Presenter Console</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104544" role="tablecontent" l10n="NEW">Ctrl-'1'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104535" role="tablecontent" l10n="NEW">إظهار ملاحظات العرض التقديمي</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104680" role="tablecontent" l10n="NEW">Ctrl-'2'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104634" role="tablecontent" l10n="NEW">إظهار نظرة عامة على الشرائح</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="ar" id="par_id0921200901104632" role="tablecontent" l10n="NEW">Ctrl-'3'</paragraph>
+            </tablecell>
+         </tablerow>
+      </table>
+
+   </body>
+</helpdocument>

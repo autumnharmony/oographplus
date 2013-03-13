@@ -5,6 +5,7 @@
 package ru.ssau.graphplus.node;
 
 import ru.ssau.graphplus.DiagramElement;
+import ru.ssau.graphplus.Misc;
 import ru.ssau.graphplus.ShapeBuilder;
 import com.sun.star.drawing.XDrawPage;
 import com.sun.star.drawing.XShape;
@@ -22,30 +23,41 @@ import java.util.Map;
  */
 public abstract class Node implements ShapeBuilder, DiagramElement {
 
+    public interface PostCreationAction {
+        void postCreate(XShape shape);
+    }
+
+    public class DefaultPostCreationAction implements PostCreationAction {
+
+        @Override
+        public void postCreate(XShape shape) {
+            Misc.tagShapeAsNode(xShape);
+        }
+    }
+
     Collection<Link>    linkCollection;
 
+    protected PostCreationAction postCreationAction;
 
+    protected Node(PostCreationAction postCreationAction) {
+        this.postCreationAction = postCreationAction;
+    }
 
     public XShape buildShape(XMultiServiceFactory xMSF, XDrawPage xDP) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not overrided.");
     }
 
     public XShape buildShape(XMultiServiceFactory xMSF, XDrawPage xDP, XComponent xDrawDoc) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not overrided yet.");
     }
 
     public XShape buildShape(XMultiServiceFactory xMSF) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not overrided.");
     }
 
     public Collection<XShape> buildShapes(XMultiServiceFactory xMSF, XDrawPage xDP, XComponent xDrawDoc) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not overrided.");
     }
-    
-    
-    
-    
-    
     
     
     public enum NodeType {
@@ -85,6 +97,12 @@ public abstract class Node implements ShapeBuilder, DiagramElement {
     };
     
     NodeType type;
+
+    public void runPostCreation(){
+        if (postCreationAction != null) {
+            postCreationAction.postCreate(getShape());
+        }
+    }
     
 //    private static void testStub(){
 //        System.out.println(typeDescMap.get(type.toString()));

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<helpdocument version="1.0">
+
+<!--***********************************************************
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ ***********************************************************-->
+
+
+
+
+<meta>
+      <topic id="textpresenterxml" indexer="include" status="PUBLISH">
+         <title xml-lang="km" id="tit" l10n="NEW">ផ្លូវកាត់​ក្ដារចុច​កុងសូល​កម្មវិធីបង្ហាញ​របស់ Oracle</title>
+         <filename>/com.sun.PresenterScreen-linux_x86_64/presenter.xhp</filename>
+      </topic>
+   </meta>
+   <body>
+<bookmark xml-lang="en-US" branch="hid/com.sun.PresenterScreen" id="bm_id3138439" localize="false"/>
+<bookmark xml-lang="km" branch="index" id="bm_id0921200912285678"><bookmark_value>ផ្លូវកាត់​កុងសូល​របស់កម្មវិធីបង្ហាញ</bookmark_value></bookmark>
+<paragraph xml-lang="km" id="hd_id0921201912165661" role="heading" level="1" l10n="NEW">ផ្លូវកាត់​ក្ដារចុច​កុងសូល​កម្មវិធីបង្ហាញ​របស់ Oracle</paragraph>
+      <paragraph xml-lang="km" id="par_id0921201912165656" role="paragraph" l10n="NEW">នៅពេល​រត់​ការ​បញ្ចាំង​ស្លាយ ដោយ​ប្រើ​កុងសូល​កម្មវិធីបង្ហាញ​ Oracle អ្នក​អាច​ប្រើ​សោ​ដូច​ខាងក្រោម ៖</paragraph>
+      <table id="tbl_id0921200901051232">
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104028" role="tablehead" l10n="NEW">សកម្មភាព</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104093" role="tablehead" l10n="NEW">គ្រាប់ចុច</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id092120090110418" role="tablecontent" l10n="NEW">ស្លាយ​បន្ទាប់ ឬ​បែបផែនបន្ទាប់</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104120" role="tablecontent" l10n="NEW">ចុច​កណ្ដុរ​ឆ្វេង ព្រួញ​ស្ដាំ ព្រួញ​ចុះក្រោម ចន្លោះ​មិនឃើញ ទំព័រ​ចុះក្រោម បញ្ចូល ត្រឡប់ 'N'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104165" role="tablecontent" l10n="NEW">ស្លាយ​មុន ឬ​បែបផែន​មុន</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104115" role="tablecontent" l10n="NEW">ចុច​កណ្ដុរ​ស្ដាំ ព្រួញ​ឆ្វេង ព្រួញ​ឡើង​លើ ទំព័រ​លើ លុប​ថយក្រោយ 'P'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104164" role="tablecontent" l10n="NEW">ស្លាយ​ដំបូង</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104148" role="tablecontent" l10n="NEW">ដើម</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104221" role="tablecontent" l10n="NEW">ស្លាយ​ចុងក្រោយ</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104277" role="tablecontent" l10n="NEW">ចុង</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104279" role="tablecontent" l10n="NEW">ស្លាយ​មុន​ដោយ​គ្មានបែបផែន</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id092120090110423" role="tablecontent" l10n="NEW">ជំនួស(Alt)+ទំព័រ​លើ (Page Up)</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id092120090110427" role="tablecontent" l10n="NEW">ស្លាយ​បន្ទាប់​ដោយ​គ្មានបែបផែន</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104261" role="tablecontent" l10n="NEW">ជំនួស(Alt)+ទំព័រ​ក្រោម (Page Down)</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104383" role="tablecontent" l10n="NEW">ពណ៌​ខ្មៅ/មិនធ្វើ​ឲ្យអេក្រង់​ពណ៌​ខ្មៅ</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id092120090110431" role="tablecontent" l10n="NEW">'B', '.'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104311" role="tablecontent" l10n="NEW">ពណ៌​ស/មិនធ្វើ​ឲ្យ​អេក្រង់​ពណ៌ស</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104359" role="tablecontent" l10n="NEW">'W', ','</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104336" role="tablecontent" l10n="NEW">បញ្ចប់ការ​បញ្ចាំង​ស្លាយ</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104419" role="tablecontent" l10n="NEW">Esc, '-'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104460" role="tablecontent" l10n="NEW">ទៅលេខ​ស្លាយ</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id092120090110440" role="tablecontent" l10n="NEW">លេខ​អម​ដោយ​គ្រាប់ចុច​បញ្ចូល (Enter)</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104427" role="tablecontent" l10n="NEW">ពង្រីក/បង្រួម​ទំហំ​ពុម្ពអក្សរ​ចំណាំ</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104442" role="tablecontent" l10n="NEW">'G', 'S'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104473" role="tablecontent" l10n="NEW">រមូរ​ចំណាំ​ឡើង​លើ/ចុះក្រោម</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id092120090110459" role="tablecontent" l10n="NEW">'A', 'Z'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id092120090110456" role="tablecontent" l10n="NEW">ផ្លាស់ទី​សញ្ញា​រំលង​ពាក្យ​នៅ​ក្នុង​​ទិដ្ឋភាព​​ចំណាំ​​ថយក្រោ/ទៅមុខ</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id092120090110457" role="tablecontent" l10n="NEW">'H', 'L'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104566" role="tablecontent" l10n="NEW">បង្ហាញ​កុងសូល​កម្មវិធី​បង្ហាញ</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104544" role="tablecontent" l10n="NEW">បញ្ជា (Ctrl)-'1'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104535" role="tablecontent" l10n="NEW">បង្ហាញ​ចំណាំ​នៃ​ការ​បង្ហាញ</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104680" role="tablecontent" l10n="NEW">បញ្ជា (Ctrl)-'2'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104634" role="tablecontent" l10n="NEW">បង្ហាញ​ទិដ្ឋភាព​ស្លាយ</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="km" id="par_id0921200901104632" role="tablecontent" l10n="NEW">បញ្ជា (Ctrl)-'3'</paragraph>
+            </tablecell>
+         </tablerow>
+      </table>
+
+   </body>
+</helpdocument>

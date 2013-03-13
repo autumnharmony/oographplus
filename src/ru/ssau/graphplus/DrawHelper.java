@@ -6,6 +6,8 @@ import com.sun.star.frame.XController;
 import com.sun.star.frame.XModel;
 import com.sun.star.lang.*;
 import com.sun.star.uno.UnoRuntime;
+import ru.ssau.graphplus.node.Node;
+
 import java.util.Collection;
 
 public class DrawHelper {
@@ -310,6 +312,13 @@ public class DrawHelper {
         XDrawPage drawPage = getCurrentDrawPage(drawDoc);
         XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, drawPage);
         ShapeHelper.insertShape(xShape, drawPage);
+    }
+
+    public static void insertNodeOnCurrentPage(Node node, XComponent drawDoc) {
+        XDrawPage drawPage = getCurrentDrawPage(drawDoc);
+//        XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, drawPage);
+        ShapeHelper.insertShape(node.getShape(), drawPage);
+        node.runPostCreation();
     }
     
     public static void insertShapesOnCurrentPage(Collection<XShape> shapes, XComponent drawDoc) {

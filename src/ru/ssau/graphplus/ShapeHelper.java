@@ -34,9 +34,8 @@
 package ru.ssau.graphplus;
 // __________ Imports __________
 
+import com.sun.star.lang.*;
 import com.sun.star.uno.UnoRuntime;
-import com.sun.star.lang.XComponent;
-import com.sun.star.lang.XMultiServiceFactory;
 
 import com.sun.star.awt.Point;
 import com.sun.star.awt.Size;
@@ -55,6 +54,7 @@ import com.sun.star.text.XText;
 import com.sun.star.text.XTextCursor;
 import com.sun.star.text.XTextContent;
 import com.sun.star.text.XTextRange;
+import ru.ssau.graphplus.node.Node;
 
 
 public class ShapeHelper
@@ -198,6 +198,31 @@ public class ShapeHelper
     public static void insertShape(XShape xShape, XDrawPage xDP){
         XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, xDP);
         insertShape(xShape, xShapes);
+    }
+
+    public static void insertShape(XShape xShape, XDrawPage xDP,Node.PostCreationAction  postCreationAction){
+        XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, xDP);
+        insertShape(xShape, xShapes);
+        postCreationAction.postCreate(xShape);
+    }
+
+    public static boolean removeShape(XShape xShape, XDrawPage xDP){
+        for(int i = 0; i < xDP.getCount(); i++){
+            try {
+                Object byIndex = xDP.getByIndex(i);
+                XShape xShape1 = QI.XShape(byIndex);
+                if (xShape.equals(xShape1)){
+                    xDP.remove(xShape);
+                    return true;
+                }
+
+            } catch (com.sun.star.lang.IndexOutOfBoundsException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (WrappedTargetException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+        return  false;
     }
     
    

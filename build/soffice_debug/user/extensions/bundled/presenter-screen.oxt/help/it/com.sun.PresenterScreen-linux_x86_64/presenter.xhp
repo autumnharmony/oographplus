@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<helpdocument version="1.0">
+
+<!--***********************************************************
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ ***********************************************************-->
+
+
+
+
+<meta>
+      <topic id="textpresenterxml" indexer="include" status="PUBLISH">
+         <title xml-lang="it" id="tit" l10n="NEW">Tasti di scelta rapida di Presenter Console</title>
+         <filename>/com.sun.PresenterScreen-linux_x86_64/presenter.xhp</filename>
+      </topic>
+   </meta>
+   <body>
+<bookmark xml-lang="en-US" branch="hid/com.sun.PresenterScreen" id="bm_id3138439" localize="false"/>
+<bookmark xml-lang="it" branch="index" id="bm_id0921200912285678"><bookmark_value>Presenter Console, tasti di scelta rapida</bookmark_value></bookmark>
+<paragraph xml-lang="it" id="hd_id0921201912165661" role="heading" level="1" l10n="NEW">Tasti di scelta rapida di Presenter Console</paragraph>
+      <paragraph xml-lang="it" id="par_id0921201912165656" role="paragraph" l10n="NEW">Quando avviate una presentazione tramite Presenter Console potete utilizzare i seguenti tasti:</paragraph>
+      <table id="tbl_id0921200901051232">
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104028" role="tablehead" l10n="NEW">Azione</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104093" role="tablehead" l10n="NEW">Tasto/i</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id092120090110418" role="tablecontent" l10n="NEW">Diapositiva o effetto successivo</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104120" role="tablecontent" l10n="NEW">Clic con il tasto sinistro, tasto freccia destra o giù, barra spaziatrice, PgGiù, Invio, 'N'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104165" role="tablecontent" l10n="NEW">Diapositiva o effetto precedente</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104115" role="tablecontent" l10n="NEW">Clic con il tasto destro, tasto Freccia sinistra o su, PgSu, barra spaziatrice, 'P'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104164" role="tablecontent" l10n="NEW">Prima diapositiva</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104148" role="tablecontent" l10n="NEW">Inizio</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104221" role="tablecontent" l10n="NEW">Ultima diapositiva</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104277" role="tablecontent" l10n="NEW">Fine</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104279" role="tablecontent" l10n="NEW">Diapositiva precedente senza effetti</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id092120090110423" role="tablecontent" l10n="NEW">Alt+PgSu</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id092120090110427" role="tablecontent" l10n="NEW">Diapositiva successiva senza effetti</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104261" role="tablecontent" l10n="NEW">Alt+PgGiù</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104383" role="tablecontent" l10n="NEW">Imposta/rimuovi schermo nero</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id092120090110431" role="tablecontent" l10n="NEW">'B', '.'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104311" role="tablecontent" l10n="NEW">Imposta/rimuovi schermo bianco</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104359" role="tablecontent" l10n="NEW">'W', ','</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104336" role="tablecontent" l10n="NEW">Termina presentazione</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104419" role="tablecontent" l10n="NEW">Esc, '-'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104460" role="tablecontent" l10n="NEW">Vai alla dispositivo numero</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id092120090110440" role="tablecontent" l10n="NEW">Numero seguito da invio</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104427" role="tablecontent" l10n="NEW">Aumenta/Diminuisci dimensioni del carattere delle note</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104442" role="tablecontent" l10n="NEW">'G', 'S'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104473" role="tablecontent" l10n="NEW">Scorri note su/giù</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id092120090110459" role="tablecontent" l10n="NEW">'A', 'Z'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id092120090110456" role="tablecontent" l10n="NEW">Sposta il cursore nella visualizzazione note indietro/avanti</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id092120090110457" role="tablecontent" l10n="NEW">'H', 'L'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104566" role="tablecontent" l10n="NEW">Mostra Presenter Console</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104544" role="tablecontent" l10n="NEW">Ctrl-'1'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104535" role="tablecontent" l10n="NEW">Visualizza le note di presentazione</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104680" role="tablecontent" l10n="NEW">Ctrl-'2'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104634" role="tablecontent" l10n="NEW">Visualizza l'anteprima delle diapositive</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="it" id="par_id0921200901104632" role="tablecontent" l10n="NEW">Ctrl-'3'</paragraph>
+            </tablecell>
+         </tablerow>
+      </table>
+
+   </body>
+</helpdocument>

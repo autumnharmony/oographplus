@@ -255,5 +255,9 @@ public class QI {
     static public XDispatchProviderInterception XDispatchProviderInterception( Object object) {
         return  (XDispatchProviderInterception) UnoRuntime.queryInterface(XDispatchProviderInterception.class, object);
     }
+
+    static public XComponent XComponent(Object o){
+        return (XComponent) UnoRuntime.queryInterface(XComponent.class, o);
+    }
     
 } 

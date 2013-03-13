@@ -16,19 +16,10 @@
       
         <!-- set variablers from SDK and Office -->
         <echo message="setting up UNO environment ..."/>
-
-        <property name="office.program.dir" value="/opt/libreoffice4.0/program" />
-        <property name="oo.sdk.dir" value="/opt/libreoffice4.0/sdk" />
-        <property name="office.program.dir" value="/opt/libreoffice4.0/program" />
         <property name="office.unopkg" value="${office.program.dir}${file.separator}unopkg"/>
-        <property name="office.soffice" value="soffice --draw" />
+        <property name="office.soffice" value="${office.program.dir}${file.separator}soffice"/>
 
-
-        <property name="sdk.bin.dir" value="${oo.sdk.dir}${file.separator}bin"/>
-        <property name="ure.bin.dir" value="/opt/libreoffice4.0/ure/bin"/>
-        <property name="oo.version.number" value="4.0"/>
-
-        <property name="sdk.idl.dir" location="${oo.sdk.dir}${file.separator}idl"/> 
+        <property name="sdk.idl.dir" location="${oo.sdk.dir}${file.separator}idl"/>
         <property name="sdk.idlc" value="${sdk.bin.dir}${file.separator}idlc"/>
         <property name="sdk.regmerge" value="${ure.bin.dir}${file.separator}regmerge"/>
         <property name="sdk.javamaker" value="${sdk.bin.dir}${file.separator}javamaker"/>
@@ -417,8 +408,27 @@
     </target> -->
     
     <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->    
-    
+
+
     <target name="uno-run" description="Run OpenOffice.org" depends="uno-package,-run-oo"/>
+
+    <property name="antRunAsync" location="/home/anton/ant/antRunAsync" />
+    <property name="exec_log" location="exec.log" />
+    <property name="exec_dir" location="" />
+
+    <target name="exec_output"
+            description="Asynchronous Exec Redirecting Output">
+        <exec executable="${antRunAsync}" dir="${exec_dir}"
+              vmlauncher="false" failonerror="true">
+            <env key="ANTRUN_OUTPUT" value="${exec_log}" />
+            <!-- On Unix, prevent a logout from killing the process -->
+            <env key="ANTRUN_NOHUP" value="true" />
+            <arg line="/opt/libreoffice4.0/program/unopkg gui -f /home/anton/graphplus/oograph/dist/oograph.oxt" />  <!-- actual executable and arguments -->
+        </exec>
+        <echo message="leaving target" />
+    </target>
+
+    <target name="uno-run-idea" description="Run OpenOffice.org" depends="uno-package,-run-oo-idea"/>
 
     <!-- subtargets for different office versions -->
     <target name="-run-oo">
@@ -433,6 +443,17 @@
             <arg value="${office.startup.options}"/>
         </exec>
     </target>
+
+    <!-- subtargets for different office versions -->
+    <target name="-run-oo-idea" depends="exec_output">
+        <!--<echo message="${office.unopkg} gui -f ${uno.package.name}"/>-->
+
+        <echo message="${office.soffice}"/>
+        <exec executable="${office.soffice}" dir="${office.program.dir}" failonerror="true">
+            <arg value="${office.startup.options}"/>
+        </exec>
+    </target>
+
         
     <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->    
     

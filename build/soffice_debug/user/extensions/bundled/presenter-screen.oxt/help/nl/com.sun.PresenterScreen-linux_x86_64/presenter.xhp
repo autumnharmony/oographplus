@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<helpdocument version="1.0">
+
+<!--***********************************************************
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ ***********************************************************-->
+
+
+
+
+<meta>
+      <topic id="textpresenterxml" indexer="include" status="PUBLISH">
+         <title xml-lang="nl" id="tit" l10n="NEW">Presenter Console toetsenbord sneltoetsen</title>
+         <filename>/com.sun.PresenterScreen-linux_x86_64/presenter.xhp</filename>
+      </topic>
+   </meta>
+   <body>
+<bookmark xml-lang="en-US" branch="hid/com.sun.PresenterScreen" id="bm_id3138439" localize="false"/>
+<bookmark xml-lang="nl" branch="index" id="bm_id0921200912285678"><bookmark_value>sneltoetsen Presenter Console</bookmark_value></bookmark>
+<paragraph xml-lang="nl" id="hd_id0921201912165661" role="heading" level="1" l10n="NEW">Presenter Console toetsenbord sneltoetsen</paragraph>
+      <paragraph xml-lang="nl" id="par_id0921201912165656" role="paragraph" l10n="NEW">Bij het uitvoeren van een presentatie met behulp van de Presenter Console, kunt u de volgende toetsen gebruiken:</paragraph>
+      <table id="tbl_id0921200901051232">
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104028" role="tablehead" l10n="NEW">Actie</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104093" role="tablehead" l10n="NEW">Toets of toetsen</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id092120090110418" role="tablecontent" l10n="NEW">Volgende dia, of volgend effect</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104120" role="tablecontent" l10n="NEW">Klik met links, pijl naar rechts, pijl naar beneden, spatiebalk, page down, enter, return, 'N'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104165" role="tablecontent" l10n="NEW">Vorige dia, of vorig effect</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104115" role="tablecontent" l10n="NEW">Klik met rechts, pijl naar links, pijl naar boven, page up, backspace, 'P'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104164" role="tablecontent" l10n="NEW">Eerste dia</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104148" role="tablecontent" l10n="NEW">Home</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104221" role="tablecontent" l10n="NEW">Laatste dia</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104277" role="tablecontent" l10n="NEW">End</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104279" role="tablecontent" l10n="NEW">Vorige dia zonder effecten</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id092120090110423" role="tablecontent" l10n="NEW">Alt+Page Up</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id092120090110427" role="tablecontent" l10n="NEW">Volgende dia zonder effecten</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104261" role="tablecontent" l10n="NEW">Alt+Page Down</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104383" role="tablecontent" l10n="NEW">Scherm zwart/niet zwart maken</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id092120090110431" role="tablecontent" l10n="NEW">'B', '.'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104311" role="tablecontent" l10n="NEW">Scherm wit/niet wit maken</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104359" role="tablecontent" l10n="NEW">'W', ','</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104336" role="tablecontent" l10n="NEW">Einde diavoorstelling</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104419" role="tablecontent" l10n="NEW">Esc, '-'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104460" role="tablecontent" l10n="NEW">Ga naar dia nummer</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id092120090110440" role="tablecontent" l10n="NEW">Nummer gevolgd door Enter</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104427" role="tablecontent" l10n="NEW">Lettertype voor notities vergroten/verkleinen</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104442" role="tablecontent" l10n="NEW">'G', 'S'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104473" role="tablecontent" l10n="NEW">Notities naar boven/beneden schuiven</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id092120090110459" role="tablecontent" l10n="NEW">'A', 'Z'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id092120090110456" role="tablecontent" l10n="NEW">Verplaats de pijl in de notitieweergave vooruit/achteruit</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id092120090110457" role="tablecontent" l10n="NEW">'H', 'L'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104566" role="tablecontent" l10n="NEW">De Presenter Console weergeven</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104544" role="tablecontent" l10n="NEW">Ctrl-'1'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104535" role="tablecontent" l10n="NEW">Geef de Presentatie Notities weer</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104680" role="tablecontent" l10n="NEW">Ctrl-'2'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104634" role="tablecontent" l10n="NEW">Geef het Diaoverzicht weer</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="nl" id="par_id0921200901104632" role="tablecontent" l10n="NEW">Ctrl-'3'</paragraph>
+            </tablecell>
+         </tablerow>
+      </table>
+
+   </body>
+</helpdocument>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<helpdocument version="1.0">
+
+<!--***********************************************************
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ ***********************************************************-->
+
+
+
+
+<meta>
+      <topic id="textpresenterxml" indexer="include" status="PUBLISH">
+         <title xml-lang="cs" id="tit" l10n="NEW">Klávesové zkratky Presenter Console</title>
+         <filename>/com.sun.PresenterScreen-linux_x86_64/presenter.xhp</filename>
+      </topic>
+   </meta>
+   <body>
+<bookmark xml-lang="en-US" branch="hid/com.sun.PresenterScreen" id="bm_id3138439" localize="false"/>
+<bookmark xml-lang="cs" branch="index" id="bm_id0921200912285678"><bookmark_value>klávesové zkratky Presenter Console</bookmark_value></bookmark>
+<paragraph xml-lang="cs" id="hd_id0921201912165661" role="heading" level="1" l10n="NEW">Klávesové zkratky Presenter Console</paragraph>
+      <paragraph xml-lang="cs" id="par_id0921201912165656" role="paragraph" l10n="NEW">Při spuštění prezentace pomozí Presenter Console můžete využít následující klávesové zkratky:</paragraph>
+      <table id="tbl_id0921200901051232">
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104028" role="tablehead" l10n="NEW">Akce</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104093" role="tablehead" l10n="NEW">Klávesy (klávesy)</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id092120090110418" role="tablecontent" l10n="NEW">Následující snímek nebo následující efekt</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104120" role="tablecontent" l10n="NEW">Klepnutí, šipka vpravo nebo dolů, mezerník, Page Down, Enter, 'N'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104165" role="tablecontent" l10n="NEW">Předchozí snímek nebo předchozí efekt</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104115" role="tablecontent" l10n="NEW">Klepnutí pravým tlačítkem, šipka vlevo nebo nahoru, Page Up, Backspace, 'P' </paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104164" role="tablecontent" l10n="NEW">První snímek</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104148" role="tablecontent" l10n="NEW">Home</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104221" role="tablecontent" l10n="NEW">Poslední snímek</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104277" role="tablecontent" l10n="NEW">End</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104279" role="tablecontent" l10n="NEW">Předchozí snímek bez efektů</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id092120090110423" role="tablecontent" l10n="NEW">Alt+Page Up</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id092120090110427" role="tablecontent" l10n="NEW">Následující snímek bez efektů</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104261" role="tablecontent" l10n="NEW">Alt+Page Down</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104383" role="tablecontent" l10n="NEW">Ztmavit/Obnovit obrazovku</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id092120090110431" role="tablecontent" l10n="NEW">'B', '.'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104311" role="tablecontent" l10n="NEW">Zbělet/Obnovit obrazovku</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104359" role="tablecontent" l10n="NEW">'W', ','</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104336" role="tablecontent" l10n="NEW">Ukončit prezentaci</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104419" role="tablecontent" l10n="NEW">Esc, '-'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104460" role="tablecontent" l10n="NEW">Přejít na snímek číslo</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id092120090110440" role="tablecontent" l10n="NEW">Číslo a Enter</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104427" role="tablecontent" l10n="NEW">Zvětšení/Zmenšení velikosti písma poznámek</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104442" role="tablecontent" l10n="NEW">'G', 'S'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104473" role="tablecontent" l10n="NEW">Posun poznámek nahoru/dolů</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id092120090110459" role="tablecontent" l10n="NEW">'A', 'Z'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id092120090110456" role="tablecontent" l10n="NEW">Posun ukazatele v zobrazení poznámek dozadu/dopředu</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id092120090110457" role="tablecontent" l10n="NEW">'H', 'L'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104566" role="tablecontent" l10n="NEW">Zobrazit Presenter Console</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104544" role="tablecontent" l10n="NEW">Ctrl-'1'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104535" role="tablecontent" l10n="NEW">Zobrazit poznámky prezentace</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104680" role="tablecontent" l10n="NEW">Ctrl-'2'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104634" role="tablecontent" l10n="NEW">Zobrazit přehled snímků</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="cs" id="par_id0921200901104632" role="tablecontent" l10n="NEW">Ctrl-'3'</paragraph>
+            </tablecell>
+         </tablerow>
+      </table>
+
+   </body>
+</helpdocument>

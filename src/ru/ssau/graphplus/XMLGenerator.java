@@ -85,11 +85,11 @@ public class XMLGenerator {
                 }
                 XNamed xN = (XNamed) UnoRuntime.queryInterface(XNamed.class, xSh);
 
-                if (xSh.getShapeType().equals("com.sun.star.drawing.EllipseShape") || xSh.getShapeType().equals("com.sun.star.drawing.CustomShape") ||  xSh.getShapeType().equals("com.sun.star.drawing.PolyLineShape")) {
 
                     if (!Misc.isNode(xSh)){
-                        continue;
+
                     }
+                else {
 
                     Element n = doc.createElement(NODE);
 
@@ -99,11 +99,11 @@ public class XMLGenerator {
                     }
                     root.appendChild(n);
                 }
-                if (xSh.getShapeType().equals("com.sun.star.drawing.ConnectorShape")) {
 
                     if (!Misc.isLink(xSh)){
                         continue;
                     }
+                else {
 
                     Element l = doc.createElement(LINK);
 

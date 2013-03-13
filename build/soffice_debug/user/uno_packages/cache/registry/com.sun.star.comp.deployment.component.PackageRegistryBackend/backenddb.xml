@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<comp:component-backend-db xmlns:comp="http://openoffice.org/extensionmanager/component-registry/2010"><comp:component url="vnd.sun.star.expand:$UNO_USER_PACKAGES_CACHE/uno_packages/sv61v9hq.tmp_/oograph.oxt/oograph.jar"><comp:java-type-library>false</comp:java-type-library><comp:implementation-names><comp:name>ru.ssau.graphplus.OOGraph</comp:name></comp:implementation-names></comp:component></comp:component-backend-db>

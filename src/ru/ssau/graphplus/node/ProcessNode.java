@@ -28,7 +28,7 @@ public class ProcessNode extends Node{
             XShape xShape =  ShapeHelper.createShape(xMSF, new Point(100,100), new Size(800,800), DrawHelper.SHAPE_KIND_RECTANGLE);
             XPropertySet xPS = QI.XPropertySet(xShape);
 //            xPS = ShapeHelper.addPortion(xShape, "process", false);
-            xPS.setPropertyValue("FillColor", new Integer(0xFFFFFF));
+            xPS.setPropertyValue("FillColor", new Integer(0x99CCFF));
             return xShape;
         } catch (Exception ex) {
            return null;

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<helpdocument version="1.0">
+
+<!--***********************************************************
+ * 
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ * 
+ ***********************************************************-->
+
+
+
+
+<meta>
+      <topic id="textpresenterxml" indexer="include" status="PUBLISH">
+         <title xml-lang="fi" id="tit" l10n="NEW">Presenter Console -pikanäppäimet</title>
+         <filename>/com.sun.PresenterScreen-linux_x86_64/presenter.xhp</filename>
+      </topic>
+   </meta>
+   <body>
+<bookmark xml-lang="en-US" branch="hid/com.sun.PresenterScreen" id="bm_id3138439" localize="false"/>
+<bookmark xml-lang="fi" branch="index" id="bm_id0921200912285678"><bookmark_value>Presenter Console -pikanäppäimet</bookmark_value></bookmark>
+<paragraph xml-lang="fi" id="hd_id0921201912165661" role="heading" level="1" l10n="NEW">Presenter Console -pikanäppäimet</paragraph>
+      <paragraph xml-lang="fi" id="par_id0921201912165656" role="paragraph" l10n="NEW">Kun Presenter Console on käytössä, diaesityksen aikana seuraavat pikanäppäimet ovat käytettävissä:</paragraph>
+      <table id="tbl_id0921200901051232">
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104028" role="tablehead" l10n="NEW">Toiminto</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104093" role="tablehead" l10n="NEW">Näppäin tai näppäimet</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id092120090110418" role="tablecontent" l10n="NEW">Seuraava dia tai seuraava tehoste</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104120" role="tablecontent" l10n="NEW">Napsautus ykköspainikkeella, oikea nuolinäppäin, alanuolinäppäin, välilyönti, page down, enter, return tai N</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104165" role="tablecontent" l10n="NEW">Edellinen dia tai tehoste</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104115" role="tablecontent" l10n="NEW">Napsautus kakkospainikkeella, vasen nuolinäppäin, ylänuolinäppäin, page up, askelpalautin tai P</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104164" role="tablecontent" l10n="NEW">Ensimmäinen dia</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104148" role="tablecontent" l10n="NEW">Home</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104221" role="tablecontent" l10n="NEW">Viimeinen dia</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104277" role="tablecontent" l10n="NEW">End</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104279" role="tablecontent" l10n="NEW">Edellinen dia ilman tehosteita</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id092120090110423" role="tablecontent" l10n="NEW">Alt+Page Up</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id092120090110427" role="tablecontent" l10n="NEW">Seuraava dia ilman tehosteita</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104261" role="tablecontent" l10n="NEW">Alt+Page Down</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104383" role="tablecontent" l10n="NEW">Musta näytön ja kuvan vuorottelu</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id092120090110431" role="tablecontent" l10n="NEW">B, piste</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104311" role="tablecontent" l10n="NEW">Valkoisen näytön ja kuvan vuorottelu</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104359" role="tablecontent" l10n="NEW">W, pilkku</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104336" role="tablecontent" l10n="NEW">Lopeta diaesitys</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104419" role="tablecontent" l10n="NEW">Esc, '-'</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104460" role="tablecontent" l10n="NEW">Siirry diaan numerolla</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id092120090110440" role="tablecontent" l10n="NEW">Dian numero ja Enter</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104427" role="tablecontent" l10n="NEW">Kasvata tai pienennä muistiinpanojen fonttikokoa</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104442" role="tablecontent" l10n="NEW">G, S</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104473" role="tablecontent" l10n="NEW">Vieritä muistiinpanoja ylös tai alas</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id092120090110459" role="tablecontent" l10n="NEW">A, Z</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id092120090110456" role="tablecontent" l10n="NEW">Siirrä osoitinta muistiinpanoissa eteen- tai taaksepäin</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id092120090110457" role="tablecontent" l10n="NEW">H, L</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104566" role="tablecontent" l10n="NEW">Näytä Presenter Console</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104544" role="tablecontent" l10n="NEW">Ctrl+1</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104535" role="tablecontent" l10n="NEW">Näytä muistiinpanot</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104680" role="tablecontent" l10n="NEW">Ctrl+2</paragraph>
+            </tablecell>
+         </tablerow>
+         <tablerow>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104634" role="tablecontent" l10n="NEW">Näytä kaikki diat</paragraph>
+            </tablecell>
+            <tablecell>
+               <paragraph xml-lang="fi" id="par_id0921200901104632" role="tablecontent" l10n="NEW">Ctrl+3</paragraph>
+            </tablecell>
+         </tablerow>
+      </table>
+
+   </body>
+</helpdocument>

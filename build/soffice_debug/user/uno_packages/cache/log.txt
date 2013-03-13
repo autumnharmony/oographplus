@@ -1,0 +1,6 @@
+###### Progress log entry 2013-03-11 23:51:41 ######
+ERROR: (com.sun.star.lang.IllegalArgumentException) { { Message = "There is no such extension deployed: ru.ssau.graphplus.oograph", Context = (com.sun.star.uno.XInterface) @7ff31358ce10 }, ArgumentPosition = (short) -1 }
+ERROR: (com.sun.star.lang.IllegalArgumentException) { { Message = "There is no such extension deployed: ru.ssau.graphplus.oograph", Context = (com.sun.star.uno.XInterface) @7ff31358ce10 }, ArgumentPosition = (short) -1 }
+Copying: oograph.oxt
+###### Progress log entry 2013-03-11 23:54:36 ######
+Copying: oograph.oxt

@@ -31,7 +31,7 @@ public class ProcedureNode extends Node {
 //            ShapeHelper.addPortion(xShape, "procedure", false);
             XPropertySet xPS = QI.XPropertySet(xShape);
             xPS.setPropertyValue(CORNER_RADIUS, new Integer(500));
-            xPS.setPropertyValue("FillColor", new Integer(0xFFFFFF));
+            xPS.setPropertyValue("FillColor", new Integer(0x99CCFF));
             
             return xShape;
         } catch (Exception ex) {
