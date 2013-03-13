@@ -123,6 +123,13 @@ public final class OOGraph extends WeakBase
                 public void notifyEvent(EventObject arg0) {
                     System.out.println("notifyEvent m_xComponent");
                     System.out.print(arg0.EventName);
+                    if (arg0.EventName.equals("ShapeInserted")){
+                        diagramController.onShapeInserted(arg0);
+                    }
+
+                    if (arg0.EventName.equals("ShapeModified")){
+                        diagramController.onShapeModified(arg0);
+                    }
                 }
 
                 public void disposing(com.sun.star.lang.EventObject arg0) {

@@ -4,9 +4,7 @@
  */
 package ru.ssau.graphplus.link;
 
-import com.sun.star.beans.PropertyChangeEvent;
-import com.sun.star.beans.UnknownPropertyException;
-import com.sun.star.beans.XPropertyChangeListener;
+import com.sun.star.beans.*;
 import com.sun.star.lang.EventObject;
 import com.sun.star.lang.WrappedTargetException;
 import ru.ssau.graphplus.link.Link.LinkType;
@@ -43,7 +41,34 @@ public class LinkFactory {
         }
 
         try {
-            link.xPS1.addPropertyChangeListener("StartShape", new XPropertyChangeListener() {
+
+            link.xPS1.addVetoableChangeListener("StartShape", new XVetoableChangeListener() {
+                @Override
+                public void vetoableChange(PropertyChangeEvent propertyChangeEvent) throws PropertyVetoException {
+                    System.out.println(propertyChangeEvent.OldValue);
+                    System.out.println(propertyChangeEvent.NewValue);
+                }
+
+                @Override
+                public void disposing(EventObject eventObject) {
+
+                }
+            });
+
+            link.xPS1.addPropertyChangeListener("", new XPropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+                    System.out.println("OMGOMGOMG");
+                }
+
+                @Override
+                public void disposing(EventObject eventObject) {
+                    //To change body of implemented methods use File | Settings | File Templates.
+                }
+            });
+
+
+            link.xPS2.addPropertyChangeListener("", new XPropertyChangeListener() {
                 @Override
                 public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
                     System.out.println("OMGOMGOMG");

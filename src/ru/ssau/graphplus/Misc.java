@@ -390,4 +390,20 @@ public class Misc {
 
 
     }
+
+    public static boolean isConnectorShape(XShape xShape) {
+        //TODO recode contains
+        if (xShape.getShapeType().contains("Connector")) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isTextShape(XShape xShape1) {
+        //TODO recode contains
+        if (xShape1.getShapeType().contains("Text")) {
+            return true;
+        }
+        return false;
+    }
 }

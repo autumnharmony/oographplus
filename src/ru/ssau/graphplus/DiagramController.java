@@ -544,179 +544,185 @@ public final class DiagramController implements XSelectionChangeListener, XModif
                         Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
-                  } catch (IndexOutOfBoundsException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (WrappedTargetException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     } catch (IndexOutOfBoundsException e) {
+                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     } catch (WrappedTargetException e) {
+                         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                     }
             }
 
 
-                if (url.Path.compareTo("TagAsNode") == 0) {
+            if (url.Path.compareTo("TagAsNode") == 0) {
+                try {
+
+                    XDrawPage xPage = PageHelper.getDrawPageByIndex(xDrawDoc, 0);
+                    XController xController = m_xFrame.getController();
+
+                    XSelectionSupplier xSelectSup = QI.XSelectionSupplier(xController);
+                    Object selectionObj = xSelectSup.getSelection();
+                    XShapes xShapes = (XShapes) UnoRuntime.queryInterface(
+                            XShapes.class, selectionObj);
                     try {
+                        final XShape xShape = (XShape) QI.XShape(xShapes.getByIndex(0));
+                        System.out.println(xShape.getShapeType());
 
-                        XDrawPage xPage = PageHelper.getDrawPageByIndex(xDrawDoc, 0);
-                        XController xController = m_xFrame.getController();
 
-                        XSelectionSupplier xSelectSup = QI.XSelectionSupplier(xController);
-                        Object selectionObj = xSelectSup.getSelection();
-                        XShapes xShapes = (XShapes) UnoRuntime.queryInterface(
-                                XShapes.class, selectionObj);
+                        Object valueByName = m_xContext.getValueByName("/singletons/com.sun.star.deployment.PackageInformationProvider");
+                        XPackageInformationProvider xPackageInformationProvider = UnoRuntime.queryInterface(XPackageInformationProvider.class, valueByName);
+                        String packageLocation = xPackageInformationProvider.getPackageLocation("ru.ssau.graphplus.oograph");
+                        System.out.println(packageLocation);
                         try {
-                            final XShape xShape = (XShape) QI.XShape(xShapes.getByIndex(0));
-                            System.out.println(xShape.getShapeType());
+                            XMultiComponentFactory xMCF = m_xContext.getServiceManager();
+                            Object obj;
+
+                            // If valid we must pass the XModel when creating a DialogProvider object
+
+                            obj = xMCF.createInstanceWithContext(
+                                    "com.sun.star.awt.DialogProvider2", m_xContext);
+
+                            XDialogProvider2 xDialogProvider = (XDialogProvider2)
+                                    UnoRuntime.queryInterface(XDialogProvider2.class, obj);
 
 
-                            Object valueByName = m_xContext.getValueByName("/singletons/com.sun.star.deployment.PackageInformationProvider");
-                            XPackageInformationProvider xPackageInformationProvider = UnoRuntime.queryInterface(XPackageInformationProvider.class, valueByName);
-                            String packageLocation = xPackageInformationProvider.getPackageLocation("ru.ssau.graphplus.oograph");
-                            System.out.println(packageLocation);
-                            try {
-                                XMultiComponentFactory xMCF = m_xContext.getServiceManager();
-                                Object obj;
+                            XDialog xDialog = xDialogProvider.createDialogWithHandler("vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/Dialog1.xdl", new XDialogEventHandler() {
 
-                                // If valid we must pass the XModel when creating a DialogProvider object
+                                private Integer selected;
+                                private Boolean convertShape = true;
 
-                                obj = xMCF.createInstanceWithContext(
-                                        "com.sun.star.awt.DialogProvider2", m_xContext);
-
-                                XDialogProvider2 xDialogProvider = (XDialogProvider2)
-                                        UnoRuntime.queryInterface(XDialogProvider2.class, obj);
+                                @Override
+                                public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
+                                    System.out.println(o);
+                                    System.out.println(s);
 
 
-                                XDialog xDialog = xDialogProvider.createDialogWithHandler("vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/Dialog1.xdl", new XDialogEventHandler() {
-
-                                    private Integer selected;
-                                    private Boolean convertShape = true;
-
-                                    @Override
-                                    public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
-                                        System.out.println(o);
-                                        System.out.println(s);
-
-
-                                        XControlContainer xControlContainer = UnoRuntime.queryInterface(XControlContainer.class, xDialog);
+                                    XControlContainer xControlContainer = UnoRuntime.queryInterface(XControlContainer.class, xDialog);
 //                                    xControlContainer.getControl("")
-                                        boolean handled = true;
-                                        boolean end = false;
+                                    boolean handled = true;
+                                    boolean end = false;
 
 
-                                        if (s.equals("chooseType")) {
+                                    if (s.equals("chooseType")) {
 
-                                            Misc.tagShapeAsNode(xShape);
+                                        Misc.tagShapeAsNode(xShape);
 
-                                            XControl comboBox1 = xControlContainer.getControl("ComboBox1");
-                                            XComboBox xComboBox = UnoRuntime.queryInterface(XComboBox.class, comboBox1);
+                                        XControl comboBox1 = xControlContainer.getControl("ComboBox1");
+                                        XComboBox xComboBox = UnoRuntime.queryInterface(XComboBox.class, comboBox1);
 
-                                            String nodeType = xComboBox.getItem(selected.shortValue());
-                                            Node nodeReplace = null;
-                                            final boolean finalConvertShape = convertShape;
-                                            final Node finalNodeReplace = nodeReplace;
-                                            if (convertShape) {
-                                                nodeReplace = nodeFactory.create(Node.NodeType.valueOf(nodeType), m_xComponent);
+                                        String nodeType = xComboBox.getItem(selected.shortValue());
+                                        Node nodeReplace = null;
+                                        final boolean finalConvertShape = convertShape;
+                                        final Node finalNodeReplace = nodeReplace;
+                                        if (convertShape) {
+                                            nodeReplace = nodeFactory.create(Node.NodeType.valueOf(nodeType), m_xComponent);
 
-                                                Node.PostCreationAction postCreationAction = new Node.PostCreationAction() {
-                                                    @Override
-                                                    public void postCreate(XShape shape) {
-                                                        if (finalConvertShape) {
-                                                            if (finalNodeReplace != null) {
-                                                                Misc.tagShapeAsNode(finalNodeReplace.getShape());
+                                            Node.PostCreationAction postCreationAction = new Node.PostCreationAction() {
+                                                @Override
+                                                public void postCreate(XShape shape) {
+                                                    if (finalConvertShape) {
+                                                        if (finalNodeReplace != null) {
+                                                            Misc.tagShapeAsNode(finalNodeReplace.getShape());
 
-                                                                xDP.remove(xShape);
-                                                            }
-                                                        } else {
-                                                            Misc.tagShapeAsNode(xShape);
+                                                            xDP.remove(xShape);
                                                         }
+                                                    } else {
+                                                        Misc.tagShapeAsNode(xShape);
                                                     }
-                                                };
-
-                                                ShapeHelper.insertShape(nodeReplace.getShape(), xDP, postCreationAction);
-                                                try {
-                                                    nodeReplace.getShape().setPosition(xShape.getPosition());
-                                                    nodeReplace.getShape().setSize(xShape.getSize());
-                                                } catch (PropertyVetoException e) {
-                                                    e.printStackTrace();
                                                 }
+                                            };
+
+                                            ShapeHelper.insertShape(nodeReplace.getShape(), xDP, postCreationAction);
+                                            try {
+                                                nodeReplace.getShape().setPosition(xShape.getPosition());
+                                                nodeReplace.getShape().setSize(xShape.getSize());
+                                            } catch (PropertyVetoException e) {
+                                                e.printStackTrace();
                                             }
+                                        }
 
 
-                                            end = true;
-                                            handled = true;
+                                        end = true;
+                                        handled = true;
 
-                                        } else if (s.equals("itemStatusChanged")) {
-                                            selected = ((ItemEvent) o).Selected;
-                                            System.out.println(o);
+                                    } else if (s.equals("itemStatusChanged")) {
+                                        selected = ((ItemEvent) o).Selected;
+                                        System.out.println(o);
 
-                                            handled = true;
-                                            end = false;
-                                        } else if (s.equals("convertShapeCheckboxExecute")) {
+                                        handled = true;
+                                        end = false;
+                                    } else if (s.equals("convertShapeCheckboxExecute")) {
 //                                        convertShape = !convertShape;
-                                            handled = true;
-                                            end = false;
-                                        } else if (s.equals("convertShapeCheckboxItemStatusChanged")) {
-                                            convertShape = !convertShape;
-                                            handled = true;
-                                            end = false;
-                                        } else {
-                                            handled = false;
-                                        }
-
-                                        if (end) {
-                                            xDialog.endExecute();
-                                        }
-
-                                        return handled;
+                                        handled = true;
+                                        end = false;
+                                    } else if (s.equals("convertShapeCheckboxItemStatusChanged")) {
+                                        convertShape = !convertShape;
+                                        handled = true;
+                                        end = false;
+                                    } else {
+                                        handled = false;
                                     }
 
-                                    @Override
-                                    public String[] getSupportedMethodNames() {
-                                        return new String[]{"chooseTypeNode", "chooseTypeLink", "chooseType",
-                                                "itemStatusChanged", "convertShapeCheckboxExecute",
-                                                "convertShapeCheckboxItemStatusChanged"};
+                                    if (end) {
+                                        xDialog.endExecute();
                                     }
-                                });
+
+                                    return handled;
+                                }
+
+                                @Override
+                                public String[] getSupportedMethodNames() {
+                                    return new String[]{"chooseTypeNode", "chooseTypeLink", "chooseType",
+                                            "itemStatusChanged", "convertShapeCheckboxExecute",
+                                            "convertShapeCheckboxItemStatusChanged"};
+                                }
+                            });
 //                    xDialog.execute();
-                                if (xDialog != null)
-                                    xDialog.execute();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-
-                        } catch (com.sun.star.lang.IndexOutOfBoundsException ex) {
-                            Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (WrappedTargetException ex) {
-                            Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (Exception ex) {
-                            Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
+                            if (xDialog != null)
+                                xDialog.execute();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+
 
                     } catch (com.sun.star.lang.IndexOutOfBoundsException ex) {
                         Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (WrappedTargetException ex) {
                         Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception ex) {
+                        Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
                     }
 
+                } catch (com.sun.star.lang.IndexOutOfBoundsException ex) {
+                    Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (WrappedTargetException ex) {
+                    Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-                if (url.Path.contains("Link")) {
-                    // common for all links
-                    if (link != null)
-                        diagramModel.addDiagramElement(link);
-                    return;
-                }
-
-                if (url.Path.contains("Node")) {
-                    // common for all links
-                    if (node != null)
-                        diagramModel.addDiagramElement(node);
-
-                    return;
-                }
-
 
             }
+
+            if (url.Path.contains("Link")) {
+                // common for all links
+                state = State.AddingLink;
+                if (link != null){
+                    diagramModel.addDiagramElement(link);
+                }
+                return;
+            }
+
+            if (url.Path.contains("Node")) {
+                // common for all links
+                if (node != null)
+                    diagramModel.addDiagramElement(node);
+
+                return;
+            }
+
+
         }
+
     }
+
+
+
 
 
     @Override
@@ -725,6 +731,101 @@ public final class DiagramController implements XSelectionChangeListener, XModif
 
     @Override
     public void removeStatusListener(XStatusListener xStatusListener, URL url) {
+    }
+
+
+
+    Set<ShapeInsertedEvent> shapeInsertedEvents = new HashSet<ShapeInsertedEvent>();
+    int connectorsAdded = 0;
+    boolean isTextShapeAdded = false;
+
+    public void onShapeInserted(com.sun.star.document.EventObject arg0) {
+        System.out.println("ShapeInserted");
+
+
+        if (shapeInsertedEvents.size() == 2){
+
+
+            boolean matched = true;
+
+            for (ShapeInsertedEvent shapeInsertedEvent : shapeInsertedEvents) {
+                if (Misc.isTextShape(shapeInsertedEvent.xShape)){
+
+                        if (isTextShapeAdded == true){
+                            matched = false;
+                            break;
+                        }
+                        else {
+                            isTextShapeAdded = true;
+                        }
+
+
+                } else if (Misc.isConnectorShape(shapeInsertedEvent.xShape)) {
+                    connectorsAdded++;
+                }
+            }
+            matched = matched & (connectorsAdded == 2);
+
+            if (matched) {
+                ElementAddEvent elementAddEvent = new ElementAddEvent();
+                fireDiagramEvent(elementAddEvent);
+            }
+            else {
+                shapeInsertedEvents.clear();
+                connectorsAdded = 0;
+                isTextShapeAdded = false;
+            }
+            // todo
+
+
+        }
+
+        else {
+
+            shapeInsertedEvents.add(new ShapeInsertedEvent(arg0, new Date()));
+
+
+        }
+
+
+//        XShape xShape = QI.XShape(arg0.Source);
+//        if (xShape !=null) {
+//            if (Misc.isConnectorShape(xShape)){
+//                XPropertySet xPropertySet = QI.XPropertySet(xShape);
+//                try {
+//                    xPropertySet.getPropertyValue("StartShape");
+//                } catch (UnknownPropertyException e) {
+//                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//                } catch (WrappedTargetException e) {
+//                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//                }
+//                try {
+//                    Object endShape = xPropertySet.getPropertyValue("EndShape");
+//                    XShape xShape1 = QI.XShape(endShape);
+//                    if (Misc.isTextShape(xShape1)){
+//
+//                    }
+//                } catch (UnknownPropertyException e) {
+//                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//                } catch (WrappedTargetException e) {
+//                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//                }
+//
+//
+//            }
+//        }
+    }
+
+    private void fireDiagramEvent(DiagramEvent diagramEvent) {
+       if (diagramEvent instanceof ElementAddEvent){
+        diagramEventHandler.elementAdded(new ElementAddEvent());
+       }
+
+           }
+
+    public void onShapeModified(com.sun.star.document.EventObject arg0) {
+        System.out.println("ShapeModified");
+
     }
 
     public enum State {
@@ -739,8 +840,23 @@ public final class DiagramController implements XSelectionChangeListener, XModif
         return state;
     }
 
+    Map<State, DiagramEventHandler>  diagramEventHandlerMap = new HashMap<State, DiagramEventHandler>();
+
+    DiagramEventHandler diagramEventHandler;
+
     public void setState(State state) {
         this.state = state;
+        if (diagramEventHandlerMap.containsKey(state)){
+            diagramEventHandler =  diagramEventHandlerMap.get(state);
+        }
+        else {
+            switch (state){
+                case AddingLink:
+                    AddingLink addingLink = new AddingLink();
+                    diagramEventHandlerMap.put(state, addingLink);
+                    break;
+            }
+        }
     }
 
 
@@ -905,7 +1021,12 @@ public final class DiagramController implements XSelectionChangeListener, XModif
                             setState(State.Nothing);
 //                        LinkAdjuster.adjustLink((Link)linker);
                             setSelectedShape(linker.getTextShape());
+                            // TODO remove next
+                            Link linker1 = (Link) linker;
+                            //QI.XPropertySet(linker1.getConnShape1()).addPropertyChangeListener();
                         }
+                    } else {
+
                     }
 
                 }
