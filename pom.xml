@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">	
+<modelVersion>4.0.0</modelVersion>
+	<groupId>ru.ssau.graphplus</groupId>
+	<artifactId>oograph</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>oxt</packaging>
+	<name>Graphplus :: Addon</name>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>juh</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>jurt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>ridl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.libreoffice</groupId>
+            <artifactId>unoil</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/oxt/</directory>
+            </resource>
+        </resources>
+        <plugins>
+
+            <plugin>
+                <groupId>be.docarch</groupId>
+                <artifactId>oxt-maven-plugin</artifactId>
+                <configuration>
+                    <centralRegistrationClass>ru.ssau.graphplus.CentralRegistrationClass</centralRegistrationClass>
+                    <registrationClasses>
+                        ru.ssau.graphplus.OOGraph
+                    </registrationClasses>
+                    <resources>
+                        <resource>
+                            <directory>src/main/oxt</directory>
+                            <excludes>
+                                <exclude>description.xml</exclude>
+                                <exclude>META-INF/manifest.xml</exclude>
+                            </excludes>
+                        </resource>
+                        <resource>
+                            <directory>src/main/oxt</directory>
+                            <includes>
+                                <include>description.xml</include>
+                                <include>META-INF/manifest.xml</include>
+                            </includes>
+                            <filtering>true</filtering>
+                        </resource>
+                        <resource>
+                            <directory>target/oxt</directory>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
