@@ -1,72 +1,226 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">	
-<modelVersion>4.0.0</modelVersion>
-	<groupId>ru.ssau.graphplus</groupId>
-	<artifactId>oograph</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
-	<packaging>oxt</packaging>
-	<name>Graphplus :: Addon</name>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ru.ssau.graphplus</groupId>
+    <artifactId>graphplus-addon</artifactId>
+    <version>0.1</version>
+    <name>graphplus::openoffice</name>
+    <packaging>pom</packaging>
 
+    <description>Graphplus Openoffice Addon</description>
+    <properties>
+        <separator>/</separator>
+        <project_dir>/home/anton/graphplus/oograph/</project_dir>
+        <target_dir>${project_dir}${separator}target</target_dir>
+        <oxt_path>${target_dir}${separator}${artifactId}-${version}.oxt</oxt_path>
+    </properties>
 
     <dependencies>
         <dependency>
-            <groupId>org.libreoffice</groupId>
+            <groupId>org.openoffice</groupId>
             <artifactId>juh</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.libreoffice</groupId>
-            <artifactId>jurt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.libreoffice</groupId>
-            <artifactId>ridl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.libreoffice</groupId>
-            <artifactId>unoil</artifactId>
-        </dependency>
-    </dependencies>
-    <build>
-        <resources>
-            <resource>
-                <directory>src/oxt/</directory>
-            </resource>
-        </resources>
-        <plugins>
+            <version>2.4.0</version>
+            <scope>system</scope>
 
+            <systemPath>/opt/libreoffice4.0/ure/share/java/juh.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>jurt</artifactId>
+            <version>2.4.0</version>
+            <scope>system</scope>
+
+            <systemPath>/opt/libreoffice4.0/ure/share/java/jurt.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>ridl</artifactId>
+            <version>2.4.0</version>
+            <scope>system</scope>
+
+            <systemPath>/opt/libreoffice4.0/ure/share/java/ridl.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>unoil</artifactId>
+            <version>2.4.0</version>
+            <scope>system</scope>
+
+            <systemPath>/opt/libreoffice4.0/program/classes/unoil.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>officebean</artifactId>
+            <version>2.4.0</version>
+            <scope>system</scope>
+
+            <systemPath>/opt/libreoffice4.0/program/classes/officebean.jar</systemPath>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
             <plugin>
-                <groupId>be.docarch</groupId>
-                <artifactId>oxt-maven-plugin</artifactId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                         <goals>
+                             <goal>compile</goal>
+                         </goals>
+                    </execution>
+                </executions>
                 <configuration>
-                    <centralRegistrationClass>ru.ssau.graphplus.CentralRegistrationClass</centralRegistrationClass>
-                    <registrationClasses>
-                        ru.ssau.graphplus.OOGraph
-                    </registrationClasses>
-                    <resources>
-                        <resource>
-                            <directory>src/main/oxt</directory>
-                            <excludes>
-                                <exclude>description.xml</exclude>
-                                <exclude>META-INF/manifest.xml</exclude>
-                            </excludes>
-                        </resource>
-                        <resource>
-                            <directory>src/main/oxt</directory>
-                            <includes>
-                                <include>description.xml</include>
-                                <include>META-INF/manifest.xml</include>
-                            </includes>
-                            <filtering>true</filtering>
-                        </resource>
-                        <resource>
-                            <directory>target/oxt</directory>
-                        </resource>
-                    </resources>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                    <encoding>utf-8</encoding>
                 </configuration>
             </plugin>
-        </plugins>
-    </build>
 
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-jar-plugin</artifactId>-->
+                <!--<version>2.4</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>jar</goal>-->
+                        <!--</goals>-->
+                        <!--<phase>prepare-package</phase>-->
+
+                        <!--<configuration>-->
+
+
+                            <!--<archive>-->
+
+                                <!--<manifestEntries>-->
+                                    <!--<RegistrationClassName>-->
+                                        <!--ru.ssau.graphplus.CentralRegistrationClass-->
+                                    <!--</RegistrationClassName>-->
+                                    <!--<RegistrationClasses>-->
+                                        <!--ru.ssau.graphplus.OOGraph-->
+                                    <!--</RegistrationClasses>-->
+                                <!--</manifestEntries>-->
+                            <!--</archive>-->
+                            <!--<includes>-->
+                                <!--<include>**/*</include>-->
+                            <!--</includes>-->
+                        <!--</configuration>-->
+
+                    <!--</execution>-->
+                <!--</executions>-->
+
+
+
+
+            <!--</plugin>-->
+
+            <plugin>
+                <groupId>org.openoffice.dev</groupId>
+                <artifactId>maven-ooo-plugin</artifactId>
+                <version>1.1.1-SNAPSHOT</version>
+                <!--
+                    the following values can be configured:
+                    ooo:    OpenOffice dir
+                    sdk:    OpenOffice SDK dir
+                    idlDir: IDL source dir
+                    oxtDir: OXT source dir
+                 -->
+                <configuration>
+                    <ooo>/opt/libreoffice4.0/</ooo>
+                    <sdk>/opt/libreoffice4.0/sdk</sdk>
+                    <oxtDir>src/main/resources/oxt</oxtDir>
+                </configuration>
+                <executions>
+                    <!--<execution>-->
+                    <!--<phase>generate-sources</phase>-->
+                    <!--<goals>-->
+                    <!--<goal>build-idl</goal>-->
+                    <!--</goals>-->
+                    <!--</execution>-->
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>oxt</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+
+                                <manifestEntries>
+                                    <UNO-Type-Path></UNO-Type-Path>
+                                    <RegistrationClassName>ru.ssau.graphplus.CentralRegistrationClass</RegistrationClassName>
+                                    <Class-Path></Class-Path>
+                                </manifestEntries>
+                                <manifestSections>
+                                    <manifestSection>
+                                        <Name>ru/ssau/graphplus/CentralRegistrationClass.class</Name>
+                                        <manifestEntries>
+                                            <RegistrationClasses>ru.ssau.graphplus.OOGraph</RegistrationClasses>
+                                        </manifestEntries>
+                                    </manifestSection>
+                                </manifestSections>
+                            </archive>
+                            <useDefaultManifestFile>true</useDefaultManifestFile>
+
+                            <jarName>graphplus-addon-0.1</jarName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <id>unopkg</id>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <phase>verify</phase>
+                        <configuration>
+                            <executable>./unopkg</executable>
+                            <!-- optional -->
+                            <workingDirectory>/opt/libreoffice4.0/program/</workingDirectory>
+                            <arguments>
+                                <argument>gui</argument>
+                                <argument>-f</argument>
+                                <argument>${oxt_path}</argument>
+                                <!--...-->
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>office</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>./soffice</executable>
+                            <!-- optional -->
+                            <workingDirectory>/opt/libreoffice4.0/program/</workingDirectory>
+                            <arguments>
+                                <!--<argument>soffice</argument>-->
+                                <argument>--draw</argument>
+                                <!--<argument>${oxt_path}</argument>-->
+                                <!--...-->
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
+        </plugins>
+
+
+    </build>
 </project>
+
