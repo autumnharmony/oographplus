@@ -1,6 +1,5 @@
 package ru.ssau.graphplus.events;
 
-import com.sun.star.document.EventObject;
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
 import ru.ssau.graphplus.ConnectedShapes;
@@ -21,27 +20,21 @@ public class ShapeInsertedEvent extends ShapeEvent {
     //private XConnectorShape xConnectorShape;
 
     public ShapeInsertedEvent(Object shape, Date date) {
-        this.xShape = QI.XShape(shape);
-//        this.xShape = xShape;
-        this.date = date;
-    }
-
-    public ShapeInsertedEvent(EventObject eventObject, Date date) {
-//        this.xShape = xShape;
-
-        XShape xShape1 = QI.XShape(eventObject.Source);
-        if (xShape1 !=null) {
-            xShape = xShape1;
-        }
+        this(QI.XShape(shape));
         this.date = date;
     }
 
     public ShapeInsertedEvent(XConnectorShape xConnectorShape, ConnectedShapes connectedShapes) {
-        this.xShape = xConnectorShape;
+        this(xConnectorShape);
         this.connectedShapes = connectedShapes;
     }
 
     public ShapeInsertedEvent(XShape xShape) {
+        this();
         this.xShape = xShape;
+    }
+
+    private ShapeInsertedEvent(){
+        shapeEventType = ShapeEventType.ShapeInserted;
     }
 }

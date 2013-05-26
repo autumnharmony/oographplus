@@ -36,20 +36,19 @@ package ru.ssau.graphplus;
 
 import com.sun.star.uno.UnoRuntime;
 
-public class Helper
-{
+public class Helper {
     // __________ static helper methods __________
 
-    /** Connect to an office, if no office is running a new instance is started.
+    /**
+     * Connect to an office, if no office is running a new instance is started.
      * A new connection is established and the service manger from the running
      * offic eis returned.
      */
     static public com.sun.star.uno.XComponentContext connect()
-        throws Exception
-    {
+            throws Exception {
         // get the remote office component context
         com.sun.star.uno.XComponentContext xOfficeContext =
-            com.sun.star.comp.helper.Bootstrap.bootstrap();
+                com.sun.star.comp.helper.Bootstrap.bootstrap();
 
         // if connection fails an exception is thrown
         System.out.println("Connected to a running office ...");
@@ -57,27 +56,27 @@ public class Helper
         return xOfficeContext;
     }
 
-    /** creates and instantiates new document
-    */
+    /**
+     * creates and instantiates new document
+     */
     static public com.sun.star.lang.XComponent createDocument(
-        com.sun.star.uno.XComponentContext xOfficeContext,
-        String sURL, String sTargetFrame, int nSearchFlags,
-        com.sun.star.beans.PropertyValue[] aArgs )
-            throws Exception
-    {
+            com.sun.star.uno.XComponentContext xOfficeContext,
+            String sURL, String sTargetFrame, int nSearchFlags,
+            com.sun.star.beans.PropertyValue[] aArgs)
+            throws Exception {
         com.sun.star.lang.XComponent xComponent = null;
         com.sun.star.frame.XComponentLoader aLoader =
-            (com.sun.star.frame.XComponentLoader)UnoRuntime.queryInterface(
-                com.sun.star.frame.XComponentLoader.class,
-                xOfficeContext.getServiceManager().createInstanceWithContext(
-                    "com.sun.star.frame.Desktop", xOfficeContext));
+                (com.sun.star.frame.XComponentLoader) UnoRuntime.queryInterface(
+                        com.sun.star.frame.XComponentLoader.class,
+                        xOfficeContext.getServiceManager().createInstanceWithContext(
+                                "com.sun.star.frame.Desktop", xOfficeContext));
 
-        xComponent = (com.sun.star.lang.XComponent)UnoRuntime.queryInterface(
-            com.sun.star.lang.XComponent.class, aLoader.loadComponentFromURL(
-                sURL, sTargetFrame, nSearchFlags, aArgs ) );
+        xComponent = (com.sun.star.lang.XComponent) UnoRuntime.queryInterface(
+                com.sun.star.lang.XComponent.class, aLoader.loadComponentFromURL(
+                sURL, sTargetFrame, nSearchFlags, aArgs));
 
-        if ( xComponent == null )
-            throw new Exception( "could not create document: " + sURL );
+        if (xComponent == null)
+            throw new Exception("could not create document: " + sURL);
         return xComponent;
     }
 }

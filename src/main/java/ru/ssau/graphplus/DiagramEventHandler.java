@@ -7,5 +7,6 @@ package ru.ssau.graphplus;
  */
 public interface DiagramEventHandler {
     public void elementAdded(ElementAddEvent event);
+
     public void elementModified(ElementModifyEvent event);
 }

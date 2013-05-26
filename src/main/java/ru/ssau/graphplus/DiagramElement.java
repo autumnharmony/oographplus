@@ -1,9 +1,13 @@
 package ru.ssau.graphplus;
 
-/**
- * User: anton
- * Date: 3/3/13
- * Time: 3:42 PM
- */
-public interface DiagramElement {
+import java.io.Serializable;
+
+public interface DiagramElement extends Serializable, Refreshable {
+    String getName();
+
+    String getId();
+
+    void setId(String id);
+
+
 }

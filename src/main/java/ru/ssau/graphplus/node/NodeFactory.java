@@ -24,8 +24,6 @@ public class NodeFactory {
 
     private XMultiServiceFactory xmsf;
 
-    public NodeFactory() {
-    }
 
 
     public NodeFactory(XMultiServiceFactory xmsf) {
@@ -42,10 +40,7 @@ public class NodeFactory {
 
     public Node create(NodeType type, XComponent xComponent) {
         try {
-//            XShape xShape = null;
-//            ShapeHelper.createShape(xComponent, new Point(0, 0), new Size(300, 300), null);
-//            ShapeHelper.createAndInsertShapeReturnXShape(xComponent, new Point(0,0), new Size(300, 300),);
-//            ShapeHelper.c
+
             Node node = null;
             switch (type) {
                 case Client:
@@ -68,7 +63,7 @@ public class NodeFactory {
 
             XPropertySet xPropertySet = QI.XPropertySet(xShape);
 
-            node.setxShape(xShape);
+            node.setShape(xShape);
 
             return node;
         } catch (Exception ex) {
@@ -105,7 +100,7 @@ public class NodeFactory {
 
             XPropertySet xPropertySet = QI.XPropertySet(xShape);
 
-            node.setxShape(xShape);
+            node.setShape(xShape);
 
             return node;
         } catch (Exception ex) {
@@ -116,6 +111,32 @@ public class NodeFactory {
         return null;
     }
 
+
+    public Node create(XShape xShape, NodeType type){
+
+
+            Node node = null;
+            switch (type) {
+                case Client:
+                    node = new ClientNode();
+                    break;
+                case Server:
+                    node = new ServerNode();
+                    break;
+                case Procedure:
+                    node = new ProcedureNode();
+                    break;
+                case Process:
+                    node = new ProcessNode();
+                    break;
+                default:
+
+            }
+
+        if (node!=null)
+        node.setShape(xShape);
+            return node;
+    }
 
 
 //    public static Node createAndInsert(Node.NodeType type, XComponent xComponent, XShapes xShapes) {

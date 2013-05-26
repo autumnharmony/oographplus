@@ -6,7 +6,6 @@ package ru.ssau.graphplus;
  */
 
 /**
- *
  * @author 1
  */
 public class Status {
@@ -19,7 +18,6 @@ public class Status {
     public static void setTagAllNewShapes(boolean tagAllNewShapes) {
         Status.tagAllNewShapes = tagAllNewShapes;
     }
-    
-        
-    
+
+
 }

@@ -1,7 +1,6 @@
-                                                                     
-                                                                     
-                                                                     
-                                             
+
+
+
 /****************************************************************
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -33,24 +32,41 @@ import com.sun.star.lang.XServiceInfo;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import ru.ssau.graphplus.events.*;
+import ru.ssau.graphplus.link.Link;
 
 import java.util.*;
 import java.util.logging.Logger;
 
 /**
- *
  * @author ariel
  */
 public class ConnectorShapeListener {
 
+    boolean muteInsert;
+    boolean muteModify;
+    boolean muteRemove;
+
+    public void setMuteInsert(boolean muteInsert) {
+        this.muteInsert = muteInsert;
+    }
+
+    public void setMuteModify(boolean muteModify) {
+        this.muteModify = muteModify;
+    }
+
+    public void setMuteRemove(boolean muteRemove) {
+        this.muteRemove = muteRemove;
+    }
+
     private final XComponentContext m_xContext;
+    private final DiagramController diagramController;
     private DocumentListener maListener;
     private XDocumentEventBroadcaster m_xNewBroadcaster;
     private XEventBroadcaster m_xOldBroadcaster;
     private List<com.sun.star.document.EventObject> removeShapeEvents;
 
-    public ConnectorShapeListener(XComponentContext xContext, XComponent xDoc, Map< XConnectorShape, ConnectedShapes> maConnectorsMap) {
-
+    public ConnectorShapeListener(XComponentContext xContext, XComponent xDoc, Map<XConnectorShape, ConnectedShapes> maConnectorsMap, DiagramController diagramController) {
+        this.diagramController = diagramController;
         m_xContext = xContext;
         removeShapeEvents = new ArrayList<>();
 
@@ -74,12 +90,11 @@ public class ConnectorShapeListener {
             XEventListener {
 
 
-
-        private final Map< XConnectorShape, ConnectedShapes> maConnectorsMap;// = new HashMap<XConnectorShape, ConnectedShapes>();
+        private final Map<XConnectorShape, ConnectedShapes> maConnectorsMap;// = new HashMap<XConnectorShape, ConnectedShapes>();
         private int passNextShapeRemovedEvents;
 
         public void setPassNextShapeRemovedEvents(int passNextShapeRemovedEvents) {
-            Logger.getLogger(getClass().toString()).info("setPassNextShapeRemovedEvents("+passNextShapeRemovedEvents+")");
+            Logger.getLogger(getClass().toString()).info("setPassNextShapeRemovedEvents(" + passNextShapeRemovedEvents + ")");
             this.passNextShapeRemovedEvents = passNextShapeRemovedEvents;
         }
 
@@ -110,70 +125,111 @@ public class ConnectorShapeListener {
             }
             System.out.println();
             if (aEvent.EventName.equals("ShapeInserted")) {
-                XConnectorShape xConnectorShape = UnoRuntime.queryInterface(XConnectorShape.class, aEvent.Source);
 
-                XShape xShape = UnoRuntime.queryInterface(XShape.class, aEvent.Source);
+                if (!muteInsert) {
+                    XConnectorShape xConnectorShape = UnoRuntime.queryInterface(XConnectorShape.class, aEvent.Source);
 
-                if (xConnectorShape != null) {
-                    if (!maConnectorsMap.containsKey(xConnectorShape)) {
-                        ConnectedShapes value = new ConnectedShapes(xConnectorShape);
-                        maConnectorsMap.put(xConnectorShape, value);
-                        System.out.println("Inserted connector shape");
-                        fireEvent(new ShapeInsertedEvent(xConnectorShape, value));
+                    XShape xShape = UnoRuntime.queryInterface(XShape.class, aEvent.Source);
+
+                    if (xConnectorShape != null) {
+                        if (!maConnectorsMap.containsKey(xConnectorShape)) {
+                            ConnectedShapes value = new ConnectedShapes(xConnectorShape);
+                            maConnectorsMap.put(xConnectorShape, value);
+                            System.out.println("Inserted connector shape");
+                            fireEvent(new ShapeInsertedEvent(xConnectorShape, value));
+                        }
+                    } else {
+                        fireEvent(new ShapeInsertedEvent(xShape));
                     }
-                }
-
-                else {
-                    fireEvent(new ShapeInsertedEvent(xShape));
                 }
 
             } else if (aEvent.EventName.equals("ShapeRemoved")) {
+                if (!muteRemove) {
+                    XShape xShape = QI.XShape(aEvent.Source);
+                    XConnectorShape xConnectorShape = UnoRuntime.queryInterface(XConnectorShape.class, aEvent.Source);
+                    if (xShape != null) {
 
-                Logger.getGlobal().info("shape removed event handling");
-                XShape xShape = QI.XShape(aEvent.Source);
-                XConnectorShape xConnectorShape = UnoRuntime.queryInterface(XConnectorShape.class, aEvent.Source);
-                boolean text = xShape.getShapeType().contains("Text");
-                if (xConnectorShape != null || text) {
+                        boolean connector = xConnectorShape != null;
+                        if (connector) {
+                            diagramController.getDiagramModel().getConnectedShapes().remove(xConnectorShape);
+                        }
+                    }
 
-                    if (!text) {
-//                        if (xConnectorShape != null) {
-                        if (maConnectorsMap.containsKey(xConnectorShape)) {
-                            maConnectorsMap.remove(xConnectorShape);
-                            System.out.println("Removed connector shape");
-                            if (passNextShapeRemovedEvents > 0) {
-                                setPassNextShapeRemovedEvents(getPassNextShapeRemovedEvents()-1);
-                            } else {
-                                setPassNextShapeRemovedEvents(2);
-                                fireEvent(new ShapeRemovedEvent(xConnectorShape));
+                    fireEvent(new ShapeRemovedEvent(xShape));
+                    if (1 == 1) return;
+                    //TODO!!
+
+
+                    if (passNextShapeRemovedEvents > 0) {
+                        Logger.getGlobal().info("passNextShapeRemovedEvents > 0 pass");
+                        setPassNextShapeRemovedEvents(getPassNextShapeRemovedEvents() - 1);
+
+                    } else {
+
+                        Logger.getGlobal().info("shape removed event handling");
+
+                        if (diagramController.getDiagramModel().getShapeToDiagramElementMap().containsKey(xShape)) {
+
+
+                            //XConnectorShape xConnectorShape = UnoRuntime.queryInterface(XConnectorShape.class, aEvent.Source);
+                            boolean text = xShape.getShapeType().contains("Text");
+                            boolean connector = !text && xConnectorShape != null;
+                            if (connector || text) {
+
+                                if (connector) {
+
+                                    diagramController.getDiagramModel().getConnectedShapes().remove(xConnectorShape);
+
+                                    if (maConnectorsMap.containsKey(xConnectorShape)) {
+                                        maConnectorsMap.remove(xConnectorShape);
+                                        System.out.println("Removed connector shape");
+                                        DiagramElement diagramElement = diagramController.getDiagramModel().getShapeToDiagramElementMap().get(xShape);
+                                        Link link = (Link) diagramElement;
+
+                                        fireEvent(new ShapeRemovedEvent(xShape));
+                                    }
+                                } else {
+
+                                    // text
+                                    Logger.getGlobal().info("removed text shape");
+//                            setPassNextShapeRemovedEvents(3);
+                                    DiagramElement diagramElement = diagramController.getDiagramModel().getShapeToDiagramElementMap().get(xShape);
+                                    Link link = (Link) diagramElement;
+//                            fireEvent(new ShapeRemovedEvent(link.getTextShape()));
+                                    fireEvent(new ShapeRemovedEvent(link.getTextShape()));
+//                            fireEvent(new ShapeRemovedEvent(link.getConnShape2()));
+                                    //fireEvent(new ShapeRemovedEvent(xShape));
+                                }
                             }
                         }
-                    } else {
-                        setPassNextShapeRemovedEvents(2);
-                        fireEvent(new ShapeRemovedEvent(xShape));
                     }
                 }
             } else if (aEvent.EventName.equals("ShapeModified")) {
-                XConnectorShape xConnectorShape = UnoRuntime.queryInterface(XConnectorShape.class, aEvent.Source);
-                if (xConnectorShape != null) {
-                    if (maConnectorsMap.containsKey(xConnectorShape)) {
-                        ConnectedShapes aShapes = maConnectorsMap.get(xConnectorShape);
-                        if (aShapes.hasChanged()) {
-                            System.out.println("Connected shapes have changed");
+                if (!muteModify) {
+                    XConnectorShape xConnectorShape = UnoRuntime.queryInterface(XConnectorShape.class, aEvent.Source);
+                    if (xConnectorShape != null) {
+                        if (maConnectorsMap.containsKey(xConnectorShape)) {
+                            ConnectedShapes aShapes = maConnectorsMap.get(xConnectorShape);
+                            if (aShapes.hasChanged()) {
+                                System.out.println("Connected shapes have changed");
 //                            aShapes.update();
-                            fireEvent(new ConnectedShapesChanged(xConnectorShape, aShapes));
+                                fireEvent(new ConnectedShapesChanged(xConnectorShape, aShapes));
+                            }
                         }
-                    }
 //                    else {
 //                        maConnectorsMap.put(xConnectorShape, new ConnectedShapes(xConnectorShape));
 //                    }
-                }
-                else {
-                    XShape xShape = QI.XShape(aEvent.Source);
-                    if (Misc.isNode(xShape)){
+                    } else {
+                        XShape xShape = QI.XShape(aEvent.Source);
+                        if (Misc.isNode(xShape)) {
+
+                        }
 
                     }
+                    fireEvent(new ShapeModifiedEvent(QI.XShape(aEvent.Source)));
+                    diagramController.getDiagramModel().getDiagramELementByShape(QI.XShape(aEvent.Source)).setId(QI.XText(aEvent.Source).getString());
+                    QI.XNamed(aEvent.Source).setName(QI.XText(aEvent.Source).getString());
                 }
-
             }
         }
 
@@ -184,31 +240,30 @@ public class ConnectorShapeListener {
 
     Map<ShapeEventType, Set<ShapeEventListener>> shapeEventMap;
 
-    public void addShapeModifiedListener(ShapeModifiedListener shapeModifiedListener){
+    public void addShapeModifiedListener(ShapeModifiedListener shapeModifiedListener) {
 
         addShapeEventListener(shapeModifiedListener, ShapeEventType.ShapeModified);
     }
 
-    public void addShapeInsertedListener(ShapeInsertedListener shapeInsertedListener){
+    public void addShapeInsertedListener(ShapeInsertedListener shapeInsertedListener) {
         addShapeEventListener(shapeInsertedListener, ShapeEventType.ShapeInserted);
     }
 
     private void addShapeEventListener(ShapeEventListener shapeEventListener, ShapeEventType eventType) {
-        if (shapeEventMap.containsKey(eventType)){
+        if (shapeEventMap.containsKey(eventType)) {
 
-        }
-        else {
+        } else {
             shapeEventMap.put(eventType, new HashSet<ShapeEventListener>());
         }
 
         shapeEventMap.get(eventType).add(shapeEventListener);
     }
 
-    public void addShapeEventListener(ShapeEventListener shapeEventListener){
+    public void addShapeEventListener(ShapeEventListener shapeEventListener) {
         addShapeEventListener(shapeEventListener, shapeEventListener.getEventType());
     }
 
-    public void fireEvent(ShapeEvent shapeEvent){
+    public void fireEvent(ShapeEvent shapeEvent) {
 
         Set<ShapeEventListener> shapeEventListeners = shapeEventMap.get(shapeEvent.getShapeEventType());
         if (shapeEventListeners != null) {
@@ -217,8 +272,6 @@ public class ConnectorShapeListener {
             }
         }
     }
-
-
 
 
 }

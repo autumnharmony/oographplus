@@ -34,196 +34,222 @@
 package ru.ssau.graphplus;
 // __________ Imports __________
 
-import com.sun.star.lang.*;
-import com.sun.star.uno.UnoRuntime;
-
 import com.sun.star.awt.Point;
 import com.sun.star.awt.Size;
-
 import com.sun.star.beans.XPropertySet;
-
 import com.sun.star.container.XEnumeration;
 import com.sun.star.container.XEnumerationAccess;
 import com.sun.star.drawing.XDrawPage;
-
 import com.sun.star.drawing.XShape;
 import com.sun.star.drawing.XShapes;
-
-import com.sun.star.text.ControlCharacter;
-import com.sun.star.text.XText;
-import com.sun.star.text.XTextCursor;
-import com.sun.star.text.XTextContent;
-import com.sun.star.text.XTextRange;
+import com.sun.star.lang.WrappedTargetException;
+import com.sun.star.lang.XComponent;
+import com.sun.star.lang.XMultiServiceFactory;
+import com.sun.star.text.*;
+import com.sun.star.uno.UnoRuntime;
 import ru.ssau.graphplus.node.Node;
 
+import java.util.ArrayList;
+import java.util.Collection;
 
-public class ShapeHelper
-{
+
+public class ShapeHelper {
     // __________ static helper methods __________
     //
-    public static XPropertySet createAndInsertShape( XComponent xDrawDoc,
-            XShapes xShapes, Point aPos, Size aSize, String sShapeType )
-        throws java.lang.Exception
-    {
-        XShape xShape = createShape( xDrawDoc, aPos, aSize, sShapeType );
-        xShapes.add( xShape );
+    public static XPropertySet createAndInsertShape(XComponent xDrawDoc,
+                                                    XShapes xShapes, Point aPos, Size aSize, String sShapeType)
+            throws java.lang.Exception {
+        XShape xShape = createShape(xDrawDoc, aPos, aSize, sShapeType);
+        xShapes.add(xShape);
         XPropertySet xPropSet = (XPropertySet)
-            UnoRuntime.queryInterface( XPropertySet.class, xShape );
+                UnoRuntime.queryInterface(XPropertySet.class, xShape);
         return xPropSet;
     }
-    
-    public static XShape createAndInsertShapeReturnXShape( XComponent xDrawDoc,
-            XShapes xShapes, Point aPos, Size aSize, String sShapeType )
-        throws java.lang.Exception
-    {
-        XShape xShape = createShape( xDrawDoc, aPos, aSize, sShapeType );
-        xShapes.add( xShape );
+
+    public static XShape createAndInsertShapeReturnXShape(XComponent xDrawDoc,
+                                                          XShapes xShapes, Point aPos, Size aSize, String sShapeType)
+            throws java.lang.Exception {
+        XShape xShape = createShape(xDrawDoc, aPos, aSize, sShapeType);
+        xShapes.add(xShape);
 //        XPropertySet xPropSet = (XPropertySet)
 //            UnoRuntime.queryInterface( XPropertySet.class, xShape );
         return xShape;
     }
-    
-    
 
-    /** create a Shape
-    */
-    public static XShape createShape( XComponent xDrawDoc,
-            Point aPos, Size aSize, String sShapeType )
-        throws java.lang.Exception
-    {
+
+    /**
+     * create a Shape
+     */
+    public static XShape createShape(XComponent xDrawDoc,
+                                     Point aPos, Size aSize, String sShapeType)
+            throws java.lang.Exception {
         XShape xShape = null;
         XMultiServiceFactory xFactory =
-            (XMultiServiceFactory )UnoRuntime.queryInterface(
-                XMultiServiceFactory.class, xDrawDoc );
-        Object xObj = xFactory.createInstance( sShapeType );
-        xShape = (XShape)UnoRuntime.queryInterface(
-            XShape.class, xObj );
-        xShape.setPosition( aPos );
-        xShape.setSize( aSize );
+                (XMultiServiceFactory) UnoRuntime.queryInterface(
+                        XMultiServiceFactory.class, xDrawDoc);
+        Object xObj = xFactory.createInstance(sShapeType);
+        xShape = (XShape) UnoRuntime.queryInterface(
+                XShape.class, xObj);
+        xShape.setPosition(aPos);
+        xShape.setSize(aSize);
         return xShape;
     }
-    
-    public static XShape createShape( XMultiServiceFactory xFactory,
-            Point aPos, Size aSize, String sShapeType )
-        throws java.lang.Exception
-    {
+
+    public static XShape createShape(XMultiServiceFactory xFactory,
+                                     Point aPos, Size aSize, String sShapeType)
+            throws java.lang.Exception {
         XShape xShape = null;
-        
-        Object xObj = xFactory.createInstance( sShapeType );
-        xShape = (XShape)UnoRuntime.queryInterface(
-            XShape.class, xObj );
-        xShape.setPosition( aPos );
-        xShape.setSize( aSize );
+
+        Object xObj = xFactory.createInstance(sShapeType);
+        xShape = (XShape) UnoRuntime.queryInterface(
+                XShape.class, xObj);
+        xShape.setPosition(aPos);
+        xShape.setSize(aSize);
         return xShape;
     }
 
     /**
-        add text to a shape. the return value is the PropertySet
-        of the text range that has been added
-    */
-    public static XPropertySet addPortion( XShape xShape, String sText, boolean bNewParagraph )
-        throws com.sun.star.lang.IllegalArgumentException
-    {
+     * add text to a shape. the return value is the PropertySet
+     * of the text range that has been added
+     */
+    public static XPropertySet addPortion(XShape xShape, String sText, boolean bNewParagraph)
+            throws com.sun.star.lang.IllegalArgumentException {
         XText xText = (XText)
-            UnoRuntime.queryInterface( XText.class, xShape );
+                UnoRuntime.queryInterface(XText.class, xShape);
 
         XTextCursor xTextCursor = xText.createTextCursor();
         //xTextCursor.gotoEnd( true );
-        if ( bNewParagraph == true )
-        {
-            xText.insertControlCharacter( xTextCursor, ControlCharacter.PARAGRAPH_BREAK, false );
-            xTextCursor.gotoEnd( false );
+        if (bNewParagraph == true) {
+            xText.insertControlCharacter(xTextCursor, ControlCharacter.PARAGRAPH_BREAK, false);
+            xTextCursor.gotoEnd(false);
         }
         XTextRange xTextRange = (XTextRange)
-            UnoRuntime.queryInterface( XTextRange.class, xTextCursor );
-        xTextRange.setString( sText );
+                UnoRuntime.queryInterface(XTextRange.class, xTextCursor);
+        xTextRange.setString(sText);
+
         //xTextCursor.gotoEnd( true );
         XPropertySet xPropSet = (XPropertySet)
-            UnoRuntime.queryInterface( XPropertySet.class, xTextRange );
+                UnoRuntime.queryInterface(XPropertySet.class, xTextRange);
         return xPropSet;
     }
-    
-     public static XPropertySet replacePortion( XShape xShape, String sText)
-        throws com.sun.star.lang.IllegalArgumentException
-    {
+
+    public static XPropertySet replacePortion(XShape xShape, String sText)
+            throws com.sun.star.lang.IllegalArgumentException {
         XText xText = (XText)
-            UnoRuntime.queryInterface( XText.class, xShape );
+                UnoRuntime.queryInterface(XText.class, xShape);
 
         XTextCursor xTextCursor = xText.createTextCursor();
         xTextCursor.gotoStart(true);
 //        true);//gotoEnd( false );
-       
+
         XTextRange xTextRange = (XTextRange)
-            UnoRuntime.queryInterface( XTextRange.class, xTextCursor );
-        xTextRange.setString( sText );
-        xTextCursor.gotoEnd( true );
+                UnoRuntime.queryInterface(XTextRange.class, xTextCursor);
+        xTextRange.setString(sText);
+        xTextCursor.gotoEnd(true);
         XPropertySet xPropSet = (XPropertySet)
-            UnoRuntime.queryInterface( XPropertySet.class, xTextRange );
+                UnoRuntime.queryInterface(XPropertySet.class, xTextRange);
         return xPropSet;
     }
 
-    public static void setPropertyForLastParagraph( XShape xText, String sPropName,
-        Object aValue )
+    public static void setPropertyForLastParagraph(XShape xText, String sPropName,
+                                                   Object aValue)
             throws com.sun.star.beans.UnknownPropertyException,
-                com.sun.star.beans.PropertyVetoException,
-                    com.sun.star.lang.IllegalArgumentException,
-                        com.sun.star.lang.WrappedTargetException,
-                            com.sun.star.container.NoSuchElementException
-    {
+            com.sun.star.beans.PropertyVetoException,
+            com.sun.star.lang.IllegalArgumentException,
+            com.sun.star.lang.WrappedTargetException,
+            com.sun.star.container.NoSuchElementException {
         XEnumerationAccess xEnumerationAccess = (XEnumerationAccess)
-            UnoRuntime.queryInterface( XEnumerationAccess.class, xText );
-        if ( xEnumerationAccess.hasElements() )
-        {
+                UnoRuntime.queryInterface(XEnumerationAccess.class, xText);
+        if (xEnumerationAccess.hasElements()) {
             XEnumeration xEnumeration = xEnumerationAccess.createEnumeration();
-            while( xEnumeration.hasMoreElements () )
-            {
+            while (xEnumeration.hasMoreElements()) {
                 Object xObj = xEnumeration.nextElement();
-                if ( xEnumeration.hasMoreElements() == false )
-                {
-                    XTextContent xTextContent = (XTextContent)UnoRuntime.queryInterface(
-                        XTextContent.class, xObj );
+                if (xEnumeration.hasMoreElements() == false) {
+                    XTextContent xTextContent = (XTextContent) UnoRuntime.queryInterface(
+                            XTextContent.class, xObj);
                     XPropertySet xParaPropSet = (XPropertySet)
-                        UnoRuntime.queryInterface( XPropertySet.class, xTextContent );
-                    xParaPropSet.setPropertyValue( sPropName, aValue );
+                            UnoRuntime.queryInterface(XPropertySet.class, xTextContent);
+                    xParaPropSet.setPropertyValue(sPropName, aValue);
                 }
             }
         }
     }
-    
-    
-    public static void insertShape(XShape xShape, XShapes xShapes){
-        xShapes.add(xShape);
+
+
+    public static void insertShape(XShape xShape, XShapes xShapes) {
+        try {
+            xShapes.add(xShape);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
     }
-    
-    public static void insertShape(XShape xShape, XDrawPage xDP){
+
+    public static void insertShape(XShape xShape, XShapes xShapes, Point point) {
+        try {
+            xShapes.add(xShape);
+            xShape.setPosition(point);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    public static void insertShape(XShape xShape, XDrawPage xDP) {
         XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, xDP);
         insertShape(xShape, xShapes);
     }
 
-    public static void insertShape(XShape xShape, XDrawPage xDP,Node.PostCreationAction  postCreationAction){
+    public static void insertShape(XShape xShape, XDrawPage xDP, Point point) {
+        XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, xDP);
+        insertShape(xShape, xShapes, point);
+    }
+
+    public static void insertShape(XShape xShape, XDrawPage xDP, Node.PostCreationAction postCreationAction) {
         XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, xDP);
         insertShape(xShape, xShapes);
         postCreationAction.postCreate(xShape);
     }
 
-    public static boolean removeShape(XShape xShape, XDrawPage xDP){
-        for(int i = 0; i < xDP.getCount(); i++){
+    public static boolean removeShape(XShape xShape, XDrawPage xDP) {
+        for (int i = 0; i < xDP.getCount(); i++) {
             try {
                 Object byIndex = xDP.getByIndex(i);
                 XShape xShape1 = QI.XShape(byIndex);
-                if (xShape.equals(xShape1)){
+                if (xShape.equals(xShape1)) {
                     xDP.remove(xShape);
                     return true;
                 }
 
             } catch (com.sun.star.lang.IndexOutOfBoundsException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             } catch (WrappedTargetException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         }
-        return  false;
+        return false;
     }
-    
-   
+
+    public static Collection<XShape> getShapes(XDrawPage xDrawPage) {
+        int count = xDrawPage.getCount();
+
+        Collection<XShape> xShapes = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            try {
+                Object byIndex = xDrawPage.getByIndex(i);
+                XShape xShape = QI.XShape(byIndex);
+                xShapes.add(xShape);
+            } catch (com.sun.star.lang.IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            } catch (WrappedTargetException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return xShapes;
+    }
+
+
 }

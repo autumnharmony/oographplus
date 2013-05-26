@@ -19,11 +19,7 @@
 
 package ru.ssau.graphplus.gui;
 
-import com.sun.star.awt.MessageBoxButtons;
-import com.sun.star.awt.Rectangle;
-import com.sun.star.awt.XMessageBox;
-import com.sun.star.awt.XMessageBoxFactory;
-import com.sun.star.awt.XWindowPeer;
+import com.sun.star.awt.*;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XInitialization;
@@ -79,7 +75,7 @@ public class UnoAwtUtils {
             xFilePicker.setDisplayDirectory(sTemplateUrl);
 
             //set the initial filename
-                xFilePicker.setDefaultName(filename);
+            xFilePicker.setDefaultName(filename);
 
             short nResult = xExecutable.execute();
 

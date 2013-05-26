@@ -10,18 +10,17 @@ import com.sun.star.container.XNameContainer;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.WrappedTargetException;
 import com.sun.star.uno.Type;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.lang.reflect.*;
 
 /**
- *
  * @author anton
  */
 public class NamedContainer implements XNameContainer {
 
-    
-//    Proxy proxy = new NamedContainer(). 
+
+    //    Proxy proxy = new NamedContainer().
     Map<String, Object> map;
 
     public NamedContainer() {

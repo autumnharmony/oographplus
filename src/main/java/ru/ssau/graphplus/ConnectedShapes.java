@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 
 public class ConnectedShapes {
 
+    public static final String START_SHAPE = "StartShape";
+    public static final String END_SHAPE = "EndShape";
     private XPropertySet mxConnector;
     private XShape mxStart;
     private XShape mxEnd;
@@ -20,8 +22,8 @@ public class ConnectedShapes {
         System.out.println("ConnectedShapes");
         try {
             mxConnector = UnoRuntime.queryInterface(XPropertySet.class, xShape);
-            mxStart = UnoRuntime.queryInterface(XShape.class, mxConnector.getPropertyValue("StartShape"));
-            mxEnd = UnoRuntime.queryInterface(XShape.class, mxConnector.getPropertyValue("EndShape"));
+            mxStart = UnoRuntime.queryInterface(XShape.class, mxConnector.getPropertyValue(START_SHAPE));
+            mxEnd = UnoRuntime.queryInterface(XShape.class, mxConnector.getPropertyValue(END_SHAPE));
         } catch (UnknownPropertyException ex) {
             Logger.getLogger(ConnectorShapeListener.class.getName()).log(Level.SEVERE, null, ex);
         } catch (WrappedTargetException ex) {

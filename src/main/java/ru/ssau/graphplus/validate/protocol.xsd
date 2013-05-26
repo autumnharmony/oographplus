@@ -13,7 +13,7 @@
             <xs:selector xpath="state"></xs:selector>
             <xs:field xpath="@id"></xs:field>
         </xs:key>
-        
+
         <xs:keyref name="messageState" refer="stateKey">
             <xs:selector xpath="state/message"></xs:selector>
             <xs:field xpath="@state"></xs:field>

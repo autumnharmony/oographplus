@@ -9,7 +9,7 @@ public abstract class ShapeEventListener {
 
     protected ShapeEventType shapeEventType;
 
-    public ShapeEventType getEventType(){
+    public ShapeEventType getEventType() {
         return shapeEventType;
     }
 

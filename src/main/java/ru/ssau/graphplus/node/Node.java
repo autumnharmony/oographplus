@@ -1,30 +1,112 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package ru.ssau.graphplus.node;
 
-import ru.ssau.graphplus.DiagramElement;
-import ru.ssau.graphplus.Misc;
-import ru.ssau.graphplus.ShapeBuilder;
-import com.sun.star.drawing.XDrawPage;
+import com.sun.star.awt.Point;
 import com.sun.star.drawing.XShape;
-import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
-import ru.ssau.graphplus.link.Link;
+import ru.ssau.graphplus.*;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.logging.Logger;
 
-/**
- *
- * @author 1
- */
-public abstract class Node implements ShapeBuilder, DiagramElement {
+
+public abstract class Node implements ShapeBuilder, DiagramElement, Serializable {
+
+    private static final long serialVersionUID = 1L;
+    protected transient PostCreationAction postCreationAction;
+    protected transient XShape xShape;
+    private String id;
+    private NodeType nodeType;
+
+    protected Node(PostCreationAction postCreationAction) {
+        this.postCreationAction = postCreationAction;
+    }
+
+    public Node() {
+    }
+
+    @Override
+    public void refresh(DiagramModel diagramModel) {
+        Misc.setId(xShape, getName());
+        if (!getName().equals(QI.XText(xShape).getString())) {
+
+            Logger.getAnonymousLogger().info("Need to refresh node name");
+        }
+    }
+
+    public int getX() {
+        return xShape.getPosition().X;
+    }
+
+    public void setX(int x) {
+        xShape.setPosition(new Point(x, xShape.getPosition().Y));
+
+    }
+
+    public int getY() {
+        return xShape.getPosition().Y;
+    }
+
+    public void setY(int y) {
+        xShape.setPosition(new Point(xShape.getPosition().X, y));
+    }
+
+    public void setPosition(int x, int y) {
+        xShape.setPosition(new Point(x, y));
+    }
+
+    public abstract XShape buildShape(XMultiServiceFactory xMSF);
+
+    public XShape getShape() {
+        return xShape;
+    }
+
+    public void setShape(XShape xShape) {
+        this.xShape = xShape;
+    }
+
+    public void runPostCreation() {
+        if (postCreationAction != null) {
+            postCreationAction.postCreate(getShape());
+        }
+    }
+
+    public NodeType getType() {
+        if (nodeType == null) {
+            if (this instanceof ClientNode) {
+                nodeType = NodeType.Client;
+            } else if (this instanceof ServerNode) {
+                nodeType = NodeType.Server;
+            } else if (this instanceof ProcessNode) {
+                nodeType = NodeType.Process;
+            } else if (this instanceof ProcedureNode) {
+                nodeType = NodeType.Procedure;
+            }
+        }
+        return nodeType;
+    }
+
+    public String getName() {
+        return QI.XText(xShape).getString();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+
+    public enum NodeType {
+        Client,
+        Server,
+        Process,
+        Procedure
+    }
 
     public static interface PostCreationAction {
-        public abstract void  postCreate(XShape shape);
+        public abstract void postCreate(XShape shape);
     }
 
     public static class DefaultPostCreationAction implements PostCreationAction {
@@ -44,100 +126,4 @@ public abstract class Node implements ShapeBuilder, DiagramElement {
         }
     }
 
-    Collection<Link>    linkCollection;
-
-    protected PostCreationAction postCreationAction;
-
-    protected Node(PostCreationAction postCreationAction) {
-        this.postCreationAction = postCreationAction;
-    }
-
-    public XShape buildShape(XMultiServiceFactory xMSF, XDrawPage xDP) {
-        throw new UnsupportedOperationException("Not overrided.");
-    }
-
-    public XShape buildShape(XMultiServiceFactory xMSF, XDrawPage xDP, XComponent xDrawDoc) {
-        throw new UnsupportedOperationException("Not overrided yet.");
-    }
-
-    public XShape buildShape(XMultiServiceFactory xMSF) {
-        throw new UnsupportedOperationException("Not overrided.");
-    }
-
-    public Collection<XShape> buildShapes(XMultiServiceFactory xMSF, XDrawPage xDP, XComponent xDrawDoc) {
-        throw new UnsupportedOperationException("Not overrided.");
-    }
-    
-    
-    public enum NodeType {
-        Client,
-        Server,
-        Process,
-        Procedure
-    }
-
-    public Node() {
-        
-    }
-    
-    public Node(NodeType type){
-        this.type = type;
-    }
-    
-    
-    
-    protected XShape xShape;
-
-    public XShape getShape() {
-        return xShape;
-    }
-
-    public void setxShape(XShape xShape) {
-        this.xShape = xShape;
-    }
-    
-    public static Map<String,String> typeDescMap = new HashMap<String, String>(){
-        {
-            put("Client", "Client Node");
-            put("Server", "Server Node");
-            put("Process", "Process Node");
-            put("Procedure","Procedure Node");
-        }
-    };
-    
-    NodeType type;
-
-    public void runPostCreation(){
-        if (postCreationAction != null) {
-            postCreationAction.postCreate(getShape());
-        }
-    }
-    
-//    private static void testStub(){
-//        System.out.println(typeDescMap.get(type.toString()));
-//    }
-//    
-//    public static void main(String[] args){
-//        testStub();
-//    }
-
-    public NodeType getType(){
-        if (this instanceof ClientNode){
-            return NodeType.Client;
-        }
-        if (this instanceof ServerNode){
-            return NodeType.Server;
-        }
-
-        if (this instanceof ProcessNode){
-            return NodeType.Process;
-        }
-
-        if (this instanceof ProcedureNode){
-            return NodeType.Procedure;
-        }
-        return null;
-
-    }
-    
 }

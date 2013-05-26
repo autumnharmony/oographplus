@@ -5,5 +5,5 @@ package ru.ssau.graphplus;
  * Date: 3/14/13
  * Time: 2:49 AM
  */
-public class ElementAddEvent extends DiagramEvent{
+public class ElementAddEvent extends DiagramEvent {
 }

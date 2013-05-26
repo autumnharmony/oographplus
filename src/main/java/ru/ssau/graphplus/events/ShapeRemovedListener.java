@@ -12,8 +12,8 @@ public abstract class ShapeRemovedListener extends ShapeEventListener {
     }
 
     @Override
-    public void onShapeEvent(ShapeEvent shapeEvent) {
-        if (shapeEvent instanceof ShapeRemovedEvent){
+    public final void onShapeEvent(ShapeEvent shapeEvent) {
+        if (shapeEvent instanceof ShapeRemovedEvent) {
             onShapeRemoved((ShapeRemovedEvent) shapeEvent);
         }
     }

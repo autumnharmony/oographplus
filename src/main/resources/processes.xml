@@ -1,0 +1,15 @@
+<process id="Parent" entry="fork">
+    <port id="p1" channel="Call" module="" type="cli">
+        <receive method="join"/>
+        <receive id="ret" method="join"/>
+    </port>
+    <port id="p2" channel="Call" module="" type="cli">
+        <receive id="ret" method="join"/>
+    </port>
+    <method id="fork">
+        <send id="call" port="p1"/>
+        <send id="call" port="p2"/>
+    </method>
+    <method id="join">
+    </method>
+</process>

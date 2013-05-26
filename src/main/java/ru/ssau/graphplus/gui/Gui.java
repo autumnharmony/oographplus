@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author 1
  */
 public class Gui {
@@ -205,8 +204,6 @@ public class Gui {
                 "Label", "??????????????????????????");
 
 
-
-
         // create a Cancel button model and set the properties
         Object cancelButtonModel = xMultiServiceFactory.createInstance(
                 "com.sun.star.awt.UnoControlButtonModel");
@@ -272,8 +269,6 @@ public class Gui {
         xNameCont.insertByName(_typeLabelName, label2Model);
 
 
-
-
         // create the dialog control and set the model
         Object dialog = xMultiComponentFactory.createInstanceWithContext(
                 "com.sun.star.awt.UnoControlDialog", _xComponentContext);
@@ -332,7 +327,6 @@ public class Gui {
                 null);
 
 
-
         objs = new Object[]{dialog, dialogModel};
         //outDialogModel = dialogModel;
         return objs;
@@ -380,7 +374,6 @@ public class Gui {
                         xPropSet.getPropertyValue("UserDefinedAttributes"));
 
 
-
                 //            XNameContainer container = (XNameContainer) UnoRuntime.queryInterface(XNameContainer.class,
                 //                    userDefinedAttrs);
                 //XNameConta
@@ -410,9 +403,8 @@ public class Gui {
                 xPropSet.setPropertyValue("UserDefinedAttributes", container);
 
 
-
                 _xDialog.endExecute();
-                
+
             } catch (PropertyVetoException ex) {
                 Logger.getLogger(Gui.class.getName()).log(Level.SEVERE, null, ex);
             } catch (UnknownPropertyException ex) {
@@ -545,8 +537,8 @@ public class Gui {
      * shows an error messagebox
      *
      * @param _xParentWindowPeer the windowpeer of the parent window
-     * @param _sTitle the title of the messagebox
-     * @param _sMessage the message of the messagebox
+     * @param _sTitle            the title of the messagebox
+     * @param _sMessage          the message of the messagebox
      */
     public static void showErrorMessageBox(XWindowPeer _xParentWindowPeer, String _sTitle, String _sMessage, XMultiComponentFactory m_xMCF, XComponentContext m_xContext) {
         XComponent xComponent = null;
@@ -642,9 +634,6 @@ public class Gui {
                 "TabIndex", new Short((short) 0));
 
 
-
-
-
         //Object propertyEdit
 
         //
@@ -665,8 +654,6 @@ public class Gui {
 
         xPSetCheckBox.setPropertyValue(
                 "Label", "??????????????????????????");
-
-
 
 
         // create a Cancel button model and set the properties
@@ -734,8 +721,6 @@ public class Gui {
         xNameCont.insertByName(_typeLabelName, label2Model);
 
 
-
-
         // create the dialog control and set the model
         Object dialog = xMultiComponentFactory.createInstanceWithContext(
                 "com.sun.star.awt.UnoControlDialog", _xComponentContext);
@@ -794,7 +779,6 @@ public class Gui {
                 null);
 
 
-
         objs = new Object[]{dialog, dialogModel};
         //outDialogModel = dialogModel;
         return objs;
@@ -834,7 +818,6 @@ public class Gui {
         xComponent.dispose();
 
     }
-
 
 
 }

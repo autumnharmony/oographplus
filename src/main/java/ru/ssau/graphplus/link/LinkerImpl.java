@@ -1,6 +1,5 @@
 package ru.ssau.graphplus.link;
 
-import com.sun.star.awt.Point;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.XPropertySet;

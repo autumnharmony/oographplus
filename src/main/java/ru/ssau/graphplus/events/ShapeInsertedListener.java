@@ -11,7 +11,7 @@ public abstract class ShapeInsertedListener extends ShapeEventListener {
     }
 
     @Override
-    public void onShapeEvent(ShapeEvent shapeEvent) {
+    public final void onShapeEvent(ShapeEvent shapeEvent) {
         if (shapeEvent instanceof ShapeInsertedEvent) {
             onShapeInserted((ShapeInsertedEvent) shapeEvent);
         }

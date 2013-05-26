@@ -98,11 +98,11 @@ public class SystemDialog {
      * raises a folderpicker in which the user can browse and select a path
      *
      * @param _sDisplayDirectory the path to the directory that is initially
-     * displayed
-     * @param _sTitle the title of the folderpicker
+     *                           displayed
+     * @param _sTitle            the title of the folderpicker
      * @return the path to the folder that the user has selected. if the user
-     * has closed the folderpicker by clicking the "Cancel" button an empty
-     * string is returned
+     *         has closed the folderpicker by clicking the "Cancel" button an empty
+     *         string is returned
      * @see com.sun.star.ui.dialogs.FolderPicker
      */
     public String raiseFolderPicker(String _sDisplayDirectory, String _sTitle) {

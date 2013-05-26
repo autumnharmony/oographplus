@@ -5,7 +5,7 @@ package ru.ssau.graphplus.events;
  * Date: 3/16/13
  * Time: 4:52 PM
  */
-public enum  ShapeEventType {
+public enum ShapeEventType {
     ShapeInserted,
     ShapeModified,
     ShapeRemoved,

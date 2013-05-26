@@ -200,7 +200,8 @@ public class DrawHelper {
             com.sun.star.lang.WrappedTargetException {
         return OOoUtils.getIntProperty(obj, "Width");
     }
-    //---------------------------------------------------------------------- 
+
+    //----------------------------------------------------------------------
     //  Operations on Shapes 
     //---------------------------------------------------------------------- 
     public static final String SHAPE_KIND_RECTANGLE = "com.sun.star.drawing.RectangleShape";
@@ -302,10 +303,19 @@ public class DrawHelper {
     }
 
     public static XDrawPage getCurrentDrawPage(XComponent drawDoc) {
-        XModel xModel = (XModel) UnoRuntime.queryInterface(XModel.class, drawDoc);
-        XController xController = xModel.getCurrentController();
-        XDrawView xDV = (XDrawView) UnoRuntime.queryInterface(XDrawView.class, xController);
-        return xDV.getCurrentPage();
+
+        try {
+            XModel xModel = (XModel) UnoRuntime.queryInterface(XModel.class, drawDoc);
+            XController xController = xModel.getCurrentController();
+
+
+            XDrawView xDV = (XDrawView) UnoRuntime.queryInterface(XDrawView.class, xController);
+            return xDV.getCurrentPage();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+
     }
 
     public static void insertShapeOnCurrentPage(XShape xShape, XComponent drawDoc) {
@@ -314,43 +324,75 @@ public class DrawHelper {
         ShapeHelper.insertShape(xShape, drawPage);
     }
 
+    public static void insertShapeFreeSpace(XShape xShape, XComponent drawDoc){
+
+
+        XDrawPage currentDrawPage = getCurrentDrawPage(drawDoc);
+        for (int i = 0; i < currentDrawPage.getCount(); i++){
+            try {
+                Object byIndex = currentDrawPage.getByIndex(i);
+                XShape xShape1 = QI.XShape(byIndex);
+            } catch (com.sun.star.lang.IndexOutOfBoundsException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (WrappedTargetException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+
+    }
+
     public static void insertNodeOnCurrentPage(final Node node, XComponent drawDoc) {
         XDrawPage drawPage = getCurrentDrawPage(drawDoc);
 //        XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, drawPage);
 
         //ShapeHelper.insertShape(linkReplace.getShape(), xDP , postCreationAction);
         ShapeHelper.insertShape(node.getShape(), drawPage, new Node.DefaultPostCreationAction());
-                //node.runPostCreation();
+        //node.runPostCreation();
     }
-    
+
     public static void insertShapesOnCurrentPage(Collection<XShape> shapes, XComponent drawDoc) {
         XDrawPage drawPage = getCurrentDrawPage(drawDoc);
         XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, drawPage);
-      
+
         for (XShape xShape : shapes)
-        ShapeHelper.insertShape(xShape, drawPage);
+            ShapeHelper.insertShape(xShape, drawPage);
     }
 
-    public static boolean pageContainsShape(XDrawPage xDrawPage, XShape xShape){
-        Object o = AnyConverter.toObject(Object.class, xShape);
+    public static void insertShapesOnCurrentPageAndLayer(Collection<XShape> shapes, XComponent drawDoc, XLayerManager xLayerManager, XLayer xLayer) {
+        XDrawPage drawPage = getCurrentDrawPage(drawDoc);
+        XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, drawPage);
 
-        int count = xDrawPage.getCount();
-        for (int i = 0; i < 0; i++){
-            Object byIndex = null;
-            try {
-                byIndex = xDrawPage.getByIndex(i);
+        for (XShape xShape : shapes)                  {
+            ShapeHelper.insertShape(xShape, drawPage);
+            xLayerManager.attachShapeToLayer(xShape, xLayer);
+        }
+    }
 
-                XShape xShape1 = QI.XShape(byIndex);
+    public static boolean pageContainsShape(XDrawPage xDrawPage, XShape xShape) {
+        Object o = null;
+        try {
+            o = AnyConverter.toObject(Object.class, xShape);
 
-                if (byIndex.equals(o)){
-                    return true;
+            int count = xDrawPage.getCount();
+            for (int i = 0; i < 0; i++) {
+                Object byIndex = null;
+                try {
+                    byIndex = xDrawPage.getByIndex(i);
+
+                    XShape xShape1 = QI.XShape(byIndex);
+
+                    if (byIndex.equals(o)) {
+                        return true;
+                    }
+                } catch (com.sun.star.lang.IndexOutOfBoundsException e) {
+                    e.printStackTrace();
+                } catch (WrappedTargetException e) {
+                    e.printStackTrace();
                 }
-            } catch (com.sun.star.lang.IndexOutOfBoundsException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (WrappedTargetException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
 
+            }
+        } catch (com.sun.star.lang.IllegalArgumentException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
         return false;

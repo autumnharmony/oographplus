@@ -18,7 +18,7 @@ public abstract class ConnectedShapesChangeListener extends ShapeEventListener {
     @Override
     public void onShapeEvent(ShapeEvent shapeEvent) {
 
-        if (shapeEvent instanceof ConnectedShapesChanged){
+        if (shapeEvent instanceof ConnectedShapesChanged) {
             ConnectedShapesChanged connectedShapesChanged = (ConnectedShapesChanged) shapeEvent;
 
             onConnectedShapesChange(connectedShapesChanged);

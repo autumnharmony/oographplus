@@ -8,4 +8,5 @@
                        manifest:full-path="registry/protocolhandler.xcu"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
                        manifest:full-path="registry/jobs.xcu"/>
+
 </manifest:manifest>

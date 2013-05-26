@@ -5,17 +5,17 @@
 package ru.ssau.graphplus.link;
 
 import com.sun.star.awt.Point;
-import ru.ssau.graphplus.QI;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.WrappedTargetException;
+import ru.ssau.graphplus.QI;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author anton
  */
 public class LinkAdjuster {
@@ -38,7 +38,7 @@ public class LinkAdjuster {
                 // top or bottom
                 XShape top;
                 XShape bottom;
-                if (conn1.getPosition().Y < conn2.getPosition().Y){
+                if (conn1.getPosition().Y < conn2.getPosition().Y) {
                     top = conn1;
                     bottom = conn2;
                 } else {
@@ -83,11 +83,11 @@ public class LinkAdjuster {
 
     }
 
-    public static void placeText(Link link){
+    public static void placeText(Link link) {
 
         Point pos1 = link.getConnShape1().getPosition();
         Point pos2 = link.getConnShape2().getPosition();
-        Point resultPosition = new Point((pos1.X + pos2.X) / 2 , (pos1.Y + pos2.Y) /2);
+        Point resultPosition = new Point((pos1.X + pos2.X) / 2, (pos1.Y + pos2.Y) / 2);
 
         link.getTextShape().setPosition(resultPosition);
 

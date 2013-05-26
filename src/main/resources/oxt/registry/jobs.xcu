@@ -10,12 +10,17 @@
                 <value>ru.ssau.graphplus.OOGraph</value>
             </prop>
             <node oor:name="Arguments">
-                <prop oor:name="fileName" oor:type="xs:string"
-                      oor:op="replace">
-                    <value>/home/anton/activity-monitor-service.log</value>
-                </prop>
+
             </node>
         </node>
+
+
+
+        <!--<node oor:name="LinkJob" oor:op="replace">-->
+            <!--<prop oor:name="Service">-->
+                <!--<value>ru.ssau.graphplus.LinkRemover</value>-->
+            <!--</prop>-->
+        <!--</node>-->
     </node>
     <node oor:name="Events">
         <node oor:name="OnLoad" oor:op="fuse">
@@ -23,17 +28,60 @@
                 <node oor:name="MonitorJob" oor:op="replace" />
             </node>
         </node>
-        <node oor:name="OnSaveDone" oor:op="fuse">
+        <node oor:name="OnLoadDone" oor:op="fuse">
             <node oor:name="JobList">
                 <node oor:name="MonitorJob" oor:op="replace" />
             </node>
         </node>
-        <node oor:name="OnSaveAsDone" oor:op="fuse">
+        <node oor:name="OnLoadFinished" oor:op="fuse">
             <node oor:name="JobList">
                 <node oor:name="MonitorJob" oor:op="replace" />
             </node>
         </node>
-        <node oor:name="OnPrint" oor:op="fuse">
+        <!--<node oor:name="OnDocumentOpened" oor:op="fuse">-->
+            <!--<node oor:name="JobList">-->
+                <!--<node oor:name="MonitorJob" oor:op="replace" />-->
+            <!--</node>-->
+        <!--</node>-->
+
+
+        <!--<node oor:name="OnSaveDone" oor:op="fuse">-->
+            <!--<node oor:name="JobList">-->
+                <!--<node oor:name="MonitorJob" oor:op="replace" />-->
+            <!--</node>-->
+        <!--</node>-->
+        <!--<node oor:name="OnSave" oor:op="fuse">-->
+            <!--<node oor:name="JobList">-->
+                <!--<node oor:name="MonitorJob" oor:op="replace" />-->
+            <!--</node>-->
+        <!--</node>-->
+        <!--<node oor:name="OnSaveAs" oor:op="fuse">-->
+            <!--<node oor:name="JobList">-->
+                <!--<node oor:name="MonitorJob" oor:op="replace" />-->
+            <!--</node>-->
+        <!--</node>-->
+        <!--<node oor:name="OnSaveAsDone" oor:op="fuse">-->
+            <!--<node oor:name="JobList">-->
+                <!--<node oor:name="MonitorJob" oor:op="replace" />-->
+            <!--</node>-->
+        <!--</node>-->
+        <!--<node oor:name="OnPrint" oor:op="fuse">-->
+            <!--<node oor:name="JobList">-->
+                <!--<node oor:name="MonitorJob" oor:op="replace" />-->
+            <!--</node>-->
+        <!--</node>-->
+        <node oor:name="OnModifyChange" oor:op="fuse">
+            <node oor:name="JobList">
+                <node oor:name="MonitorJob" oor:op="replace" />
+            </node>
+        </node>
+        <node oor:name="OnNew" oor:op="fuse">
+            <node oor:name="JobList">
+                <node oor:name="MonitorJob" oor:op="replace" />
+            </node>
+        </node>
+
+        <node oor:name="OnRemoveText" oor:op="fuse">
             <node oor:name="JobList">
                 <node oor:name="MonitorJob" oor:op="replace" />
             </node>

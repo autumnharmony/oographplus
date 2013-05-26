@@ -17,7 +17,7 @@ public class ConnectedShapesChanged extends ShapeEvent {
     public ConnectedShapesChanged(XConnectorShape xConnectorShape, ConnectedShapes aShapes) {
         this.xConnectorShape = xConnectorShape;
         this.connectedShapes = aShapes;
-        shapeEventType =  ShapeEventType.ConnectedShapesChanged;
+        shapeEventType = ShapeEventType.ConnectedShapesChanged;
     }
 
     public XConnectorShape getConnectorShape() {
