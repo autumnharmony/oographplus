@@ -3,13 +3,10 @@ package ru.ssau.graphplus;
 
 import com.sun.star.awt.*;
 import com.sun.star.beans.*;
-import com.sun.star.chart2.XChartDocument;
 import com.sun.star.container.XNameContainer;
 import com.sun.star.deployment.XPackageInformationProvider;
-import com.sun.star.document.DocumentEvent;
-import com.sun.star.document.XDocumentEventBroadcaster;
-import com.sun.star.document.XDocumentEventListener;
-import com.sun.star.document.XEventBroadcaster;
+import com.sun.star.document.*;
+import com.sun.star.document.XEventListener;
 import com.sun.star.drawing.*;
 import com.sun.star.frame.*;
 import com.sun.star.lang.EventObject;
@@ -18,29 +15,28 @@ import com.sun.star.lang.IndexOutOfBoundsException;
 import com.sun.star.lang.*;
 import com.sun.star.lib.uno.helper.Factory;
 import com.sun.star.lib.uno.helper.WeakBase;
+import com.sun.star.registry.InvalidRegistryException;
 import com.sun.star.registry.XRegistryKey;
 import com.sun.star.report.XImageControl;
-import com.sun.star.table.XTable;
+import com.sun.star.table.*;
 import com.sun.star.ui.XContextMenuInterception;
+import com.sun.star.uno.*;
 import com.sun.star.uno.Exception;
-import com.sun.star.uno.UnoRuntime;
-import com.sun.star.uno.XComponentContext;
 import com.sun.star.util.URL;
 import com.sun.star.util.XModifiable;
+import com.sun.star.util.XModifyListener;
 import com.sun.star.view.XSelectionSupplier;
-import ru.ssau.graphplus.gui.ContextMenuInterceptor;
-import ru.ssau.graphplus.gui.Gui;
-import ru.ssau.graphplus.gui.SystemDialog;
-import ru.ssau.graphplus.gui.UnoAwtUtils;
+import ru.ssau.graphplus.gui.*;
+import ru.ssau.graphplus.link.InputTwoShapesMode;
 import ru.ssau.graphplus.link.Link;
 import ru.ssau.graphplus.link.LinkFactory;
 import ru.ssau.graphplus.node.Node;
+import ru.ssau.graphplus.node.NodeBase;
 import ru.ssau.graphplus.node.NodeFactory;
 import ru.ssau.graphplus.xml.XMLGenerator;
 import ru.ssau.graphplus.xml.XMLTransform;
 
 import java.io.*;
-import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.logging.Level;
@@ -68,51 +64,113 @@ public final class OOGraph extends WeakBase implements
     private static final String[] m_serviceNames = {
             "com.sun.star.frame.ProtocolHandler",
             "com.sun.star.task.Job",
-            "com.sun.star.task.AsyncJob"};
-    static List<WeakReference<OOGraph>> weakReferences = new ArrayList<>();
-    private static com.sun.star.frame.XFrame m_xFrame;
+            "com.sun.star.task.AsyncJob"
+    };
+
+    private static List<WeakReference<OOGraph>> weakReferences = new ArrayList<>();
+
+    private com.sun.star.frame.XFrame m_xFrame;
     private static XMultiComponentFactory xMCF = null;
     private static XMultiServiceFactory xMSF = null;
     private static XComponent xDrawDoc = null;
-    // store every frame with its DiagramController, DiagramModel object
     private static ArrayList<FrameObject> _frameObjectList = null;
     private static XComponent m_xComponent = null;
     private final XComponentContext m_xContext;
-    ReferenceQueue<FrameObject> frameObjectReferenceQueue = new ReferenceQueue<>();
-    Map<State, DiagramEventHandler> diagramEventHandlerMap = new HashMap<State, DiagramEventHandler>();
-    DiagramEventHandler diagramEventHandler;
-    State state;
-    Map<MyURL, Set<XStatusListener>> statusListeners = new HashMap<>();
+    private Map<MyURL, Set<XStatusListener>> statusListeners = new HashMap<>();
     private DiagramController diagramController;
     private DiagramModel diagramModel;
-    //    private XStatusIndicator statusIndicator;
     private String diagramName;
     private String diagramType;
     private NodeFactory nodeFactory;
     private LinkFactory linkFactory;
-    private DiagramController m_Controller;
-    private InputTwoShapesMode inputMode;
     private XEventBroadcaster m_xEventBroadcaster = null;
     private boolean isAliveDocumentEventListener = false;
 
-    public OOGraph(XComponentContext context) {
-        Logger logger = Logger.getLogger("oograph");
+    private static final ArrayList<String> m_aSupportedModules = new ArrayList(1);
 
+    private static WeakHashMap<XFrame, DiagramModel> frameToDM = new WeakHashMap<>();
+
+    static {
+        m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
+    }
+
+    public static StatusBarInterceptionController aController;
+
+    public OOGraph(XComponentContext context) {
+        Thread thread = Thread.currentThread();
+
+        Logger logger = Logger.getLogger("oograph");
         logger.info("OOGraph ctor");
-        weakReferences.add(new WeakReference<OOGraph>(this));
+        logger.info("Thread " + thread.getName());
+
+        weakReferences.add(new WeakReference<>(this));
         m_xContext = context;
 
+        try {
+            this.m_xModuleManager = UnoRuntime.queryInterface(XModuleManager.class, this.m_xContext.getServiceManager().createInstanceWithContext("com.sun.star.frame.ModuleManager", this.m_xContext));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    public static OOGraph temp(XComponentContext xComponentContext){
+        return new OOGraph(xComponentContext);
+    }
+
+    public class OOGraphProxy extends OOGraph
+
+    public void frame(XFrame xFrame){
+        this.m_xFrame = xFrame;
+        MyComponentFactory.frameToOOGraph.put(xFrame,this);
+    }
+
+    private static class MyComponentFactory implements XSingleComponentFactory{
+
+        public static WeakHashMap<XComponentContext, OOGraph> map =  new WeakHashMap<>();
+        public static WeakHashMap<XFrame, OOGraph> frameToOOGraph = new WeakHashMap<>();
+        public static WeakReference<OOGraph> weakReference;
+
+
+        @Override
+        public Object createInstanceWithContext(XComponentContext xComponentContext) throws Exception {
+
+            OOGraph temp = OOGraph.temp(xComponentContext);
+            weakReference = new WeakReference<OOGraph>(temp);
+            return temp;
+//            return map.get(xComponentContext);
+        }
+
+        @Override
+        public Object createInstanceWithArgumentsAndContext(Object[] objects, XComponentContext xComponentContext) throws Exception {
+            System.out.println("createInstanceWithArgumentAndContext");
+            return new OOGraph(xComponentContext);
+        }
     }
 
     public static XSingleComponentFactory __getComponentFactory(String sImplementationName) {
         XSingleComponentFactory xFactory = null;
 
         if (sImplementationName.equals(m_implementationName))
-            xFactory = Factory.createComponentFactory(OOGraph.class, m_serviceNames);
+            xFactory = new MyComponentFactory();
+//            xFactory = Factory.createComponentFactory(OOGraph.class, m_serviceNames);
         return xFactory;
     }
 
     public static boolean __writeRegistryServiceInfo(XRegistryKey xRegistryKey) {
+        try {
+            String[] keyNames;
+
+            keyNames = xRegistryKey.getKeyNames();
+            for (int i = 0; i < keyNames.length; i++){
+                System.out.println(keyNames[i]);
+            }
+        } catch (InvalidRegistryException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+
         return Factory.writeRegistryServiceInfo(m_implementationName,
                 m_serviceNames,
                 xRegistryKey);
@@ -152,28 +210,47 @@ public final class OOGraph extends WeakBase implements
         return diagramType;
     }
 
-    public DiagramModel getDiagramModel() {
+    public DiagramModel getOrCreateDiagramModel(int magic) {
         if (diagramModel == null) {
             System.out.println("diagramModel null");
             int i1 = weakReferences.indexOf(new WeakReference<OOGraph>(this));
             int i2 = i1;
 
+            List<WeakReference<OOGraph>> toRemove = new ArrayList<>();
+
             for (int i = 0; i < weakReferences.size(); i++) {
-                WeakReference<OOGraph> ooGraphWeakReference = weakReferences.get(i);
-                if (ooGraphWeakReference.get().equals(this)) {
-                    i2 = i;
+                WeakReference<OOGraph> weak = weakReferences.get(i);
+                if (weak != null) {
+                    OOGraph ooGraph = weak.get();
+                    if (ooGraph!=null && ooGraph.equals(this)) {
+                        i2 = i;
+                    }
+
+                    if (ooGraph == null){
+                        toRemove.add(weak);
+                    }
                 }
+            }
+
+            for (WeakReference reference : toRemove){
+                weakReferences.remove(reference);
             }
 
             int i = i2 / 10 * 10;
             DiagramModel diagramModel1 = weakReferences.get(i).get().getDiagramModel();
+            if (diagramModel1 == null) {
+                diagramModel1 = new DiagramModel();
+            }
             this.diagramModel = diagramModel1;
             return diagramModel1;
-
 
         } else {
             return diagramModel;
         }
+    }
+
+    public DiagramModel getDiagramModel() {
+        return diagramModel;
     }
 
     public DiagramController getDiagramController() {
@@ -223,54 +300,20 @@ public final class OOGraph extends WeakBase implements
 
         Logger.getAnonymousLogger().info("OOGraph initialize");
 
-//        if (object.length > 0)
-//        {
-//            this.m_xFrame = ((XFrame)UnoRuntime.queryInterface(XFrame.class, object[0]));
-//            boolean isNewFrame;
-//            if (_frameObjectList == null) {
-//                _frameObjectList = new ArrayList();
-//                isNewFrame = true;
-//            } else {
-//                isNewFrame = true;
-//                for (FrameObject frameObj : _frameObjectList)
-//                    if (this.m_xFrame.equals(frameObj.getXFrame()))
-//                        isNewFrame = false;
-//            }
-//            if (isNewFrame) {
-//                this.m_xFrame.addFrameActionListener(this);
-//                this.m_xEventBroadcaster = ((XEventBroadcaster)UnoRuntime.queryInterface(XEventBroadcaster.class, this.m_xFrame.getController().getModel()));
-//                addEventListener();
-//
-//
-//                DiagramModel diagramModel1 = null;
-//                if (this.m_Controller == null) {
-//                    diagramModel1 = new DiagramModel();
-//                    this.m_Controller = new DiagramController(this.m_xContext, this.m_xFrame, xMSF,xMCF, DrawHelper.getCurrentDrawPage(xDrawDoc), diagramModel1, m_xComponent, xDrawDoc);
-//                }
-//                _frameObjectList.add(new FrameObject(this.m_xFrame, this.m_Controller, diagramModel1));
-//            }
-//            else {
-//                for (FrameObject frameObj : _frameObjectList)
-//                    if (this.m_xFrame.equals(frameObj.getXFrame()))
-//                        this.m_Controller = frameObj.getController();
-//            }
-//        }
-//
-//        if (1 == 1) return;
-
-
         if (object.length > 0) {
 
-            m_xFrame = (com.sun.star.frame.XFrame) UnoRuntime.queryInterface(com.sun.star.frame.XFrame.class, object[0]);
+            m_xFrame = UnoRuntime.queryInterface(XFrame.class, object[0]);
+
+            MyComponentFactory.weakReference.get().frame(m_xFrame);
 
             XController xController = m_xFrame.getController();
 
             XContextMenuInterception xContMenuInterception =
-                    (XContextMenuInterception) UnoRuntime.queryInterface(XContextMenuInterception.class, xController);
+                    UnoRuntime.queryInterface(XContextMenuInterception.class, xController);
 
             xMCF = m_xContext.getServiceManager();
-            m_xComponent = (XComponent) UnoRuntime.queryInterface(XComponent.class, m_xFrame.getController().getModel());
-            xMSF = (XMultiServiceFactory) UnoRuntime.queryInterface(
+            m_xComponent = UnoRuntime.queryInterface(XComponent.class, m_xFrame.getController().getModel());
+            xMSF = UnoRuntime.queryInterface(
                     XMultiServiceFactory.class, m_xComponent);
 
             nodeFactory = new NodeFactory(xMSF);
@@ -298,13 +341,12 @@ public final class OOGraph extends WeakBase implements
 
                     if (diagramController == null) {
                         diagramModel = new DiagramModel();
-//                        diagramModel.setDiagramType(diagramType);
-//                        diagramType = "";
-                        XComponent xDrawDoc = (XComponent) UnoRuntime.queryInterface(
+
+                        XComponent xDrawDoc = UnoRuntime.queryInterface(
                                 XComponent.class, m_xComponent);
                         diagramController = new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel, xDrawDoc);
                         xContMenuInterception.registerContextMenuInterceptor(new ContextMenuInterceptor(m_xContext, diagramController));
-//                        diagramController.setStatusIndicator(statusIndicator);
+
                         addDocumentEventListener(m_xComponent);
 
 
@@ -317,7 +359,7 @@ public final class OOGraph extends WeakBase implements
 
                         if (diagramController == null) {
                             diagramController = new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel, xDrawDoc);
-//            diagramController.setStatusIndicator(statusIndicator);
+
                         }
 
 
@@ -325,7 +367,7 @@ public final class OOGraph extends WeakBase implements
                         _frameObjectList.add(new FrameObject(m_xFrame, diagramController, diagramModel));
 
 
-                        this.m_xEventBroadcaster = ((XEventBroadcaster) UnoRuntime.queryInterface(XEventBroadcaster.class, this.m_xFrame.getController().getModel()));
+                        this.m_xEventBroadcaster = UnoRuntime.queryInterface(XEventBroadcaster.class, this.m_xFrame.getController().getModel());
                         addEventListener();
                     }
                 } catch (java.lang.Exception ex) {
@@ -338,16 +380,14 @@ public final class OOGraph extends WeakBase implements
 
 
                 System.out.println("getting Drawpage");
-                com.sun.star.drawing.XDrawPagesSupplier xDPS = (com.sun.star.drawing.XDrawPagesSupplier) UnoRuntime.queryInterface(
-                        com.sun.star.drawing.XDrawPagesSupplier.class, m_xComponent);
+                com.sun.star.drawing.XDrawPagesSupplier xDPS = UnoRuntime.queryInterface(
+                        XDrawPagesSupplier.class, m_xComponent);
 
                 com.sun.star.drawing.XDrawPages xDPn = xDPS.getDrawPages();
-                com.sun.star.container.XIndexAccess xDPi =
-                        (com.sun.star.container.XIndexAccess) UnoRuntime.queryInterface(
-                                com.sun.star.container.XIndexAccess.class, xDPn);
-                final XDrawPage xDP = (com.sun.star.drawing.XDrawPage) UnoRuntime.queryInterface(
-                        com.sun.star.drawing.XDrawPage.class, xDPi.getByIndex(0));
-                XModifiable xMod = (XModifiable) UnoRuntime.queryInterface(
+                com.sun.star.container.XIndexAccess xDPi = UnoRuntime.queryInterface(com.sun.star.container.XIndexAccess.class, xDPn);
+                final XDrawPage xDP = UnoRuntime.queryInterface(
+                        XDrawPage.class, xDPi.getByIndex(0));
+                XModifiable xMod = UnoRuntime.queryInterface(
                         XModifiable.class, xDrawDoc);
                 xMod.addModifyListener(diagramController);
 
@@ -370,7 +410,7 @@ public final class OOGraph extends WeakBase implements
                 if (documentEvent.EventName.equals("OnSaveDone") || documentEvent.EventName.equals("OnSaveAsDone")) {
 
                     diagramModel.refreshLinksShapesId();
-//                    diagramModel.refreshNodesShapeId();
+
                     String url = QI.XModel(m_xFrame.getController().getModel()).getURL();
                     String substring = url.substring(7);
                     String[] split = url.split("/");
@@ -407,8 +447,6 @@ public final class OOGraph extends WeakBase implements
                         String xmlString = XMLGenerator.generateXMLStringByDiagramModel(diagramModel, xDrawDoc);
 
 
-                        OutputStream outputStream = null;
-
                         File f = null;
                         FileWriter fw = null;
 
@@ -430,7 +468,7 @@ public final class OOGraph extends WeakBase implements
 
                             }
                             try {
-                                outputStream = new FileOutputStream(f);
+
                                 System.out.println(f.getCanonicalPath());
                                 fw = new FileWriter(f);
 
@@ -466,10 +504,10 @@ public final class OOGraph extends WeakBase implements
                     }
                 } else if (documentEvent.EventName.equals("OnLoad")) {
 
-                    XComponent drawDoc = QI.XComponent(((DocumentEvent) documentEvent).Source);
+                    XComponent drawDoc = QI.XComponent(documentEvent.Source);
                     XDrawPage currentDrawPage = DrawHelper.getCurrentDrawPage(drawDoc);
 
-                    DiagramModel diagramModel_ = getDiagramModel();
+                    DiagramModel diagramModel_ = getOrCreateDiagramModel(2);
                     if (!diagramModel_.isRestored()) {
                         diagramModel_ = new DiagramModel();
                         diagramModel_.restore(currentDrawPage, xMSF, drawDoc);
@@ -490,6 +528,9 @@ public final class OOGraph extends WeakBase implements
             }
         });
     }
+
+    private XModel2 m_xModel;
+    private XModuleManager m_xModuleManager;
 
     // com.sun.star.task.XJob:
     public Object execute(com.sun.star.beans.NamedValue[] Arguments) throws com.sun.star.lang.IllegalArgumentException, com.sun.star.uno.Exception {
@@ -520,8 +561,71 @@ public final class OOGraph extends WeakBase implements
             }
         }
 
+
+        try
+        {
+            NamedValue[] aEnvironment = null;
+            for (int i = 0; i < Arguments.length; i++) {
+                if (Arguments[i].Name.equals("Environment")) {
+                    aEnvironment = (NamedValue[])AnyConverter.toArray(Arguments[i].Value);
+
+                    break;
+                }
+            }
+
+            if (aEnvironment == null) {
+                throw new IllegalArgumentException("no environment");
+            }
+
+            String sEnvType = null;
+            String sEventName = null;
+            this.m_xModel = null;
+            for (int i = 0; i < aEnvironment.length; i++) {
+                String sName = aEnvironment[i].Name;
+                if (sName.equals("EnvType")) {
+                    sEnvType = AnyConverter.toString(aEnvironment[i].Value);
+                }
+                else if (sName.equals("EventName")) {
+                    sEventName = AnyConverter.toString(aEnvironment[i].Value);
+                }
+                else if (sName.equals("Model")) {
+                    this.m_xModel = ((XModel2)UnoRuntime.queryInterface(XModel2.class, aEnvironment[i].Value));
+                }
+
+            }
+
+            if ((sEnvType == null) || (!sEnvType.equals("DOCUMENTEVENT"))) {
+                throw new IllegalArgumentException("Invalid event type! This Job only works with document events.");
+            }
+
+            if ((sEventName == null) || (!sEventName.equals("onDocumentOpened") && !sEventName.equals("OnLoad")) && !sEventName.equals("OnNew")) {
+                throw new IllegalArgumentException("Invalid event! This Job only works with onDocumentOpened (OnLoad + OnNew) document event.");
+            }
+
+            if (this.m_xModel == null) {
+                throw new IllegalArgumentException("The Job needs a XModel reference.");
+            }
+
+            String sModuleIdentifier = this.m_xModuleManager.identify(this.m_xModel);
+            System.out.printf("css.frame.XJob.execute: Event: \"%s\" - Module : %s\n", new Object[] { sEventName, sModuleIdentifier });
+
+            if (!m_aSupportedModules.contains(sModuleIdentifier)) {
+                return new Any(Type.VOID, null);
+            }
+
+//            aController = new InterceptionController(this.m_xContext, this.m_xModel, sModuleIdentifier);
+        }
+        catch (java.lang.Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+
+
+
+
         if (eventNameString != null) {
 
+            String sModuleIdentifier = null;
             if (eventNameString.equals("RemoveConnectorShapes")) {
 
                 System.out.println("RemoveConnectorShapes");
@@ -535,6 +639,11 @@ public final class OOGraph extends WeakBase implements
             } else if (eventNameString.equals("OnSaveAsDone") || eventNameString.equals("OnSaveDone")) {
 
             } else if (eventNameString.equals("OnNew")) {
+
+                if (m_aSupportedModules.contains(sModuleIdentifier)){
+                    return new Any(Type.VOID, null);
+                }
+
                 // dialog for diagram name
                 XMultiComponentFactory xMCF = m_xContext.getServiceManager();
                 Object obj;
@@ -621,20 +730,73 @@ public final class OOGraph extends WeakBase implements
                 XComponent drawDoc = QI.XComponent(xComponent);
                 XDrawPage currentDrawPage = DrawHelper.getCurrentDrawPage(drawDoc);
 
-                DiagramModel diagramModel_ = getDiagramModel();
+                DiagramModel diagramModel_ = getOrCreateDiagramModel(3);
                 if (!diagramModel_.isRestored()) {
-                    diagramModel_ = new DiagramModel();
+//                    diagramModel_ = new DiagramModel();
                     diagramModel_.restore(currentDrawPage, xMSF, drawDoc);
 
                 } else {
 
                 }
 
+                DiagramController diagramController_ = new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel_, drawDoc);
+
                 OOGraph.this.diagramModel = diagramModel_;
+                OOGraph.this.diagramController = diagramController_;
 
+            } else if (eventNameString.equals("onDocumentOpened")) {
+                try {
+                    NamedValue[] aEnvironment = null;
+                    for (int i = 0; i < Arguments.length; i++) {
+                        if (Arguments[i].Name.equals("Environment")) {
+                            aEnvironment = (NamedValue[]) AnyConverter.toArray(Arguments[i].Value);
 
-            } else if (eventNameString.equals("OnDocumentOpened")) {
-                System.out.println(eventNameString);
+                            break;
+                        }
+                    }
+
+                    if (aEnvironment == null) {
+                        throw new IllegalArgumentException("no environment");
+                    }
+
+                    String sEnvType = null;
+                    String sEventName = null;
+                    this.m_xModel = null;
+                    for (int i = 0; i < aEnvironment.length; i++) {
+                        String sName = aEnvironment[i].Name;
+                        if (sName.equals("EnvType")) {
+                            sEnvType = AnyConverter.toString(aEnvironment[i].Value);
+                        } else if (sName.equals("EventName")) {
+                            sEventName = AnyConverter.toString(aEnvironment[i].Value);
+                        } else if (sName.equals("Model")) {
+                            this.m_xModel = ((XModel2) UnoRuntime.queryInterface(XModel2.class, aEnvironment[i].Value));
+                        }
+
+                    }
+
+                    if ((sEnvType == null) || (!sEnvType.equals("DOCUMENTEVENT"))) {
+                        throw new IllegalArgumentException("Invalid event type! This Job only works with document events.");
+                    }
+
+                    if ((sEventName == null) || (!sEventName.equals("onDocumentOpened"))) {
+                        throw new IllegalArgumentException("Invalid event! This Job only works with onDocumentOpened (OnLoad + OnNew) document event.");
+                    }
+
+                    if (this.m_xModel == null) {
+                        throw new IllegalArgumentException("The Job needs a XModel reference.");
+                    }
+
+                    sModuleIdentifier = this.m_xModuleManager.identify(this.m_xModel);
+                    System.out.printf("css.frame.XJob.execute: Event: \"%s\" - Module : %s\n", new Object[]{sEventName, sModuleIdentifier});
+
+                    if (!m_aSupportedModules.contains(sModuleIdentifier)) {
+                        return new Any(Type.VOID, null);
+                    }
+
+                    aController = new StatusBarInterceptionController(this.m_xContext, this.m_xModel, sModuleIdentifier);
+                } catch (java.lang.Exception e) {
+                }
+                return new Any(Type.VOID, null);
             }
 
 
@@ -792,7 +954,7 @@ public final class OOGraph extends WeakBase implements
                     XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, xPage);
 
 
-                    Node processNode = nodeFactory.create(Node.NodeType.Process, m_xComponent);
+                    NodeBase processNode = nodeFactory.create(Node.NodeType.Process, m_xComponent);
                     node = processNode;
 
 
@@ -826,7 +988,7 @@ public final class OOGraph extends WeakBase implements
 
                     XDrawPage xPage = PageHelper.getDrawPageByIndex(xDrawDoc, 0);
                     XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, xPage);
-                    Node procedureNode = nodeFactory.create(Node.NodeType.Procedure, m_xComponent);//createAndInsert(Node.NodeType.Process, m_xComponent, xShapes);
+                    NodeBase procedureNode = nodeFactory.create(Node.NodeType.Procedure, m_xComponent);//createAndInsert(NodeBase.NodeType.Process, m_xComponent, xShapes);
                     node = procedureNode;
 
 
@@ -866,7 +1028,7 @@ public final class OOGraph extends WeakBase implements
 
                     Misc.tagShapeAsNode(clientNode.getShape());
 
-                    clientNode.runPostCreation();
+                    clientNode.setProps();
                     DrawHelper.setShapePositionAndSize(clientNode.getShape(), 100, 100, 1500, 1500);
                     Gui.createDialogForShape2(clientNode.getShape(), m_xContext, new HashMap<String, XShape>());
 
@@ -881,7 +1043,7 @@ public final class OOGraph extends WeakBase implements
 
             if (url.Path.compareTo(SERVER_NODE) == 0) {
                 try {
-                    Node serverNode = nodeFactory.create(Node.NodeType.Server, m_xComponent);
+                    NodeBase serverNode = nodeFactory.create(Node.NodeType.Server, m_xComponent);
                     node = serverNode;
 
                     DrawHelper.insertShapeOnCurrentPage(serverNode.getShape(), xDrawDoc);
@@ -891,7 +1053,7 @@ public final class OOGraph extends WeakBase implements
                     Misc.setNodeType(serverNode.getShape(), Node.NodeType.Server);
 
 
-                    node.runPostCreation();
+                    node.setProps();
                     DrawHelper.setShapePositionAndSize(serverNode.getShape(), 100, 100, 1500, 1500);
                     Gui.createDialogForShape2(serverNode.getShape(), m_xContext, new HashMap<String, XShape>());
 
@@ -907,7 +1069,7 @@ public final class OOGraph extends WeakBase implements
 
             if (url.Path.compareTo(LINK_LINK) == 0) {
 
-                Link linkLink = linkFactory.create(Link.LinkType.Link, xDrawDoc, DrawHelper.getCurrentDrawPage(xDrawDoc));
+                Link linkLink = linkFactory.create(Link.LinkType.Link, xDrawDoc);
                 link = linkLink;
                 linkShapes = linkLink.getShapes();
 
@@ -915,7 +1077,7 @@ public final class OOGraph extends WeakBase implements
 
             if (url.Path.compareTo(MESSAGE_LINK) == 0) {
 
-                Link messageLink = linkFactory.create(Link.LinkType.Message, xDrawDoc, DrawHelper.getCurrentDrawPage(xDrawDoc));
+                Link messageLink = linkFactory.create(Link.LinkType.Message, xDrawDoc);
                 link = messageLink;
                 linkShapes = messageLink.getShapes();
 
@@ -923,7 +1085,7 @@ public final class OOGraph extends WeakBase implements
 
             if (url.Path.compareTo(CONTROL_LINK) == 0) {
 
-                Link controlLink = linkFactory.create(Link.LinkType.Control, xDrawDoc, DrawHelper.getCurrentDrawPage(xDrawDoc));
+                Link controlLink = linkFactory.create(Link.LinkType.Control, xDrawDoc);
                 link = controlLink;
                 linkShapes = controlLink.getShapes();
 
@@ -934,6 +1096,7 @@ public final class OOGraph extends WeakBase implements
 
                 for (XShape shape : linkShapes) {
                     DrawHelper.insertShapeOnCurrentPage(shape, xDrawDoc);
+
                     linkFactory.setId(shape, link);
                 }
 
@@ -941,9 +1104,9 @@ public final class OOGraph extends WeakBase implements
 
                 // common for all links
 
-                setState(State.InputTwoShapes);
+
                 getDiagramController().setLinker(link);
-                getDiagramController().setInputMode(new InputTwoShapesMode());
+                getDiagramController().setInputMode(new InputTwoShapesMode(getDiagramController(), link));
 
                 //inputMode = new InputTwoShapesMode(getDiagramController());
                 statusChangedDisable(url);
@@ -951,7 +1114,7 @@ public final class OOGraph extends WeakBase implements
 //                    lastURL = url;
 
                 if (link != null) {
-                    getDiagramModel().addDiagramElement(link);
+                    getOrCreateDiagramModel(445).addDiagramElement(link);
                     diagramController.configureListeners(link);
                 }
                 return;
@@ -1050,9 +1213,9 @@ public final class OOGraph extends WeakBase implements
                                         final Link finalLinkReplace = linkReplace;
                                         if (convertShape) {
 //                                                TODO xDP
-//                                                linkReplace = linkFactory.create(Link.LinkType.valueOf(nodeType), m_xComponent, xDP);
+//                                                linkReplace = linkFactory.create(LinkBase.LinkType.valueOf(nodeType), m_xComponent, xDP);
 
-//                                            Node.PostCreationAction postCreationAction = new Node.PostCreationAction() {
+//                                            NodeBase.PostCreationAction postCreationAction = new NodeBase.PostCreationAction() {
 //                                                @Override
 //                                                public void postCreate(XShape shape) {
 //                                                    if (finalConvertShape) {
@@ -1196,14 +1359,14 @@ public final class OOGraph extends WeakBase implements
                                         XComboBox xComboBox = UnoRuntime.queryInterface(XComboBox.class, comboBox1);
 
                                         String nodeType = xComboBox.getItem(selected.shortValue());
-                                        Node nodeReplace = null;
+                                        NodeBase nodeReplace = null;
                                         final boolean finalConvertShape = convertShape;
-                                        final Node finalNodeReplace = nodeReplace;
+                                        final NodeBase finalNodeReplace = nodeReplace;
                                         if (convertShape) {
-                                            final Node.NodeType type = Node.NodeType.valueOf(nodeType);
+                                            final NodeBase.NodeType type = Node.NodeType.valueOf(nodeType);
                                             nodeReplace = nodeFactory.create(type, m_xComponent);
 
-                                            Node.PostCreationAction postCreationAction = new Node.DefaultPostCreationAction(convertShape) {
+                                            NodeBase.PostCreationAction postCreationAction = new NodeBase.DefaultPostCreationAction(convertShape) {
                                                 @Override
                                                 public void postCreate(XShape shape) {
                                                     super.postCreate(shape);    //To change body of overridden methods use File | Settings | File Templates.
@@ -1317,10 +1480,10 @@ public final class OOGraph extends WeakBase implements
             }
 
 
-            if (url.Path.contains("Node")) {
-                // common for all links
+            if (url.Path.contains("NodeBase")) {
+                // common for all nodes
                 if (node != null) {
-                    getDiagramModel().addDiagramElement(node);
+                    getOrCreateDiagramModel(34123).addDiagramElement(node);
                     Misc.setId(node.getShape(), node.getName());
 //                        diagramModel.addDiagramElement(node);
                 }
@@ -1345,7 +1508,7 @@ public final class OOGraph extends WeakBase implements
             xDrawDoc = (XComponent) UnoRuntime.queryInterface(XComponent.class, m_xComponent);
 
 
-            //insertTable(xDrawDoc);
+            insertTable(xDrawDoc);
             XPropertySet xLayerPropSet;
             XLayerManager xLayerManager = UnoRuntime.queryInterface(XLayerManager.class, UnoRuntime.queryInterface(XLayerSupplier.class, xDrawDoc).getLayerManager());
             XLayer xNotVisibleAndEditable = xLayerManager.insertNewByIndex(0);
@@ -1419,49 +1582,121 @@ public final class OOGraph extends WeakBase implements
 
     }
 
-    private void insertTable(XComponent aDrawDoc) {
-        XDrawPagesSupplier aSupplier = (XDrawPagesSupplier)
-                UnoRuntime.queryInterface(XDrawPagesSupplier.class, aDrawDoc);
+    Map<String, String> getKeyValueMapFromXTable(XTable xTable) {
 
-        XShapes aPage = null;
-        // get first page
-        XDrawPage currentDrawPage = DrawHelper.getCurrentDrawPage(xDrawDoc);
-        aPage = QI.XShapes(currentDrawPage);
-//            aPage = (XShapes) aSupplier.getDrawPages().getByIndex(0);
+        Map<String, String> result = new HashMap<>();
+        XTableRows rows = xTable.getRows();
+        for (int i = 0; i < rows.getCount(); i++) {
+            try {
+                Object byIndex = rows.getByIndex(i);
+                XCellRange xCellRange = UnoRuntime.queryInterface(XCellRange.class, byIndex);
+                XCell cellByPosition = xCellRange.getCellByPosition(0, 0);
+                String formula = cellByPosition.getFormula();
+                double value = cellByPosition.getValue();
 
-        if (aPage != null) {
-            // the document should be a factory that can create shapes
-            XMultiServiceFactory aFact = UnoRuntime.queryInterface(
-                    XMultiServiceFactory.class, aDrawDoc);
-
-            if (aFact != null) {
-                try {
-                    // create an OLE 2 shape
-                    XShape aShape = (XShape)
-                            UnoRuntime.queryInterface(
-                                    XShape.class,
-                                    aFact.createInstance("com.sun.star.drawing.OLE2Shape"));
-
-                    // insert the shape into the page
-                    aPage.add(aShape);
-                    aShape.setPosition(new Point(1000, 1000));
-                    aShape.setSize(new Size(15000, 9271));
-
-                    // make the OLE shape a chart
-                    XPropertySet aShapeProp = (XPropertySet) UnoRuntime.queryInterface(
-                            XPropertySet.class, aShape);
-
-                    // set the class id for charts
-                    aShapeProp.setPropertyValue("CLSID", "47BBB4CB-CE4C-4E80-A591-42D9AE74950F");
-
-                    // retrieve the chart document as model of the OLE shape
-                    XTable table = (XTable) UnoRuntime.queryInterface(
-                            XChartDocument.class,
-                            aShapeProp.getPropertyValue("Model"));
-                } catch (Exception ex) {
-                    System.out.println("Couldn't change the OLE shape into a chart: " + ex);
-                }
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            } catch (WrappedTargetException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
+        }
+        return result;
+    }
+
+    void addCellEventListener(XCell xCell) {
+//        xCell.
+    }
+
+    private void insertTable(XComponent xDrawDoc) {
+        try {
+            Object instance = xMSF.createInstance("com.sun.star.drawing.TableShape");
+            XShape oTableShape = QI.XShape(instance);
+            XDrawPage oDrawPage = DrawHelper.getCurrentDrawPage(xDrawDoc);
+
+
+            int borderBottom = OOoUtils.getIntProperty(oDrawPage, "BorderBottom");
+            int borderLeft = OOoUtils.getIntProperty(oDrawPage, "BorderLeft");
+            int borderRight = OOoUtils.getIntProperty(oDrawPage, "BorderRight");
+            int width = OOoUtils.getIntProperty(oDrawPage, "Width");
+            int height = OOoUtils.getIntProperty(oDrawPage, "Height");
+
+
+            Size aSize = new Size(width - borderLeft - borderRight, 3000);
+            oTableShape.setSize(aSize);
+            OOoUtils.setBooleanProperty(oTableShape, "SizeProtect", true);
+            Point aPos = new Point();
+
+            aPos.X = width / 2 - aSize.Width / 2;
+            aPos.Y = height - borderBottom - 3000;
+
+
+            oTableShape.setPosition(aPos);
+
+
+            oDrawPage.add(oTableShape);
+            Object model = OOoUtils.getProperty(oTableShape, "Model");
+//            XModel xModel = QI.XModel(model);
+            XTable xTable = UnoRuntime.queryInterface(XTable.class, model);
+
+            XModifiable xModifiable = UnoRuntime.queryInterface(XModifiable.class, model);
+
+            if (xModifiable != null) {
+                xModifiable.addModifyListener(new XModifyListener() {
+                    @Override
+                    public void modified(EventObject eventObject) {
+                        Map<String, String> keyValueMapFromXTable = getKeyValueMapFromXTable(UnoRuntime.queryInterface(XTable.class, eventObject.Source));
+                        System.out.println(keyValueMapFromXTable.entrySet().size());
+
+                    }
+
+                    @Override
+                    public void disposing(EventObject eventObject) {
+                        //TODO implement
+                    }
+                });
+            }
+
+            XEventBroadcaster xEventBroadcaster = UnoRuntime.queryInterface(XEventBroadcaster.class, model);
+            if (xEventBroadcaster != null) {
+
+                xEventBroadcaster.addEventListener(new XEventListener() {
+                    @Override
+                    public void notifyEvent(com.sun.star.document.EventObject eventObject) {
+                        System.out.println(eventObject.EventName);
+                    }
+
+                    @Override
+                    public void disposing(EventObject eventObject) {
+                        //TODO implement
+                    }
+                });
+            }
+
+            XTableColumns columns = xTable.getColumns();
+
+
+            columns.insertByIndex(0, 1);
+
+
+            XTableRows rows = xTable.getRows();
+            rows.insertByIndex(0, 1);
+            rows.insertByIndex(0, 1);
+
+
+            for (int i = 0; i < columns.getCount() - 1; i++) {
+                Object byIndex = columns.getByIndex(i);
+                OOoUtils.setProperty(byIndex, "Width", aSize.Width / columns.getCount());
+            }
+
+            for (int i = 0; i < rows.getCount() - 1; i++) {
+                Object byIndex = rows.getByIndex(i);
+                OOoUtils.setProperty(byIndex, "Height", aSize.Height / rows.getCount());
+            }
+
+            oTableShape.setSize(aSize);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -1524,37 +1759,6 @@ public final class OOGraph extends WeakBase implements
         }
     }
 
-    public void setState(State state) {
-        this.state = state;
-
-
-        if (diagramEventHandlerMap.containsKey(state)) {
-            diagramEventHandler = diagramEventHandlerMap.get(state);
-        } else {
-            switch (state) {
-                case AddingLink:
-                    AddingLink addingLink = new AddingLink();
-                    diagramEventHandlerMap.put(state, addingLink);
-                    break;
-                default:
-                    diagramEventHandlerMap.put(state, new DiagramEventHandler() {
-                        @Override
-                        public void elementAdded(ElementAddEvent event) {
-                            System.out.println("elementAdded");
-                            // ignore
-                        }
-
-                        @Override
-                        public void elementModified(ElementModifyEvent event) {
-                            System.out.println("elementModified");
-                            // ignore
-                        }
-                    });
-                    break;
-            }
-        }
-    }
-
     void statusChangedDisable(URL url) {
 
         MyURL myURL = new MyURL(url);
@@ -1593,6 +1797,11 @@ public final class OOGraph extends WeakBase implements
         Nothing,
         InputTwoShapes,
         AddingLink
+    }
+
+    static
+    {
+        m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
     }
 
 
