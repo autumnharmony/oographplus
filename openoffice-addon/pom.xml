@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>ru.ssau.graphplus</groupId>
+    <artifactId>openoffice-addon</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>graphplus::openoffice</name>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>ru.ssau.graphplus</groupId>
+        <artifactId>oograph</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <description>Graphplus Openoffice Addon</description>
+    <properties>
+        <project_dir>${project.basedir}</project_dir>
+        <oxt_path>${project.basedir}${file.separator}target${file.separator}${artifactId}-${version}.oxt</oxt_path>
+    </properties>
+
+    <dependencies>
+
+        <!-- openoffice depends -->
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>juh</artifactId>
+            <scope>system</scope>
+            <systemPath>${oo_artifacts_path}juh.jar</systemPath>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>jurt</artifactId>
+            <scope>system</scope>
+            <systemPath>${oo_artifacts_path}jurt.jar</systemPath>
+            <version>3.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>ridl</artifactId>
+            <scope>system</scope>
+            <systemPath>${oo_artifacts_path}ridl.jar</systemPath>
+            <version>3.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>unoil</artifactId>
+            <scope>system</scope>
+            <systemPath>${oo_artifacts_path}unoil.jar</systemPath>
+            <version>3.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>officebean</artifactId>
+            <version>4.0</version>
+            <scope>system</scope>
+            <systemPath>${oo_artifacts_path}officebean.jar</systemPath>
+        </dependency>
+        <!-- / openoffice depends -->
+
+
+
+
+        <dependency>
+            <groupId>ru.ssau.graphplus</groupId>
+            <artifactId>api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.8.1</version>
+            <scope>compile</scope>
+
+        </dependency>
+
+
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>serializer</artifactId>
+            <version>2.7.1</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>2.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <version>2.0.2</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+       </dependency>
+
+        <dependency>
+            <groupId>ru.ssau.graphplus</groupId>
+            <artifactId>api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+
+        </dependency>
+
+
+        <dependency>
+            <groupId>ru.ssau.graphplus</groupId>
+            <artifactId>code-generator-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+
+        </dependency>
+
+
+        <dependency>
+            <groupId>ru.ssau.graphplus</groupId>
+            <artifactId>code-generator-ooo-impl</artifactId>
+            <version>1.0-SNAPSHOT</version>
+
+        </dependency>
+
+        <dependency>
+            <groupId>ru.ssau.graphplus</groupId>
+            <artifactId>commons</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--<dependency>-->
+        <!--<groupId>bootstrap</groupId>-->
+        <!--<artifactId>bootstrap</artifactId>-->
+        <!--<scope>system</scope>-->
+        <!--<systemPath>${project.basedir}${file.separator}lib/bootstrapconnector.jar</systemPath>-->
+        <!--</dependency>-->
+
+
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-shade-plugin</artifactId>-->
+                <!--<version>2.1</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>shade</goal>-->
+
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<artifactSet>-->
+                                <!--<includes>-->
+                                    <!--<include>ru.ssau.graphplus:code-generator-api</include>-->
+                                    <!--<include>ru.ssau.graphplus:code-generator-diagram-impl</include>-->
+                                    <!--<include>ru.ssau.graphplus:api</include>-->
+                                    <!--&lt;!&ndash;<include>ru.ssau.graphplus:openoffice-addon</include>&ndash;&gt;-->
+                                <!--</includes>-->
+                            <!--</artifactSet>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+
+                <!--</executions>-->
+            <!--</plugin>-->
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.10</version>
+
+                <configuration>
+                    <parallel>methods</parallel>
+                    <threadCount>10</threadCount>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit4</artifactId>
+                        <version>2.10</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>utf-8</encoding>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!--<outputDirectory>target/oxt/lib</outputDirectory>-->
+                            <outputDirectory>${project.basedir}/src/main/resources/oxt/lib</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-dependency-plugin</artifactId>-->
+                <!--<version>2.8</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>copy</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>copy</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<artifactItems>-->
+                                <!--<artifactItem>-->
+                                    <!--<groupId>xalan</groupId>-->
+                                    <!--<artifactId>xalan</artifactId>-->
+                                    <!--<version>2.7.1</version>-->
+                                    <!--<type>jar</type>-->
+                                    <!--<overWrite>true</overWrite>-->
+
+                                    <!--<destFileName>xalan.jar</destFileName>-->
+                                <!--</artifactItem>-->
+
+                                <!--<artifactItem>-->
+                                    <!--<groupId>xml-apis</groupId>-->
+                                    <!--<artifactId>xml-apis</artifactId>-->
+                                    <!--<version>2.0.2</version>-->
+                                    <!--<type>jar</type>-->
+                                    <!--<overWrite>false</overWrite>-->
+                                    <!--<destFileName>xml-apis.jar</destFileName>-->
+                                <!--</artifactItem>-->
+
+
+                                <!--<artifactItem>-->
+                                    <!--<groupId>ru.ssau.graphplus</groupId>-->
+                                    <!--<artifactId>api</artifactId>-->
+                                    <!--<version>1.0-SNAPSHOT</version>-->
+                                    <!--<type>jar</type>-->
+                                    <!--<overWrite>true</overWrite>-->
+                                    <!--<destFileName>api.jar</destFileName>-->
+                                <!--</artifactItem>-->
+
+
+                                <!--<artifactItem>-->
+                                    <!--<groupId>ru.ssau.graphplus</groupId>-->
+                                    <!--<artifactId>code-generator-api</artifactId>-->
+                                    <!--<version>1.0-SNAPSHOT</version>-->
+                                    <!--<type>jar</type>-->
+                                    <!--<overWrite>true</overWrite>-->
+                                    <!--&lt;!&ndash;<destFileName>codegen-api.jar</destFileName>&ndash;&gt;-->
+                                <!--</artifactItem>-->
+
+
+                                <!--<artifactItem>-->
+                                    <!--<groupId>ru.ssau.graphplus</groupId>-->
+                                    <!--<artifactId>code-generator-ooo-impl</artifactId>-->
+                                    <!--<version>1.0-SNAPSHOT</version>-->
+                                    <!--<type>jar</type>-->
+                                    <!--<overWrite>true</overWrite>-->
+                                    <!--&lt;!&ndash;<destFileName>codegen-impl.jar</destFileName>&ndash;&gt;-->
+                                <!--</artifactItem>-->
+
+                            <!--</artifactItems>-->
+                            <!--<outputDirectory>${project.basedir}/src/main/resources/lib</outputDirectory>-->
+                            <!--<overWriteReleases>true</overWriteReleases>-->
+                            <!--<overWriteSnapshots>true</overWriteSnapshots>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+
+            <plugin>
+                <groupId>org.openoffice.dev</groupId>
+                <artifactId>maven-ooo-plugin</artifactId>
+                <version>1.2-SNAPSHOT</version>
+                <!--
+                    the following values can be configured:
+                    ooo:    OpenOffice dir
+                    sdk:    OpenOffice SDK dir
+                    idlDir: IDL source dir
+                    oxtDir: OXT source dir
+                 -->
+                <configuration>
+                    <ooo>/opt/openoffice4/</ooo>
+                    <sdk>/opt/openoffice4/sdk</sdk>
+                    <oxtDir>src/main/resources/oxt</oxtDir>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <!--<goal>uninstall</goal>-->
+                            <goal>oxt</goal>
+                            <!-- TODO remove -->
+                            <goal>install</goal>
+
+                            <!--<goal>build-idl</goal>-->
+                        </goals>
+                        <configuration>
+
+                            <archive>
+                                <manifestEntries>
+                                    <UNO-Type-Path></UNO-Type-Path>
+                                    <RegistrationClassName>ru.ssau.graphplus.CentralRegistrationClass
+                                    </RegistrationClassName>
+                                    <Class-Path>lib/xerces.jar lib/xalan.jar lib/guava.jar lib/jdom.jar
+                                        lib/xercesImpl.jar lib/xml-apis.jar lib/serializer.jar lib/api.jar lib/codegen-impl.jar lib/codegen-api.jar
+                                    </Class-Path>
+                                </manifestEntries>
+                                <manifestSections>
+                                    <manifestSection>
+                                        <Name>ru/ssau/graphplus/CentralRegistrationClass.class</Name>
+                                        <manifestEntries>
+                                            <RegistrationClasses>ru.ssau.graphplus.OOGraph</RegistrationClasses>
+                                        </manifestEntries>
+                                    </manifestSection>
+                                </manifestSections>
+                            </archive>
+                            <useDefaultManifestFile>true</useDefaultManifestFile>
+                            <jarName>graphplus-addon-0.1</jarName>
+
+
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+
+        </plugins>
+
+
+    </build>
+</project>
+

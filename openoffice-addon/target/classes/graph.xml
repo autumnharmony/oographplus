@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graph id="graph">
+    <node id="a">
+        <link id="link1" to="b"/>
+    </node>
+    <node id="b">
+        <link id="link2" to="d"/>
+    </node>
+    <node id="c"/>
+    <node id="c"/>
+    <node id="d">
+        <link id="link3" to="c"/>
+    </node>
+</graph>

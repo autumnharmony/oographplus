@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog1" dlg:left="95" dlg:top="46" dlg:width="130" dlg:height="62" dlg:closeable="true" dlg:moveable="true" dlg:title="Tag shape">
+ <dlg:bulletinboard>
+  <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="1" dlg:left="30" dlg:top="10" dlg:width="70" dlg:height="14" dlg:spin="true">
+   <dlg:menupopup>
+    <dlg:menuitem dlg:value="Message"/>
+    <dlg:menuitem dlg:value="Control"/>
+    <dlg:menuitem dlg:value="Link"/>
+   </dlg:menupopup>
+   <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.UNO:itemStatusChanged" script:language="UNO"/>
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:comboboxExecuteAction" script:language="UNO"/>
+  </dlg:combobox>
+  <dlg:button dlg:id="chooseTypeButton" dlg:tab-index="0" dlg:left="30" dlg:top="44" dlg:width="70" dlg:height="14" dlg:value="Tag">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:chooseType" script:language="UNO"/>
+  </dlg:button>
+  <dlg:checkbox dlg:id="convertShapeCheckbox" dlg:tab-index="2" dlg:left="44" dlg:top="31" dlg:width="48" dlg:height="7" dlg:value="convertShape" dlg:checked="true">
+   <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.UNO:convertShapeCheckboxItemStatusChanged" script:language="UNO"/>
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:convertShapeCheckboxExecute" script:language="UNO"/>
+  </dlg:checkbox>
+ </dlg:bulletinboard>
+</dlg:window>

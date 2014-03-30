@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graph id="Call">
+    <node id="s0" type="Client" />
+    <node id="s1" type="Server" />
+    <node id="s2" type="Client" />
+    <link from="s0" id="call" to="s1" />
+    <link from="s1" id="ret" to="s2" />
+</graph>
+

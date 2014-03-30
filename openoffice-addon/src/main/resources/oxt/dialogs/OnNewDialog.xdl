@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="OnNewDialog" dlg:left="117" dlg:top="61" dlg:width="150" dlg:height="130" dlg:closeable="true" dlg:moveable="true">
+ <dlg:bulletinboard>
+  <dlg:menulist dlg:id="ListBox1" dlg:tab-index="0" dlg:left="31" dlg:top="19" dlg:width="94" dlg:height="34">
+   <dlg:menupopup>
+    <dlg:menuitem dlg:value="Композиция процессов"/>
+    <dlg:menuitem dlg:value="Процессов"/>
+    <dlg:menuitem dlg:value="Протокол взаимодействия"/>
+   </dlg:menupopup>
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:diagramTypeChanged" script:language="UNO"/>
+   <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.UNO:diagramTypeChanged" script:language="UNO"/>
+  </dlg:menulist>
+  <dlg:checkbox dlg:id="CheckBox1" dlg:tab-index="1" dlg:visible="false" dlg:left="3" dlg:top="120" dlg:width="146" dlg:height="11" dlg:value="Показывать это окно при создании нового файла" dlg:checked="false"/>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="2" dlg:left="40" dlg:top="94" dlg:width="26" dlg:height="20" dlg:value="Создать">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:createButton" script:language="UNO"/>
+  </dlg:button>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="3" dlg:left="84" dlg:top="94" dlg:width="30" dlg:height="20" dlg:value="Отменить">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:cancelButton" script:language="UNO"/>
+  </dlg:button>
+  <dlg:textfield dlg:id="TextField1" dlg:tab-index="4" dlg:left="18" dlg:top="71" dlg:width="120" dlg:height="12">
+   <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.UNO:diagramNameChanged" script:language="UNO"/>
+  </dlg:textfield>
+  <dlg:text dlg:id="Label1" dlg:tab-index="5" dlg:left="48" dlg:top="5" dlg:width="61" dlg:height="7" dlg:value="Тип диаграммы"/>
+  <dlg:text dlg:id="Label2" dlg:tab-index="6" dlg:left="47" dlg:top="60" dlg:width="62" dlg:height="9" dlg:value="Название диаграммы"/>
+ </dlg:bulletinboard>
+</dlg:window>

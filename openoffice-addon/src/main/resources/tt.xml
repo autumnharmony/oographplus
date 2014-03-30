@@ -1,0 +1,9 @@
+<graph id="qwe">
+
+    <node id="a" type="Client"/>
+    <node id="b" type="Server"/>
+
+    <!--<link from="a" id="link" to="b"/>-->
+    <link from="b" id="p1->p:Call" to="a"/>
+
+</graph>

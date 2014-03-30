@@ -1,0 +1,8 @@
+<process id="anySimpleType" entry="anySimpleType">
+    <port id="string" channel="string" type="string" module="string">
+        <receive id="string" method="string"/>
+    </port>
+    <method>
+        <send id="string" port="string"/>
+    </method>
+</process>

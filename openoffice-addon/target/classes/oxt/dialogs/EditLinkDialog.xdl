@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="EditLinkDialog" dlg:left="117" dlg:top="61" dlg:width="148" dlg:height="84" dlg:closeable="true" dlg:moveable="true">
+ <dlg:bulletinboard>
+  <dlg:button dlg:id="Save" dlg:tab-index="0" dlg:left="19" dlg:top="60" dlg:width="55" dlg:height="20" dlg:value="Save">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:onSave" script:language="UNO"/>
+  </dlg:button>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="83" dlg:top="58" dlg:width="53" dlg:height="21" dlg:value="Cancel">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:onCancel" script:language="UNO"/>
+  </dlg:button>
+  <dlg:textfield dlg:id="TextField1" dlg:tab-index="2" dlg:left="27" dlg:top="26" dlg:width="96" dlg:height="23" dlg:multiline="true"/>
+ </dlg:bulletinboard>
+</dlg:window>

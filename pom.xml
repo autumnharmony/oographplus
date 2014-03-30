@@ -1,151 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project>
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>ru.ssau.graphplus</groupId>
-    <artifactId>graphplus-addon</artifactId>
-    <version>0.1</version>
-    <name>graphplus::openoffice</name>
-    <packaging>pom</packaging>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <description>Graphplus Openoffice Addon</description>
+  <groupId>ru.ssau.graphplus</groupId>
+  <artifactId>oograph</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
     <properties>
-        <project_dir>${project.basedir}</project_dir>
-        <oxt_path>${project.basedir}${file.separator}target${file.separator}${artifactId}-${version}.oxt</oxt_path>
+        <oo_artifacts_path>/opt/openoffice4/program/classes/</oo_artifacts_path>
     </properties>
+  <modules>
+    <module>openoffice-addon</module>
+    <module>api</module>
+    <module>code-generator-api</module>
+    <module>code-generator-diagram-impl</module>
+    <module>commons</module>
+  </modules>
 
+    <dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>juh</artifactId>
-            <version>3.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>jurt</artifactId>
-            <version>3.2.1</version>
-        </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>15.0</version>
+            </dependency>
 
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>ridl</artifactId>
-            <version>3.2.1</version>
-        </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.8.1</version>
+                <scope>test</scope>
+            </dependency>
 
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>unoil</artifactId>
-            <version>3.2.1</version>
-        </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.8.4</version>
+                <scope>test</scope>
+            </dependency>
 
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>officebean</artifactId>
-            <version>2.4.0</version>
-            <scope>system</scope>
-            <systemPath>${project_dir}/lib/officebean.jar</systemPath>
-        </dependency>
+            <dependency>
+                <groupId>ru.ssau.graphplus</groupId>
+                <artifactId>commons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
+            <dependency>
+                <groupId>com.google.inject</groupId>
+                <artifactId>guice</artifactId>
+                <version>3.0</version>
+            </dependency>
 
-        <dependency>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-            <version>2.8.1</version>
-            <scope>compile</scope>
-
-        </dependency>
-
-
-
-        <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>xalan</artifactId>
-            <version>2.7.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>serializer</artifactId>
-            <version>2.7.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>2.0.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jdom</groupId>
-            <artifactId>jdom</artifactId>
-            <version>2.0.2</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.8.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>13.0</version>
-        </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>bootstrap</groupId>-->
-            <!--<artifactId>bootstrap</artifactId>-->
-            <!--<scope>system</scope>-->
-            <!--<systemPath>${project.basedir}${file.separator}lib/bootstrapconnector.jar</systemPath>-->
-        <!--</dependency>-->
-
-    </dependencies>
-
+            <dependency>
+                <groupId>com.google.collections</groupId>
+                <artifactId>google-collections</artifactId>
+                <version>1.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
-
         <plugins>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.10</version>
-
-                <configuration>
-                    <parallel>methods</parallel>
-                    <threadCount>10</threadCount>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.surefire</groupId>
-                        <artifactId>surefire-junit4</artifactId>
-                        <version>2.10</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
 
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -153,107 +71,7 @@
                 </configuration>
             </plugin>
 
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.8</version>
-                <executions>
-                    <execution>
-                        <id>copy</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>xalan</groupId>
-                                    <artifactId>xalan</artifactId>
-                                    <version>2.7.1</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-
-                                    <destFileName>xalan.jar</destFileName>
-                                </artifactItem>
-
-                                <artifactItem>
-                                    <groupId>xml-apis</groupId>
-                                    <artifactId>xml-apis</artifactId>
-                                    <version>2.0.2</version>
-                                    <type>jar</type>
-                                    <overWrite>false</overWrite>
-                                    <destFileName>xml-apis.jar</destFileName>
-                                </artifactItem>
-
-                            </artifactItems>
-                            <outputDirectory>${project.basedir}/src/main/resources/lib</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-
-
-            <plugin>
-                <groupId>org.openoffice.dev</groupId>
-                <artifactId>maven-ooo-plugin</artifactId>
-                <version>1.2-SNAPSHOT</version>
-                <!--
-                    the following values can be configured:
-                    ooo:    OpenOffice dir
-                    sdk:    OpenOffice SDK dir
-                    idlDir: IDL source dir
-                    oxtDir: OXT source dir
-                 -->
-                <configuration>
-                    <ooo>/opt/openoffice4/</ooo>
-                    <sdk>/opt/openoffice4/sdk</sdk>
-                    <oxtDir>src/main/resources/oxt</oxtDir>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <!--<goal>uninstall</goal>-->
-                            <goal>oxt</goal>
-                            <goal>install</goal>
-
-                            <!--<goal>build-idl</goal>-->
-                        </goals>
-                        <configuration>
-
-                            <archive>
-                                <manifestEntries>
-                                    <UNO-Type-Path></UNO-Type-Path>
-                                    <RegistrationClassName>ru.ssau.graphplus.CentralRegistrationClass</RegistrationClassName>
-                                    <Class-Path>lib/xerces.jar lib/xalan.jar lib/guava.jar lib/jdom.jar-->
-                                    lib/xercesImpl.jar lib/xml-apis.jar lib/serializer.jar
-                                    </Class-Path>
-                                </manifestEntries>
-                                <manifestSections>
-                                    <manifestSection>
-                                        <Name>ru/ssau/graphplus/CentralRegistrationClass.class</Name>
-                                        <manifestEntries>
-                                            <RegistrationClasses>ru.ssau.graphplus.OOGraph</RegistrationClasses>
-                                        </manifestEntries>
-                                    </manifestSection>
-                                </manifestSections>
-                            </archive>
-                            <useDefaultManifestFile>true</useDefaultManifestFile>
-                            <jarName>graphplus-addon-0.1</jarName>
-                        </configuration>
-                    </execution>
-
-                </executions>
-            </plugin>
-
-
         </plugins>
-
 
     </build>
 </project>
-
