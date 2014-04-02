@@ -3,27 +3,51 @@ package ru.ssau.graphplus.link;
 import com.sun.star.awt.Point;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
+import com.sun.star.beans.XPropertySet;
 import com.sun.star.drawing.XShape;
-import com.sun.star.lang.WrappedTargetException;
-import com.sun.star.lang.XComponent;
-import com.sun.star.lang.XMultiServiceFactory;
+import com.sun.star.lang.*;
+import com.sun.star.lang.IllegalArgumentException;
 import ru.ssau.graphplus.QI;
 
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LinkLink extends LinkBase implements Linker, Serializable {
+public class MixedLink extends LinkBase implements Linker, Serializable {
 
     private static final long serialVersionUID = 1L;
 
 
-    public LinkLink(XMultiServiceFactory xmsf, XComponent xComp, String c) {
+    public MixedLink(XMultiServiceFactory xmsf, XComponent xComp, String c) {
         super(xmsf, xComp, c);
     }
 
-    LinkLink() {
+    MixedLink() {
 
+    }
+
+    @Override
+    protected LinkStyle getStyle() {
+        return new LinkStyleBase() {
+            @Override
+            public void applyStyleForHalf1(XPropertySet xPS1) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, com.sun.star.lang.IllegalArgumentException {
+                xPS1.setPropertyValue("EndShape", getTextShape());
+//            xPS1.setPropertyValue("LineStyle", LineStyle.DASH);
+                xPS1.setPropertyValue("LineColor", new Integer(0x000000));
+
+                xPS1.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
+
+            }
+
+            @Override
+            public void applyStyleForHalf2(XPropertySet xPS2) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
+                xPS2.setPropertyValue("StartShape", getTextShape());
+                xPS2.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
+                xPS2.setPropertyValue("LineEndName", "Circle");
+                xPS2.setPropertyValue("LineColor", new Integer(0x000000));
+
+            }
+        };
     }
 
     @Override
@@ -53,50 +77,16 @@ public class LinkLink extends LinkBase implements Linker, Serializable {
         return null;
     }
 
-    public void setProps() {
-        super.setProps();
-
-        try {
-            xPS1.setPropertyValue("EndShape", getTextShape());
-//            xPS1.setPropertyValue("LineStyle", LineStyle.DASH);
-            xPS1.setPropertyValue("LineColor", new Integer(0x000000));
-
-            xPS1.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
-            xPS2.setPropertyValue("StartShape", getTextShape());
-            xPS2.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
-            xPS2.setPropertyValue("LineEndName", "Circle");
-            xPS2.setPropertyValue("LineColor", new Integer(0x000000));
-
-        } catch (UnknownPropertyException e) {
-            e.printStackTrace();
-        } catch (PropertyVetoException e) {
-            e.printStackTrace();
-        } catch (WrappedTargetException e) {
-            e.printStackTrace();
-        } catch (com.sun.star.lang.IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void link(XShape sh1, XShape sh2) {
         try {
-            /*
-
-               this.startShape = sh1;
-            this.endShape = sh2;
-            xPS1.setPropertyValue("StartShape", sh1);
-            xPS2.setPropertyValue("EndShape", sh2);
-
-            textShape.setPosition(new Point((sh1.getPosition().X + sh2.getPosition().X) / 2, (sh1.getPosition().Y + sh2.getPosition().Y) / 2));
-            super.link(sh1, sh2);
-             */
             textShape.setPosition(new Point((sh1.getPosition().X + sh2.getPosition().X) / 2, (sh1.getPosition().Y + sh2.getPosition().Y) / 2));
 
             this.startShape = sh1;
             this.endShape = sh2;
             xPS1.setPropertyValue("StartShape", sh1);
             xPS2.setPropertyValue("EndShape", sh2);
-//            textShape.setPosition(new Point((sh1.getPosition().X + sh2.getPosition().X) / 2, (sh1.getPosition().Y + sh2.getPosition().Y) / 2));
+
             super.link(sh1, sh2);
         } catch (UnknownPropertyException ex) {
             Logger.getLogger(ControlLink.class.getName()).log(Level.SEVERE, null, ex);

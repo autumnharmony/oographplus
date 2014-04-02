@@ -4,12 +4,12 @@ package ru.ssau.graphplus.link;
 import com.sun.star.awt.Point;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
+import com.sun.star.beans.XPropertySet;
 import com.sun.star.drawing.ConnectorType;
 import com.sun.star.drawing.LineStyle;
 import com.sun.star.drawing.XShape;
-import com.sun.star.lang.WrappedTargetException;
-import com.sun.star.lang.XComponent;
-import com.sun.star.lang.XMultiServiceFactory;
+import com.sun.star.lang.*;
+import com.sun.star.lang.IllegalArgumentException;
 import ru.ssau.graphplus.QI;
 import ru.ssau.graphplus.api.DiagramModel;
 
@@ -20,16 +20,16 @@ import java.util.logging.Logger;
 /**
  * @author anton
  */
-public class MessageLink extends LinkBase implements Linker, Serializable {
+public class DataLink extends LinkBase implements Linker, Serializable {
 
     private static final long serialVersionUID = 1L;
 
 
-    public MessageLink(XMultiServiceFactory xmsf, XComponent xComp, String c) {
+    public DataLink(XMultiServiceFactory xmsf, XComponent xComp, String c) {
         super(xmsf, xComp, c);
     }
 
-    MessageLink() {
+    DataLink() {
 
     }
 
@@ -62,34 +62,31 @@ public class MessageLink extends LinkBase implements Linker, Serializable {
         return null;
     }
 
-    public void setProps() {
-        super.setProps();
+    @Override
+    protected LinkStyle getStyle() {
+        return new LinkStyleBase() {
+            @Override
+            public void applyStyleForHalf1(XPropertySet xPS1) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, com.sun.star.lang.IllegalArgumentException {
+                xPS1.setPropertyValue("EndShape", getTextShape());
+                xPS1.setPropertyValue("LineStyle", LineStyle.DASH);
+                xPS1.setPropertyValue("LineDashName", "Fine Dashed");
 
-        try {
-            xPS1.setPropertyValue("EndShape", getTextShape());
-            xPS1.setPropertyValue("LineStyle", LineStyle.DASH);
-            xPS1.setPropertyValue("LineDashName", "Fine Dashed");
+                xPS1.setPropertyValue("EdgeKind", ConnectorType.LINE);
+                xPS1.setPropertyValue("LineColor", new Integer(0x000000));
+            }
 
-            xPS1.setPropertyValue("EdgeKind", ConnectorType.LINE);
-            xPS1.setPropertyValue("LineColor", new Integer(0x000000));
-
-            xPS2.setPropertyValue("StartShape", getTextShape());
-            xPS2.setPropertyValue("EdgeKind", ConnectorType.LINE);
-            xPS2.setPropertyValue("LineEndName", "Arrow");
-            xPS2.setPropertyValue("LineStyle", LineStyle.DASH);
-            xPS2.setPropertyValue("LineDashName", "Fine Dashed");
-            xPS2.setPropertyValue("LineColor", new Integer(0x000000));
-
-        } catch (UnknownPropertyException e) {
-            e.printStackTrace();
-        } catch (PropertyVetoException e) {
-            e.printStackTrace();
-        } catch (WrappedTargetException e) {
-            e.printStackTrace();
-        } catch (com.sun.star.lang.IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void applyStyleForHalf2(XPropertySet xPS2) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
+                xPS2.setPropertyValue("StartShape", getTextShape());
+                xPS2.setPropertyValue("EdgeKind", ConnectorType.LINE);
+                xPS2.setPropertyValue("LineEndName", "Arrow");
+                xPS2.setPropertyValue("LineStyle", LineStyle.DASH);
+                xPS2.setPropertyValue("LineDashName", "Fine Dashed");
+                xPS2.setPropertyValue("LineColor", new Integer(0x000000));
+            }
+        };
     }
+
 
     public void link(XShape sh1, XShape sh2) {
 
