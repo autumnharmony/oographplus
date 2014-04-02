@@ -2,6 +2,7 @@
 package ru.ssau.graphplus.link;
 
 import com.sun.star.awt.Point;
+import com.sun.star.awt.Rectangle;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.XPropertySet;
@@ -9,9 +10,8 @@ import com.sun.star.drawing.PolyPolygonBezierCoords;
 import com.sun.star.drawing.TextHorizontalAdjust;
 import com.sun.star.drawing.TextVerticalAdjust;
 import com.sun.star.drawing.XShape;
-import com.sun.star.lang.WrappedTargetException;
-import com.sun.star.lang.XComponent;
-import com.sun.star.lang.XMultiServiceFactory;
+import com.sun.star.lang.*;
+import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.text.XText;
 import com.sun.star.uno.Exception;
 import ru.ssau.graphplus.*;
@@ -78,12 +78,12 @@ public abstract class LinkBase implements Link,
     @Override
     public LinkType getType() {
         if (linkType == null) {
-            if (this instanceof LinkLink) {
-                linkType = LinkType.Link;
+            if (this instanceof MixedLink) {
+                linkType = LinkType.MixedFlow;
             } else if (this instanceof ControlLink) {
-                linkType = LinkType.Control;
-            } else if (this instanceof MessageLink) {
-                linkType = LinkType.Message;
+                linkType = LinkType.ControlFlow;
+            } else if (this instanceof DataLink) {
+                linkType = LinkType.DataFlow;
             }
         }
         return linkType;
@@ -178,14 +178,11 @@ public abstract class LinkBase implements Link,
         try {
 
             Object text = xMSF.createInstance("com.sun.star.drawing.TextShape");
-
             XShape xTextSh = QI.XShape(text);
 
             linkShapes.textShape = xTextSh;
             textShape = xTextSh;
-
             xPStext = QI.XPropertySet(text);
-
 
         } catch (Exception ex) {
             Logger.getLogger(LinkBase.class.getName()).log(Level.SEVERE, null, ex);
@@ -193,12 +190,94 @@ public abstract class LinkBase implements Link,
         return linkShapes;
     }
 
-    public void setProps() {
-        try {
-            xPStext.setPropertyValue("TextVerticalAdjust", TextVerticalAdjust.CENTER);
-            xPStext.setPropertyValue("TextHorizontalAdjust", TextHorizontalAdjust.CENTER);
-            xPStext.setPropertyValue("TextAutoGrowWidth", new Boolean(true));
 
+    interface LinkStyle {
+        void applyStyleForHalf1(XPropertySet xPropertySet) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException;
+        void applyStyleForHalf2(XPropertySet xPropertySet) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException;
+        void applyStyleForText(XPropertySet xPropertySet) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException;
+    }
+
+    abstract class LinkStyleBase implements LinkStyle {
+        @Override
+        public void applyStyleForText(XPropertySet xPStext) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
+
+                xPStext.setPropertyValue("TextVerticalAdjust", TextVerticalAdjust.CENTER);
+                xPStext.setPropertyValue("TextHorizontalAdjust", TextHorizontalAdjust.CENTER);
+                xPStext.setPropertyValue("TextAutoGrowWidth", new Boolean(true));
+
+        }
+    }
+
+    interface LinkApplyer {
+        void apply(LinkStyle linkStyle, LinkBase linkBase);
+    }
+
+    class LinkApplyerImpl implements LinkApplyer {
+        @Override
+        public void apply(LinkStyle linkStyle, LinkBase linkBase) {
+         try {
+                    linkStyle.applyStyleForHalf1( QI.XPropertySet(linkBase.getConnShape1()));
+                    linkStyle.applyStyleForText(QI.XPropertySet(linkBase.getTextShape()));
+                    linkStyle.applyStyleForHalf2(QI.XPropertySet(linkBase.getConnShape2()));
+            } catch (UnknownPropertyException | PropertyVetoException | com.sun.star.lang.IllegalArgumentException|WrappedTargetException e) {
+                throw new WrappedTargetRuntimeException("Error"); // TODO wrap exception
+            }
+        }
+    }
+
+    private void applyStyle(LinkStyle style){
+        new LinkApplyerImpl().apply(style, this);
+    }
+
+    protected abstract LinkStyle getStyle();
+
+    @Override
+    public Rectangle getBound() {
+        Point position = connShape1.getPosition();
+        Point position1 = connShape2.getPosition();
+        Point position2 = textShape.getPosition();
+
+        int[] xx = {position.X, position1.X, position2.X};
+        Arrays.sort(xx);
+        int[] yy = {position.Y, position1.Y, position2.Y};
+        Arrays.sort(yy);
+
+        int x = xx[0];
+        int y = yy[0];
+
+        XShape[] xShapes = {connShape1, connShape2, textShape};
+
+        int maxx = 0;
+        int maxy = 0;
+
+        for (XShape xShape : xShapes){
+            int xw = xShape.getPosition().X + xShape.getSize().Width;
+            if (xw > maxx) {
+                maxx = xw;
+            }
+
+            int yh = xShape.getPosition().Y + xShape.getSize().Height;
+            if (yh > maxy) {
+                maxy = yh;
+            }
+        }
+
+        return new Rectangle(x,y, maxx - x, maxy - y);
+    }
+
+    public void setProps() {
+
+        try {
+            xPS1.setPropertyValue("EndShape", getTextShape());
+            xPS2.setPropertyValue("StartShape", getTextShape());
+        }
+        catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException |WrappedTargetException e)
+        {
+            throw new RuntimeException(e);
+        }
+
+
+        applyStyle(getStyle());
 
 //            MiscHelper.setId(connShape1, getName() + "/conn1");
 //            MiscHelper.setId(connShape2, getName() + "/conn2");
@@ -214,15 +293,7 @@ public abstract class LinkBase implements Link,
 
             shapes = Arrays.asList(connShape1, connShape2, textShape);
 
-        } catch (UnknownPropertyException e) {
-            e.printStackTrace();
-        } catch (PropertyVetoException e) {
-            e.printStackTrace();
-        } catch (WrappedTargetException e) {
-            e.printStackTrace();
-        } catch (com.sun.star.lang.IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+
 
     }
 

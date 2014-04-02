@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2014. Anton Borisov
+ */
+
 package ru.ssau.graphplus;
 
 /**
@@ -8,4 +12,18 @@ package ru.ssau.graphplus;
  * To change this template use File | Settings | File Templates.
  */
 public class Settings {
+
+
+    public static boolean promptForNodeName = false;
+
+    public static LinkingInputMode linkingInputMode;
+
+    public static boolean mouseLinkingMode(){
+        return false;
+    }
+
+    private enum LinkingInputMode {
+        MouseClicking,
+        Silent
+    }
 }

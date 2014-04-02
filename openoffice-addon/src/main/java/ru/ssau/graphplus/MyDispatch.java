@@ -20,15 +20,12 @@ import com.sun.star.drawing.XShapes;
 import com.sun.star.frame.*;
 import com.sun.star.lang.*;
 import com.sun.star.lang.IllegalArgumentException;
-import com.sun.star.report.XImageControl;
 import com.sun.star.task.XJobExecutor;
 import com.sun.star.uno.*;
 import com.sun.star.uno.Exception;
 import com.sun.star.uno.RuntimeException;
 import com.sun.star.util.URL;
-import com.sun.star.view.XSelectionSupplier;
 import ru.ssau.graphplus.analizer.DiagramWalker;
-import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.document.event.handler.DocumentEventHandler;
 import ru.ssau.graphplus.document.event.handler.DocumentEventsHandler;
@@ -51,13 +48,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 2/8/14
- * Time: 1:04 AM
- * To change this template use File | Settings | File Templates.
- */
 public class MyDispatch implements XDispatch {
 
 
@@ -419,61 +409,8 @@ public class MyDispatch implements XDispatch {
             }
 
 
-            Object nodeObject;
-            Object linkObject;
-
             LinkBase link = null;
             NodeBase node = null;
-
-
-            if (url.Path.compareTo("Node") == 0) {
-
-                try {
-                    XDrawPage xDrawPage = DrawHelper.getDrawPageByIndex(getDiagramModel().getDrawDoc(), 0);
-                    XShape xShape = ShapeHelper.createShape(m_xComponent, new Point(800, 600), new Size(1500, 1500), "com.sun.star.drawing.EllipseShape");// .createEllipseShape(m_xComponent, 800, 800, 1500, 1500);
-                    node = nodeFactory.create(Node.NodeType.ClientPort, m_xComponent);
-                    XPropertySet xPS = QI.XPropertySet(xShape);
-
-                    try {
-                        Object ncObj = xMSF.createInstance("com.sun.star.drawing.BitmapTable");
-                        XNameContainer xNamedCont = (XNameContainer) QI.XNameContainer(ncObj);
-
-
-                    } catch (ServiceNotRegisteredException ex) {
-                    }
-
-                    XNameContainer xNC = QI.XNameContainer(xPS.getPropertyValue("ShapeUserDefinedAttributes"));
-
-                    XPropertySet xPropSet = QI.XPropertySet(xShape);
-
-                    XComponent xCompShape = (XComponent) UnoRuntime.queryInterface(XComponent.class, xShape);
-                    xCompShape.addEventListener(new com.sun.star.document.XEventListener() {
-
-                        public void notifyEvent(com.sun.star.document.EventObject arg0) {
-                            System.err.println(arg0.EventName);
-                            //                    throw new UnsupportedOperationException("Not supported yet.");
-                        }
-
-                        public void disposing(com.sun.star.lang.EventObject arg0) {
-                            //                    throw new UnsupportedOperationException("Not supported yet.");
-                        }
-                    });
-
-
-                    MiscHelper.tagShapeAsNode(xShape);
-                    xDrawPage.add(xShape);
-
-                    return;
-
-                } catch (com.sun.star.lang.IndexOutOfBoundsException ex) {
-                    Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (WrappedTargetException ex) {
-                    Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (java.lang.Exception ex) {
-                    Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-
 
             if (url.Path.compareTo(PROCESS_NODE) == 0) {
                 try {
@@ -504,7 +441,7 @@ public class MyDispatch implements XDispatch {
                     MiscHelper.tagShapeAsNode(node.getShape());
                     MiscHelper.setNodeType(node.getShape(), Node.NodeType.StartMethodOfProcess);
                     DrawHelper.setShapePositionAndSize(node.getShape(), 100, 100, 1800, 1500);
-                    Gui.createDialogForShape2(node.getShape(), m_xContext, new HashMap<String, XShape>());
+
                     //return;
 
                 } catch (com.sun.star.lang.IndexOutOfBoundsException ex) {
@@ -531,7 +468,6 @@ public class MyDispatch implements XDispatch {
                     MiscHelper.tagShapeAsNode(procedureNode.getShape());
 
                     DrawHelper.setShapePositionAndSize(procedureNode.getShape(), 100, 100, 2000, 1500);
-                    Gui.createDialogForShape2(procedureNode.getShape(), m_xContext, new HashMap<String, XShape>());
 
                     //return;
 
@@ -547,8 +483,6 @@ public class MyDispatch implements XDispatch {
 
             if (url.Path.compareTo(CLIENT_NODE) == 0) {
                 try {
-
-
                     ClientNode clientNode = (ClientNode) nodeFactory.create(Node.NodeType.ClientPort, m_xComponent);
                     node = clientNode;
 
@@ -561,10 +495,8 @@ public class MyDispatch implements XDispatch {
 
                     clientNode.setProps();
                     DrawHelper.setShapePositionAndSize(clientNode.getShape(), 100, 100, 1500, 1500);
-                    Gui.createDialogForShape2(clientNode.getShape(), m_xContext, new HashMap<String, XShape>());
 
-                    OOGraph.LOGGER.info("omg");
-                    //return;
+
                 } catch (java.lang.Exception ex) {
                     Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
                     return;
@@ -586,7 +518,7 @@ public class MyDispatch implements XDispatch {
 
                     node.setProps();
                     DrawHelper.setShapePositionAndSize(serverNode.getShape(), 100, 100, 1500, 1500);
-                    Gui.createDialogForShape2(serverNode.getShape(), m_xContext, new HashMap<String, XShape>());
+
 
                 } catch (PropertyVetoException ex) {
                     Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
@@ -598,410 +530,64 @@ public class MyDispatch implements XDispatch {
 
             Iterable<XShape> linkShapes = new ArrayList<XShape>();
 
-            if (url.Path.compareTo(LINK_LINK) == 0) {
+            if (url.Path.compareTo(MIXED_LINK) == 0) {
 
-                LinkLink linkLink = (LinkLink) linkFactory.create(Link.LinkType.Link, getDiagramModel().getDrawDoc());
-                link = linkLink;
-                linkShapes = linkLink.getShapes();
+                MixedLink mixedLink = (MixedLink) linkFactory.create(Link.LinkType.MixedFlow, getDiagramModel().getDrawDoc());
+                link = mixedLink;
+                linkShapes = mixedLink.getShapes();
 
             }
 
-            if (url.Path.compareTo(MESSAGE_LINK) == 0) {
+            if (url.Path.compareTo(DATA_LINK) == 0) {
 
-                MessageLink messageLink = (MessageLink) linkFactory.create(Link.LinkType.Message, getDiagramModel().getDrawDoc());
-                link = messageLink;
-                linkShapes = messageLink.getShapes();
+                DataLink dataLink = (DataLink) linkFactory.create(Link.LinkType.DataFlow, getDiagramModel().getDrawDoc());
+                link = dataLink;
+                linkShapes = dataLink.getShapes();
 
             }
 
             if (url.Path.compareTo(CONTROL_LINK) == 0) {
 
-                ControlLink controlLink = (ControlLink) linkFactory.create(Link.LinkType.Control, getDiagramModel().getDrawDoc());
+                ControlLink controlLink = (ControlLink) linkFactory.create(Link.LinkType.ControlFlow, getDiagramModel().getDrawDoc());
                 link = controlLink;
                 linkShapes = controlLink.getShapes();
 
             }
 
 
-            if (url.Path.compareTo(LINK_LINK) == 0 || url.Path.compareTo(CONTROL_LINK) == 0 || url.Path.compareTo(MESSAGE_LINK) == 0) {
+            if (anyLink(url)) {
+                // common for all links
 
                 for (XShape shape : linkShapes) {
                     DrawHelper.insertShapeOnCurrentPage(shape, getDiagramModel().getDrawDoc());
-
-//                    linkFactory.setId(shape, link);
                 }
-
-                link.setProps();
-
-                // common for all links
-
-
-                getDiagramController().setLinker(link);
-                getDiagramController().setInputMode(new InputTwoShapesMode(getDiagramController(), link));
-
-                //inputMode = new InputTwoShapesMode(getDiagramController());
-                statusChangedDisable(url);
-
-                //                    lastURL = url;
 
                 if (link != null) {
+                    link.setProps();
 
-                    getDiagramModel().addDiagramElement(link);
-                    diagramController.configureListeners(link);
-                }
-                return;
-            }
+                    getDiagramController().setLinker(link);
 
-
-            if (url.Path.compareTo("Save") == 0) {
-                // TODO implement or delete
-                return;
-            }
-
-            if (url.Path.compareTo("Tag") == 0) {
-                // add your own code here
-                OOGraph.LOGGER.info("Tag");
-                if (Status.isTagAllNewShapes()) {
-                    Status.setTagAllNewShapes(false);
-                } else {
-                    Status.setTagAllNewShapes(true);
-                }
-                return;
-            }
-
-            if (url.Path.compareTo("Assoc") == 0) {
-                // add your own code here
-                OOGraph.LOGGER.info("Assoc");
-
-                return;
-            }
-
-
-            if (url.Path.compareTo("TagAsLink") == 0) {
-
-                try {
-
-                    XDrawPage xPage = PageHelper.getDrawPageByIndex(getDiagramModel().getDrawDoc(), 0);
-
-                    XController xController = m_xFrame.getController();
-
-                    //                            Object ddv = xMCF.createInstanceWithContext("com.sun.star.drawing.DrawingDocumentDrawView", m_xContext);
-                    //XSelectionSupplier
-                    XSelectionSupplier xSelectSup = QI.XSelectionSupplier(xController);
-                    Object selectionObj = xSelectSup.getSelection();
-                    XShapes xShapes = (XShapes) UnoRuntime.queryInterface(
-                            XShapes.class, selectionObj);
-                    try {
-                        final XShape xShape = (XShape) QI.XShape(xShapes.getByIndex(0));
-                        OOGraph.LOGGER.info(xShape.getShapeType());
-                        //                        if (xShape.getShapeType().contains("Connector")) {
-                        //                            Misc.tagShapeAsLink(xShape);
-                        //                            chooseLinkType(xShape);
-                        //
-                        //                        }
-
-                        String packageLocation = getPackageLocation();
-                        OOGraph.LOGGER.info(packageLocation);
-                        try {
-                            XMultiComponentFactory xMCF = m_xContext.getServiceManager();
-                            Object obj;
-
-                            // If valid we must pass the XModel when creating a DialogProvider object
-
-                            obj = xMCF.createInstanceWithContext(
-                                    "com.sun.star.awt.DialogProvider2", m_xContext);
-
-                            XDialogProvider2 xDialogProvider = (XDialogProvider2)
-                                    UnoRuntime.queryInterface(XDialogProvider2.class, obj);
-
-
-                            XDialog xDialog = xDialogProvider.createDialogWithHandler("vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/Dialog2.xdl", new XDialogEventHandler() {
-
-                                private Integer selected;
-                                private Boolean convertShape = true;
-
-                                @Override
-                                public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
-
-                                    XControlContainer xControlContainer = UnoRuntime.queryInterface(XControlContainer.class, xDialog);
-                                    //                                    xControlContainer.getControl("")
-                                    boolean handled = true;
-                                    boolean end = false;
-
-
-                                    if (s.equals("chooseType")) {
-
-                                        MiscHelper.tagShapeAsNode(xShape);
-
-                                        XControl comboBox1 = xControlContainer.getControl("ComboBox1");
-                                        XComboBox xComboBox = UnoRuntime.queryInterface(XComboBox.class, comboBox1);
-
-                                        String nodeType = xComboBox.getItem(selected.shortValue());
-                                        Link linkReplace = null;
-                                        final boolean finalConvertShape = convertShape;
-                                        final Link finalLinkReplace = linkReplace;
-                                        if (convertShape) {
-                                            //                                                TODO xDP
-                                            //                                                linkReplace = linkFactory.create(LinkBase.LinkType.valueOf(nodeType), m_xComponent, xDP);
-
-//                                            NodeBase.PostCreationAction postCreationAction = new NodeBase.PostCreationAction() {
-//                                                @Override
-//                                                public void postCreate(XShape shape) {
-//                                                    if (finalConvertShape) {
-//                                                        if (finalLinkReplace != null) {
-//                                                            Misc.tagShapeAsLink(finalLinkReplace.getConnShape1());
-//                                                            Misc.tagShapeAsLink(finalLinkReplace.getConnShape2());
-//                                                            Misc.tagShapeAsLink(finalLinkReplace.getTextShape());
-//
-//                                                            xDP.remove(xShape);
-//                                                        }
-//                                                    } else {
-//                                                        Misc.tagShapeAsNode(xShape);
-//                                                    }
-//                                                }
-//                                            };
-
-
-                                        }
-
-
-                                        end = true;
-                                        handled = true;
-
-                                    } else if (s.equals("itemStatusChanged")) {
-                                        selected = ((ItemEvent) o).Selected;
-
-                                        handled = true;
-                                        end = false;
-                                    } else if (s.equals("convertShapeCheckboxExecute")) {
-                                        //                                        convertShape = !convertShape;
-                                        handled = true;
-                                        end = false;
-                                    } else if (s.equals("convertShapeCheckboxItemStatusChanged")) {
-                                        convertShape = !convertShape;
-                                        handled = true;
-                                        end = false;
-                                    } else {
-                                        handled = false;
-                                    }
-
-                                    if (end) {
-                                        xDialog.endExecute();
-                                    }
-
-                                    return handled;
-                                }
-
-                                @Override
-                                public String[] getSupportedMethodNames() {
-                                    return new String[]{"chooseTypeNode", "chooseTypeLink", "chooseType",
-                                            "itemStatusChanged", "convertShapeCheckboxExecute",
-                                            "convertShapeCheckboxItemStatusChanged"};
-                                }
-                            });
-                            //                    xDialog.execute();
-                            if (xDialog != null)
-                                xDialog.execute();
-
-
-                        } catch (com.sun.star.lang.IndexOutOfBoundsException ex) {
-                            Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (WrappedTargetException ex) {
-                            Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (Exception ex) {
-                            Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
-                    } catch (com.sun.star.lang.IndexOutOfBoundsException ex) {
-                        Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (WrappedTargetException ex) {
-                        Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
+                    if (Settings.mouseLinkingMode()){
+                        getDiagramController().setInputMode(new InputTwoShapesMode(getDiagramController(), link));
                     }
 
-                } catch (com.sun.star.lang.IndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                } catch (WrappedTargetException e) {
-                    e.printStackTrace();
+                    statusChangedDisable(url);
+                        getDiagramModel().addDiagramElement(link);
+                        diagramController.configureListeners(link);
                 }
-            }
-
-
-            if (url.Path.compareTo("TagAsNode") == 0) {
-                try {
-
-                    XDrawPage xPage = PageHelper.getDrawPageByIndex(getDiagramModel().getDrawDoc(), 0);
-                    XController xController = m_xFrame.getController();
-
-                    XSelectionSupplier xSelectSup = QI.XSelectionSupplier(xController);
-                    Object selectionObj = xSelectSup.getSelection();
-                    XShapes xShapes = (XShapes) UnoRuntime.queryInterface(
-                            XShapes.class, selectionObj);
-                    try {
-                        final XShape xShape = (XShape) QI.XShape(xShapes.getByIndex(0));
-                        OOGraph.LOGGER.info(xShape.getShapeType());
-
-
-                        Object valueByName = m_xContext.getValueByName("/singletons/com.sun.star.deployment.PackageInformationProvider");
-                        XPackageInformationProvider xPackageInformationProvider = UnoRuntime.queryInterface(XPackageInformationProvider.class, valueByName);
-                        String packageLocation = xPackageInformationProvider.getPackageLocation("ru.ssau.graphplus.oograph");
-                        OOGraph.LOGGER.info(packageLocation);
-                        try {
-                            XMultiComponentFactory xMCF = m_xContext.getServiceManager();
-                            Object obj;
-
-                            // If valid we must pass the XModel when creating a DialogProvider object
-
-                            obj = xMCF.createInstanceWithContext(
-                                    "com.sun.star.awt.DialogProvider2", m_xContext);
-
-                            XDialogProvider2 xDialogProvider = (XDialogProvider2)
-                                    UnoRuntime.queryInterface(XDialogProvider2.class, obj);
-
-
-                            XDialog xDialog = xDialogProvider.createDialogWithHandler("vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/Dialog1.xdl", new XDialogEventHandler() {
-
-                                private Integer selected;
-                                private Boolean convertShape = true;
-
-                                @Override
-                                public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
-
-
-                                    XControlContainer xControlContainer = UnoRuntime.queryInterface(XControlContainer.class, xDialog);
-
-                                    boolean handled = true;
-                                    boolean end = false;
-
-
-                                    if (s.equals("chooseType")) {
-
-                                        MiscHelper.tagShapeAsNode(xShape);
-
-                                        XControl comboBox1 = xControlContainer.getControl("ComboBox1");
-                                        XComboBox xComboBox = UnoRuntime.queryInterface(XComboBox.class, comboBox1);
-
-                                        String nodeType = xComboBox.getItem(selected.shortValue());
-                                        NodeBase nodeReplace = null;
-                                        final boolean finalConvertShape = convertShape;
-                                        final NodeBase finalNodeReplace = nodeReplace;
-                                        if (convertShape) {
-                                            final NodeBase.NodeType type = Node.NodeType.valueOf(nodeType);
-                                            nodeReplace = nodeFactory.create(type, m_xComponent);
-
-                                            PostCreationAction postCreationAction = new NodeBase.DefaultPostCreationAction(convertShape) {
-                                                @Override
-                                                public void postCreate(XShape shape) {
-                                                    super.postCreate(shape);    //To change body of overridden methods use File | Settings | File Templates.
-
-                                                }
-                                            };
-
-                                            if (finalConvertShape) {
-                                                //                                                    TODO xDP
-                                                //                                                    ShapeHelper.insertShape(nodeReplace.getShape(), xDP, postCreationAction);
-                                                try {
-                                                    nodeReplace.getShape().setPosition(xShape.getPosition());
-                                                    nodeReplace.getShape().setSize(xShape.getSize());
-                                                    DiagramElement diagramElement = diagramModel.getShapeToDiagramElementMap().get(xShape);
-
-                                                    // TODO get DRAWPAGE of current
-                                                    //                                                        xDP.remove(xShape);
-                                                } catch (PropertyVetoException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            } else {
-
-                                            }
-
-
-                                        }
-
-
-                                        end = true;
-                                        handled = true;
-
-                                    } else if (s.equals("itemStatusChanged")) {
-                                        selected = ((ItemEvent) o).Selected;
-                                        XControl control = xControlContainer.getControl("ImageControl1");
-                                        XImageControl xImageControl = UnoRuntime.queryInterface(XImageControl.class, control);
-
-                                        XControl comboBox1 = xControlContainer.getControl("ComboBox1");
-                                        XComboBox xComboBox = UnoRuntime.queryInterface(XComboBox.class, comboBox1);
-
-                                        String nodeType = xComboBox.getItem(selected.shortValue());
-                                        nodeType = nodeType.toLowerCase().trim().replace("node", "");
-
-                                        //QI.XPropertySet(control.getModel()).setPropertyValue("ImageURL", "vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/server.png")
-                                        try {
-                                            QI.XPropertySet(control.getModel()).setPropertyValue("ImageURL", "vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/" + nodeType + ".png");
-                                        } catch (UnknownPropertyException e) {
-                                            e.printStackTrace();
-                                        } catch (PropertyVetoException e) {
-                                            e.printStackTrace();
-                                        } catch (com.sun.star.lang.IllegalArgumentException e) {
-                                            e.printStackTrace();
-                                        }
-                                        //xImageControl.setImageURL("vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/"+nodeType +".png");
-
-                                        handled = true;
-                                        end = false;
-                                    } else if (s.equals("convertShapeCheckboxExecute")) {
-                                        //                                        convertShape = !convertShape;
-                                        handled = true;
-                                        end = false;
-                                    } else if (s.equals("convertShapeCheckboxItemStatusChanged")) {
-                                        convertShape = !convertShape;
-                                        handled = true;
-                                        end = false;
-                                    } else {
-                                        handled = false;
-                                    }
-
-                                    if (end) {
-                                        xDialog.endExecute();
-                                    }
-
-                                    return handled;
-                                }
-
-                                @Override
-                                public String[] getSupportedMethodNames() {
-                                    return new String[]{"chooseTypeNode", "chooseTypeLink", "chooseType",
-                                            "itemStatusChanged", "convertShapeCheckboxExecute",
-                                            "convertShapeCheckboxItemStatusChanged"};
-                                }
-                            });
-
-                            xDialog.execute();
-                            //                            if (xDialog != null)
-                            //                                xDialog.execute();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } catch (java.lang.RuntimeException e) {
-                            Logger.getAnonymousLogger().warning(e.getMessage());
-                        }
-
-
-                    } catch (com.sun.star.lang.IndexOutOfBoundsException ex) {
-                        Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (WrappedTargetException ex) {
-                        Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (Exception ex) {
-                        Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                } catch (com.sun.star.lang.IndexOutOfBoundsException ex) {
-                    Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (WrappedTargetException ex) {
-                    Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
                 return;
-
             }
 
 
             if (anyNode(url)) {
+                try {
+                    if (Settings.promptForNodeName){
+                        Gui.createDialogForShape2(node.getShape(), m_xContext, new HashMap<String, XShape>());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
                 // common for all nodes
                 if (node != null) {
 
@@ -1083,6 +669,10 @@ public class MyDispatch implements XDispatch {
 
         }
 
+    }
+
+    private boolean anyLink(URL url) {
+        return url.Path.compareTo(MIXED_LINK) == 0 || url.Path.compareTo(CONTROL_LINK) == 0 || url.Path.compareTo(DATA_LINK) == 0;
     }
 
     final static String msShowCommand = "ShowOptionsDialog";

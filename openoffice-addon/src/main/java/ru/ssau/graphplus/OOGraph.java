@@ -75,15 +75,12 @@ public class OOGraph extends ComponentBase implements
     private static ArrayList<FrameObject> _frameObjectList = null;
     private static XComponent m_xComponent = null;
 
-    static {
-        m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
-    }
-
     private final XComponentContext m_xContext;
 
     public static final Logger LOGGER;
 
     static {
+        m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
 
         LOGGER = Logger.getLogger("oograph");
         Handler consoleHandler = new ConsoleHandler();

@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2014. Anton Borisov
- */
-
 package ru.ssau.graphplus.gui;
 
 import com.sun.star.awt.*;
@@ -15,15 +11,10 @@ import com.sun.star.lang.XMultiServiceFactory;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 4/2/14
- * Time: 9:30 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class ChooseNodeTypeDialog {
-    public short chooseNodeTypeDialog(XMultiComponentFactory xMCF, final XShape xShape, XComponentContext m_xContext) {
+
+    public short chooseNodeType(XMultiComponentFactory xMCF, final XShape xShape, XComponentContext m_xContext) {
 
             try {
                 Object oDialogModel = xMCF.createInstanceWithContext("com.sun.star.awt.UnoControlDialogModel", m_xContext);
@@ -58,7 +49,6 @@ public class ChooseNodeTypeDialog {
                         "Width", new Integer(200));
                 xPSetDialog.setPropertyValue(
                         "Height", new Integer(70));
-
 
                 Object toolkit = xMCF.createInstanceWithContext(
                         "com.sun.star.awt.ExtToolkit", m_xContext);
@@ -120,5 +110,5 @@ public class ChooseNodeTypeDialog {
             }
             return 0;
         }
-    }
+
 }

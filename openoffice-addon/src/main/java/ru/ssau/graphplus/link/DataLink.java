@@ -67,7 +67,7 @@ public class DataLink extends LinkBase implements Linker, Serializable {
         return new LinkStyleBase() {
             @Override
             public void applyStyleForHalf1(XPropertySet xPS1) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, com.sun.star.lang.IllegalArgumentException {
-                xPS1.setPropertyValue("EndShape", getTextShape());
+
                 xPS1.setPropertyValue("LineStyle", LineStyle.DASH);
                 xPS1.setPropertyValue("LineDashName", "Fine Dashed");
 
@@ -77,7 +77,7 @@ public class DataLink extends LinkBase implements Linker, Serializable {
 
             @Override
             public void applyStyleForHalf2(XPropertySet xPS2) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
-                xPS2.setPropertyValue("StartShape", getTextShape());
+
                 xPS2.setPropertyValue("EdgeKind", ConnectorType.LINE);
                 xPS2.setPropertyValue("LineEndName", "Arrow");
                 xPS2.setPropertyValue("LineStyle", LineStyle.DASH);

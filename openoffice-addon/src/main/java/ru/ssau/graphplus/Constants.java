@@ -9,8 +9,8 @@ public class Constants {
 
     public static String XSLT_PATH = "/xsl/";
 
-    public static final String LINK_LINK = "LinkLink";
-    public static final String MESSAGE_LINK = "MessageLink";
+    public static final String MIXED_LINK = "MixedLink";
+    public static final String DATA_LINK = "DataLink";
     public static final String CONTROL_LINK = "ControlLink";
     public static final String SERVER_NODE = "ServerNode";
     public static final String CLIENT_NODE = "ClientNode";

@@ -34,10 +34,17 @@
                         </prop>
                     </node>
 
+                    <node oor:name="s0" oor:op="replace">
+                        <prop oor:name="URL" oor:type="xs:string">
+                            <value>private:separator</value>
+                        </prop>
+                    </node>
+
+
 
                     <node oor:name="m1" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
-                            <value>ru.ssau.graphplus:ServerNode</value>
+                            <value>ru.ssau.graphplus:ProcessNode</value>
                         </prop>
 
                         <prop oor:name="Target" oor:type="xs:string">
@@ -70,7 +77,7 @@
                     </node>
                     <node oor:name="m3" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
-                            <value>ru.ssau.graphplus:ProcessNode</value>
+                            <value>ru.ssau.graphplus:ServerNode</value>
                         </prop>
                         <prop oor:name="ImageIdentifier" oor:type="xs:string">
                             <value/>
@@ -109,12 +116,6 @@
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>private:separator</value>
                         </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.drawing.DrawingDocument</value>
-                        </prop>
                     </node>
 
 
@@ -140,7 +141,7 @@
 
                     <node oor:name="m6" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
-                            <value>ru.ssau.graphplus:ControlLink</value>
+                            <value>ru.ssau.graphplus:DataLink</value>
                         </prop>
                         <prop oor:name="ImageIdentifier" oor:type="xs:string">
                             <value/>
@@ -159,7 +160,7 @@
 
                     <node oor:name="m7" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
-                            <value>ru.ssau.graphplus:ControlLink</value>
+                            <value>ru.ssau.graphplus:MixedLink</value>
                         </prop>
                         <prop oor:name="ImageIdentifier" oor:type="xs:string">
                             <value/>
@@ -180,12 +181,6 @@
                     <node oor:name="s2" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>private:separator</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.drawing.DrawingDocument</value>
                         </prop>
                     </node>
 

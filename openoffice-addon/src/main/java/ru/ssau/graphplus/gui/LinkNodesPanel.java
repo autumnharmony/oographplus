@@ -199,7 +199,7 @@ public class LinkNodesPanel extends PanelBase {
     }
 
     private Link.LinkType getLinkType() {
-        return Link.LinkType.Control;
+        return Link.LinkType.ControlFlow;
     }
 
 

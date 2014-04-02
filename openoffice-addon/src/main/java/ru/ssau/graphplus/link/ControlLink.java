@@ -3,6 +3,7 @@ package ru.ssau.graphplus.link;
 import com.sun.star.awt.Point;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
+import com.sun.star.beans.XPropertySet;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.WrappedTargetException;
@@ -60,30 +61,23 @@ public class ControlLink extends LinkBase implements Linker, Serializable {
         return null;
     }
 
-    public void setProps() {
-        super.setProps();
+    @Override
+    protected LinkStyle getStyle() {
+        return new LinkStyleBase() {
+            @Override
+            public void applyStyleForHalf1(XPropertySet xPS1) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
+                xPS1.setPropertyValue("LineColor", new Integer(0x000000));
+                xPS1.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
 
-        try {
-            xPS1.setPropertyValue("EndShape", getTextShape());
-            xPS1.setPropertyValue("LineColor", new Integer(0x000000));
+            }
 
-            xPS1.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
-
-
-            xPS2.setPropertyValue("StartShape", getTextShape());
-            xPS2.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
-            xPS2.setPropertyValue("LineEndName", "Arrow");
-            xPS2.setPropertyValue("LineColor", new Integer(0x000000));
-
-        } catch (UnknownPropertyException e) {
-            e.printStackTrace();
-        } catch (PropertyVetoException e) {
-            e.printStackTrace();
-        } catch (WrappedTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void applyStyleForHalf2(XPropertySet xPS2) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
+                xPS2.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
+                xPS2.setPropertyValue("LineEndName", "Arrow");
+                xPS2.setPropertyValue("LineColor", new Integer(0x000000));
+            }
+        };
     }
 
     public void link(XShape sh1, XShape sh2) {

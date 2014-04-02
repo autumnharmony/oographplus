@@ -27,14 +27,14 @@ public class LinkFactory extends DiagramElementFactory{
     public Link create(Link.LinkType type, XComponent xComp) {
         LinkBase link = null;
         switch (type) {
-            case Control:
+            case ControlFlow:
                 link = new ControlLink(xmsf,  xComp, LINK_PREFIX + getCount());
                 break;
-            case Link:
-                link = new LinkLink(xmsf,  xComp, LINK_PREFIX + getCount());
+            case MixedFlow:
+                link = new MixedLink(xmsf,  xComp, LINK_PREFIX + getCount());
                 break;
-            case Message:
-                link = new MessageLink(xmsf, xComp, LINK_PREFIX + getCount());
+            case DataFlow:
+                link = new DataLink(xmsf, xComp, LINK_PREFIX + getCount());
                 break;
         }
 
@@ -50,14 +50,14 @@ public class LinkFactory extends DiagramElementFactory{
     public Link createPrototype(Link.LinkType type){
         LinkBase link = null;
         switch (type) {
-            case Control:
+            case ControlFlow:
                 link = new ControlLink();
                 break;
-            case Link:
-                link = new LinkLink();
+            case MixedFlow:
+                link = new MixedLink();
                 break;
-            case Message:
-                link = new MessageLink();
+            case DataFlow:
+                link = new DataLink();
                 break;
         }
         return link;

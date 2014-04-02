@@ -4,6 +4,7 @@ import com.sun.star.awt.Point;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.XPropertySet;
+import com.sun.star.drawing.LineStyle;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.*;
 import com.sun.star.lang.IllegalArgumentException;
@@ -31,19 +32,16 @@ public class MixedLink extends LinkBase implements Linker, Serializable {
         return new LinkStyleBase() {
             @Override
             public void applyStyleForHalf1(XPropertySet xPS1) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, com.sun.star.lang.IllegalArgumentException {
-                xPS1.setPropertyValue("EndShape", getTextShape());
-//            xPS1.setPropertyValue("LineStyle", LineStyle.DASH);
+
                 xPS1.setPropertyValue("LineColor", new Integer(0x000000));
-
                 xPS1.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
-
             }
 
             @Override
             public void applyStyleForHalf2(XPropertySet xPS2) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
-                xPS2.setPropertyValue("StartShape", getTextShape());
+                xPS2.setPropertyValue("LineStyle", LineStyle.DASH);
                 xPS2.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
-                xPS2.setPropertyValue("LineEndName", "Circle");
+//                xPS2.setPropertyValue("LineEndName", "Circle");
                 xPS2.setPropertyValue("LineColor", new Integer(0x000000));
 
             }
