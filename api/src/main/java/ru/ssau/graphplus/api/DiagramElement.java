@@ -1,8 +1,9 @@
 package ru.ssau.graphplus.api;
 
+import com.sun.star.awt.Point;
 import com.sun.star.awt.Rectangle;
 
-import java.awt.*;
+
 
 public interface DiagramElement  {
 

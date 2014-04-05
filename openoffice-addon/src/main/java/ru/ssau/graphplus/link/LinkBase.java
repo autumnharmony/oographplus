@@ -36,8 +36,28 @@ public abstract class LinkBase implements Link,
         ShapesProvider
 {
 
+    @Override
+    public void setPosition(Point position) {
+        // TODO implement
 
-//    @Override
+    }
+
+    @Override
+    public Point getPosition() {
+        Point position1 = connShape1.getPosition();
+        Point position2 = connShape2.getPosition();
+        Point position3 = textShape.getPosition();
+
+        int[] xx = {position1.X, position2.X, position3.X};
+        int[] yy = {position1.Y, position2.Y, position3.Y};
+
+        Arrays.sort(xx);
+        Arrays.sort(yy);
+        return new Point(xx[0], yy[0]);
+
+    }
+
+    //    @Override
     public void setStartNode(Node node1) {
         if (node1 instanceof NodeBase){
             setStartNode(node1);

@@ -4,17 +4,18 @@
 
 package ru.ssau.graphplus.gui;
 
-import com.sun.star.awt.*;
+
 import ru.ssau.graphplus.api.DiagramElement;
-import ru.ssau.graphplus.api.Node;
 
 import java.awt.*;
-import java.awt.Point;
-import java.awt.Rectangle;
 
+
+/**
+ * Wrapper of diagram element for layouting purpose
+ */
 public class DiagramElementObj implements Layout.Obj {
 
-    DiagramElement diagramElement;
+    final DiagramElement diagramElement;
 
     public DiagramElementObj(DiagramElement diagramElement) {
         this.diagramElement = diagramElement;
@@ -28,17 +29,35 @@ public class DiagramElementObj implements Layout.Obj {
 
     @Override
     public void setPosition(Point position) {
-        diagramElement.setPosition(position);
+        diagramElement.setPosition(new com.sun.star.awt.Point(position.x, position.y));
     }
 
     @Override
     public Point getPosition() {
-        return diagramElement.getPosition();
+        com.sun.star.awt.Point position = diagramElement.getPosition();
+        return new Point(position.X, position.Y);
     }
 
     @Override
     public Rectangle getBound() {
         com.sun.star.awt.Rectangle bound = diagramElement.getBound();
         return new Rectangle(bound.X, bound.Y, bound.Width, bound.Height);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DiagramElementObj)) return false;
+
+        DiagramElementObj that = (DiagramElementObj) o;
+
+        if (!diagramElement.equals(that.diagramElement)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return diagramElement.hashCode();
     }
 }

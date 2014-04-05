@@ -114,6 +114,11 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
         }
     }
 
+    @Override
+    public void setPosition(Point position) {
+        xShape.setPosition(position);
+    }
+
     public abstract XShape buildShape(XMultiServiceFactory xMSF);
 
     public XShape getShape() {

@@ -30,9 +30,7 @@ import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.document.event.handler.DocumentEventHandler;
 import ru.ssau.graphplus.document.event.handler.DocumentEventsHandler;
 import ru.ssau.graphplus.document.event.handler.impl.DocumentEventsHandlerImpl;
-import ru.ssau.graphplus.gui.GetCodeDialog;
-import ru.ssau.graphplus.gui.Gui;
-import ru.ssau.graphplus.gui.LinkNodesDialog;
+import ru.ssau.graphplus.gui.*;
 import ru.ssau.graphplus.link.*;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
@@ -107,6 +105,9 @@ public class MyDispatch implements XDispatch {
         diagramController = new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel, xDrawDoc, this);
 
         setupDocumentEventsHandler();
+
+        layout = new FlowLayout(new StageSheetImpl(diagramModel, xDrawDoc));
+
 
         if (Boolean.TRUE.equals(Global.loaded)){
          onLoadHandler();
@@ -325,6 +326,8 @@ public class MyDispatch implements XDispatch {
         }
     }
 
+    private Layout layout;
+
 
     @Override
     public void dispatch(URL url, PropertyValue[] propertyValues) {
@@ -440,7 +443,9 @@ public class MyDispatch implements XDispatch {
 
                     MiscHelper.tagShapeAsNode(node.getShape());
                     MiscHelper.setNodeType(node.getShape(), Node.NodeType.StartMethodOfProcess);
-                    DrawHelper.setShapePositionAndSize(node.getShape(), 100, 100, 1800, 1500);
+
+//                    DrawHelper.setShapePositionAndSize(node.getShape(), 100, 100, 1800, 1500);
+                    DrawHelper.setShapeSize(node.getShape(), 1800, 1500);
 
                     //return;
 
@@ -467,7 +472,9 @@ public class MyDispatch implements XDispatch {
 
                     MiscHelper.tagShapeAsNode(procedureNode.getShape());
 
-                    DrawHelper.setShapePositionAndSize(procedureNode.getShape(), 100, 100, 2000, 1500);
+//                    DrawHelper.setShapePositionAndSize(procedureNode.getShape(), 100, 100, 2000, 1500);
+
+                    DrawHelper.setShapeSize(procedureNode.getShape(), 2000, 1500);
 
                     //return;
 
@@ -494,7 +501,9 @@ public class MyDispatch implements XDispatch {
                     MiscHelper.tagShapeAsNode(clientNode.getShape());
 
                     clientNode.setProps();
-                    DrawHelper.setShapePositionAndSize(clientNode.getShape(), 100, 100, 1500, 1500);
+//                    DrawHelper.setShapePositionAndSize(clientNode.getShape(), 100, 100, 1500, 1500);
+
+                    DrawHelper.setShapeSize(clientNode.getShape(), 1500, 1500);
 
 
                 } catch (java.lang.Exception ex) {
@@ -517,7 +526,8 @@ public class MyDispatch implements XDispatch {
 
 
                     node.setProps();
-                    DrawHelper.setShapePositionAndSize(serverNode.getShape(), 100, 100, 1500, 1500);
+//                    DrawHelper.setShapePositionAndSize(serverNode.getShape(), 100, 100, 1500, 1500);
+                    DrawHelper.setShapeSize(serverNode.getShape(), 1500, 1500);
 
 
                 } catch (PropertyVetoException ex) {
@@ -595,6 +605,8 @@ public class MyDispatch implements XDispatch {
                     MiscHelper.setId(node.getShape(), node.getName());
                     //                        diagramModel.addDiagramElement(node);
                 }
+
+                layout.layout(new DiagramElementObj(node));
 
                 return;
             }

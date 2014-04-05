@@ -44,7 +44,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     private DiagramType diagramType;
     private String name;
 
-    private BiMap<String,String> idNameBiMap;
+//    private BiMap<String,String> idNameBiMap;
 
     transient private Map<XShape, Pair<XShape, XShape>> connShapeToShape;
     private boolean restored;
@@ -72,7 +72,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         this.xDrawDoc = xDrawDoc;
 
         shapeDiagramElementBiMap =  HashBiMap.create();
-        idNameBiMap = HashBiMap.create();
+//        idNameBiMap = HashBiMap.create();
     }
 
     public DiagramType getDiagramType() {
@@ -138,7 +138,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
             shapeToDiagramElementMap.put(node.getShape(), de);
             idToShape.put(node.getId(), node.getShape());
 
-            idNameBiMap.put(node.getId(),node.getName());
+//            idNameBiMap.put(node.getId(),node.getName());
         }
         return this;
     }

@@ -8,14 +8,14 @@ import java.awt.*;
 import java.util.Collection;
 
 /**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 4/3/14
- * Time: 12:18 AM
- * To change this template use File | Settings | File Templates.
+ * Layouting <code>Obj</code> on <code>Stage</code>
+ * It only affects position of Obj
  */
 public interface Layout {
 
+    /**
+     * Object, which should be layouted
+     */
     interface Obj {
         Dimension getDimension();
         void setPosition(Point position);
@@ -23,6 +23,9 @@ public interface Layout {
         Rectangle getBound();
     }
 
+    /**
+     * Stage for positioning objects on
+     */
     interface Stage {
         Dimension getDimenstion();
         Collection<Obj> getObjects();
@@ -30,8 +33,18 @@ public interface Layout {
         Rectangle getBound(Obj obj);
     }
 
+    /**
+     * Change position of obj accroding to positions of other Objs already added on stage
+     * @param stage
+     * @param obj
+     */
     void layout(Stage stage, Obj obj);
 
+    /**
+     * Change position of obj accroding to positions of other Objs already added on stage
+     * @param obj
+     */
+    void layout(Obj obj);
 
 
 }
