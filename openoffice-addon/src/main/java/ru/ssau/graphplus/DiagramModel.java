@@ -111,7 +111,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     }
 
     public DiagramElement getDiagramElementByShape(XShape xS) {
-        return shapeToDiagramElementMap.get(xS);
+                    return shapeToDiagramElementMap.get(xS);
     }
 
     public DiagramModel addDiagramElement(DiagramElement de) {

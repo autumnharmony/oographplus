@@ -7,6 +7,7 @@ package ru.ssau.graphplus;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+import com.google.inject.Guice;
 import com.sun.star.awt.*;
 import com.sun.star.beans.*;
 import com.sun.star.container.XNameContainer;
@@ -27,10 +28,13 @@ import com.sun.star.uno.RuntimeException;
 import com.sun.star.util.URL;
 import ru.ssau.graphplus.analizer.DiagramWalker;
 import ru.ssau.graphplus.api.DiagramType;
+import ru.ssau.graphplus.di.AddonModule;
 import ru.ssau.graphplus.document.event.handler.DocumentEventHandler;
 import ru.ssau.graphplus.document.event.handler.DocumentEventsHandler;
 import ru.ssau.graphplus.document.event.handler.impl.DocumentEventsHandlerImpl;
 import ru.ssau.graphplus.gui.*;
+import ru.ssau.graphplus.gui.dialogs.CreateNodeDialog;
+import ru.ssau.graphplus.gui.dialogs.GetCodeDialog;
 import ru.ssau.graphplus.link.*;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
@@ -46,6 +50,9 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Dispatch wrapper
+ */
 public class MyDispatch implements XDispatch {
 
 
@@ -106,7 +113,10 @@ public class MyDispatch implements XDispatch {
 
         setupDocumentEventsHandler();
 
-        layout = new FlowLayout(new StageSheetImpl(diagramModel, xDrawDoc));
+        StageSheetImpl stage = new StageSheetImpl(diagramModel, xDrawDoc);
+        Guice.createInjector(new AddonModule(stage,diagramModel));
+
+        layout = new FlowLayout(stage);
 
 
         if (Boolean.TRUE.equals(Global.loaded)){
@@ -577,36 +587,43 @@ public class MyDispatch implements XDispatch {
 
                     getDiagramController().setLinker(link);
 
-                    if (Settings.mouseLinkingMode()){
+                    if (Settings.getSettings().mouseLinkingMode() && diagramModel.getNodes().size() >= 2){
                         getDiagramController().setInputMode(new InputTwoShapesMode(getDiagramController(), link));
                     }
 
                     statusChangedDisable(url);
                         getDiagramModel().addDiagramElement(link);
                         diagramController.configureListeners(link);
+
+                    layout.layout(new DiagramElementObj(link));
                 }
+
+
+
                 return;
             }
 
 
             if (anyNode(url)) {
-                try {
-                    if (Settings.promptForNodeName){
-                        Gui.createDialogForShape2(node.getShape(), m_xContext, new HashMap<String, XShape>());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
+                    if (Settings.getSettings().promptForNodeName()){
+                        CreateNodeDialog createNodeDialog = new CreateNodeDialog(node.getShape(), m_xContext);
+                        XModel xModel = QI.XModel(xDrawDoc);
+                        XDialog dialog = createDialog(CreateNodeDialog.CREATE_NODE_DIALOG_XDL, xModel, m_xFrame, createNodeDialog, false);
+                        createNodeDialog.init(dialog);
+                        dialog.execute();
+                     }
+
 
                 // common for all nodes
                 if (node != null) {
 
                     getDiagramModel().addDiagramElement(node);
                     MiscHelper.setId(node.getShape(), node.getName());
-                    //                        diagramModel.addDiagramElement(node);
+
+                    layout.layout(new DiagramElementObj(node));
                 }
 
-                layout.layout(new DiagramElementObj(node));
+
 
                 return;
             }
@@ -691,7 +708,7 @@ public class MyDispatch implements XDispatch {
 
 
     private boolean anyNode(URL url) {
-        return url.Path.equals(CLIENT_NODE) || url.Path.equals(PROCEDURE_NODE) || url.Path.equals(CLIENT_NODE) || url.Path.equals(SERVER_NODE);
+        return url.Path.equals(CLIENT_NODE) || url.Path.equals(PROCEDURE_NODE) || url.Path.equals(PROCESS_NODE) || url.Path.equals(SERVER_NODE);
     }
 
     public XDialog createDialog(String xdlUrl, XModel xModel, XFrame xFrame){

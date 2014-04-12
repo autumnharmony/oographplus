@@ -1,4 +1,4 @@
-package ru.ssau.graphplus.gui;
+package ru.ssau.graphplus.gui.dialogs;
 
 import com.sun.star.awt.*;
 import com.sun.star.beans.XMultiPropertySet;
@@ -10,6 +10,7 @@ import com.sun.star.lang.XMultiComponentFactory;
 import com.sun.star.lang.XMultiServiceFactory;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
+import ru.ssau.graphplus.gui.MyXActionListener;
 
 
 public class ChooseNodeTypeDialog {

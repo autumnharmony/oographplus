@@ -2,6 +2,14 @@
 <manifest:manifest xmlns:manifest="http://openoffice.org/2001/manifest">
     <manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=Java"
                          manifest:full-path="graphplus-addon-0.1.jar"/>
+    <manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=Java"
+                         manifest:full-path="api.jar"/>
+    <manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=Java"
+                         manifest:full-path="codegen-api.jar"/>
+    <manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=Java"
+                         manifest:full-path="codegen-impl.jar"/>
+
+
     <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
                          manifest:full-path="registry/data/org/openoffice/Office/Addons.xcu"/>
     <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"

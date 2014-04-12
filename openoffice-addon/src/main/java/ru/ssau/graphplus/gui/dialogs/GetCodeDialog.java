@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Anton Borisov
  */
 
-package ru.ssau.graphplus.gui;
+package ru.ssau.graphplus.gui.dialogs;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.star.awt.XControl;

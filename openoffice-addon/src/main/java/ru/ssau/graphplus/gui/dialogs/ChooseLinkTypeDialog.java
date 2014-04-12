@@ -1,4 +1,4 @@
-package ru.ssau.graphplus.gui;
+package ru.ssau.graphplus.gui.dialogs;
 
 import com.sun.star.awt.*;
 import com.sun.star.beans.UnknownPropertyException;
@@ -15,6 +15,7 @@ import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import ru.ssau.graphplus.DrawHelper;
 import ru.ssau.graphplus.api.Link;
+import ru.ssau.graphplus.gui.MyXActionListener;
 import ru.ssau.graphplus.link.LinkFactory;
 import ru.ssau.graphplus.link.Linker;
 import ru.ssau.graphplus.link.LinkerImpl;

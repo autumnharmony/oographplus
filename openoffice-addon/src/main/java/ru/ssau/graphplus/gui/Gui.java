@@ -556,262 +556,262 @@ public class Gui {
         }
     }
 
-    //======================
-    public static Object[] onlyCreateDialog2(final XNamed xNmd, XShape xShp, XComponentContext _xComponentContext, Map<String, XShape> elements) throws com.sun.star.uno.Exception {
-        XMultiComponentFactory xMultiComponentFactory = _xComponentContext.getServiceManager();
-        Object[] objs;
-        // create the dialog model and set the properties
-        Object dialogModel = xMultiComponentFactory.createInstanceWithContext(
-                "com.sun.star.awt.UnoControlDialogModel", _xComponentContext);
-        XPropertySet xPSetDialog = (XPropertySet) UnoRuntime.queryInterface(
-                XPropertySet.class, dialogModel);
-        xPSetDialog.setPropertyValue(
-                "PositionX", new Integer(100));
-        xPSetDialog.setPropertyValue(
-                "PositionY", new Integer(100));
-        xPSetDialog.setPropertyValue(
-                "Width", new Integer(150));
-        xPSetDialog.setPropertyValue(
-                "Height", new Integer(100));
-
-
-        xPSetDialog.setPropertyValue(
-                "Title", new String("Properties " + MiscHelper.getGraphElementType(xShp)));
-
-        // get the service manager from the dialog model
-        XMultiServiceFactory xMultiServiceFactory = (XMultiServiceFactory) UnoRuntime.queryInterface(
-                XMultiServiceFactory.class, dialogModel);
-
-        // create the button model and set the properties
-        Object buttonModel = xMultiServiceFactory.createInstance(
-                "com.sun.star.awt.UnoControlButtonModel");
-        MiscHelper.printInfo(buttonModel);
-        XPropertySet xPSetButton = (XPropertySet) UnoRuntime.queryInterface(
-                XPropertySet.class, buttonModel);
-
-        xPSetButton.setPropertyValue("PositionX", new Integer(20));
-        xPSetButton.setPropertyValue(
-                "PositionY", new Integer(70));
-        xPSetButton.setPropertyValue(
-                "Width", new Integer(50));
-        xPSetButton.setPropertyValue(
-                "Height", new Integer(14));
-        xPSetButton.setPropertyValue(
-                "Name", _buttonName);
-        xPSetButton.setPropertyValue(
-                "TabIndex", new Short((short) 0));
-
-        xPSetButton.setPropertyValue(
-                "Label", new String("Ok"));
-
-
-        // create the textbox model and set the properties
-
-        Object editModel = xMultiServiceFactory.createInstance(
-                "com.sun.star.awt.UnoControlEditModel");
-
-        XTextComponent xTextComp; // = UnoRuntime.queryInterface(XTextComponent.class, editModel);
-
-        XPropertySet xPSetEdit = (XPropertySet) UnoRuntime.queryInterface(
-                XPropertySet.class, editModel);
-
-        xPSetEdit.setPropertyValue("PositionX", new Integer(40));
-        xPSetEdit.setPropertyValue(
-                "PositionY", new Integer(30));
-        xPSetEdit.setPropertyValue(
-                "Width", new Integer(100));
-        xPSetEdit.setPropertyValue(
-                "Height", new Integer(14));
-        xPSetEdit.setPropertyValue(
-                "Name", _textfieldName);
-        xPSetEdit.setPropertyValue(
-                "TabIndex", new Short((short) 0));
-
-
-        //Object propertyEdit
-
-        //
-
-        Object cbModel = xMultiServiceFactory.createInstance(
-                "com.sun.star.awt.UnoControlCheckBoxModel");
-        XPropertySet xPSetCheckBox = (XPropertySet) UnoRuntime.queryInterface(
-                XPropertySet.class, cbModel);
-
-        xPSetCheckBox.setPropertyValue("PositionX", new Integer(40));
-        xPSetCheckBox.setPropertyValue(
-                "PositionY", new Integer(50));
-
-        xPSetCheckBox.setPropertyValue(
-                "Name", _checkboxName);
-        xPSetCheckBox.setPropertyValue(
-                "TabIndex", new Short((short) 1));
-
-        xPSetCheckBox.setPropertyValue(
-                "Label", "??????????????????????????");
-
-
-        // create a Cancel button model and set the properties
-        Object cancelButtonModel = xMultiServiceFactory.createInstance(
-                "com.sun.star.awt.UnoControlButtonModel");
-        XPropertySet xPSetCancelButton = (XPropertySet) UnoRuntime.queryInterface(
-                XPropertySet.class, cancelButtonModel);
-
-
-        xPSetCancelButton.setPropertyValue("PositionX", new Integer(80));
-        xPSetCancelButton.setPropertyValue(
-                "PositionY", new Integer(70));
-        xPSetCancelButton.setPropertyValue(
-                "Width", new Integer(50));
-        xPSetCancelButton.setPropertyValue(
-                "Height", new Integer(14));
-        xPSetCancelButton.setPropertyValue(
-                "Name", _cancelButtonName);
-        xPSetCancelButton.setPropertyValue(
-                "TabIndex", new Short((short) 2));
-        xPSetCancelButton.setPropertyValue(
-                "PushButtonType", new Short((short) 2));
-        xPSetCancelButton.setPropertyValue(
-                "Label", new String("Cancel"));
-
-
-        ///
-        Object label1Model = xMultiServiceFactory.createInstance("com.sun.star.awt.UnoControlFixedTextModel");
-        XPropertySet xPSetLabel1 = (XPropertySet) UnoRuntime.queryInterface(
-                XPropertySet.class, label1Model);
-        xPSetLabel1.setPropertyValue("PositionX", new Integer(10));
-        xPSetLabel1.setPropertyValue("PositionY", new Integer(30));
-        xPSetLabel1.setPropertyValue("Label", new String("ID"));
-        xPSetLabel1.setPropertyValue("Name", _idLabelName);
-        xPSetLabel1.setPropertyValue("Width", new Integer(20));
-        xPSetLabel1.setPropertyValue(
-                "Height", new Integer(14));
-
-
-        Object label2Model = xMultiServiceFactory.createInstance("com.sun.star.awt.UnoControlFixedTextModel");
-        XPropertySet xPSetLabel2 = (XPropertySet) UnoRuntime.queryInterface(
-                XPropertySet.class, label2Model);
-        xPSetLabel1.setPropertyValue("PositionX", new Integer(10));
-        xPSetLabel1.setPropertyValue("PositionY", new Integer(50));
-        xPSetLabel1.setPropertyValue("Label", new String("Type"));
-        xPSetLabel1.setPropertyValue("Name", _typeLabelName);
-        xPSetLabel1.setPropertyValue("Width", new Integer(20));
-        xPSetLabel1.setPropertyValue(
-                "Height", new Integer(14));
-
-
-        // add the model to the NameContainer of the dialog model
-        // insert the control models into the dialog model
-
-
-        XNameContainer xNameCont = (XNameContainer) UnoRuntime.queryInterface(
-                XNameContainer.class, dialogModel);
-
-        xNameCont.insertByName(_buttonName, buttonModel);
-        xNameCont.insertByName(_textfieldName, editModel);
-        //xNameCont.insertByName(_checkboxName, cbModel);
-        xNameCont.insertByName(_cancelButtonName, cancelButtonModel);
-//        xNameCont.insertByName(_textfieldName2, editModel2);
-        xNameCont.insertByName(_idLabelName, label1Model);
-        xNameCont.insertByName(_typeLabelName, label2Model);
-
-
-        // create the dialog control and set the model
-        Object dialog = xMultiComponentFactory.createInstanceWithContext(
-                "com.sun.star.awt.UnoControlDialog", _xComponentContext);
-
-        XControlContainer xControlCont = (XControlContainer) UnoRuntime.queryInterface(
-                XControlContainer.class, dialog);
-
-        XControl xControl = (XControl) UnoRuntime.queryInterface(
-                XControl.class, dialog);
-        XControlModel xControlModel = (XControlModel) UnoRuntime.queryInterface(
-                XControlModel.class, dialogModel);
-
-        xControl.setModel(xControlModel);
-        // add an action listener to the button control
-
-        Object objectButton = xControlCont.getControl("Button1");
-        XButton xButton = (XButton) UnoRuntime.queryInterface(
-                XButton.class, objectButton);
-        XDialog xDialog = (XDialog) UnoRuntime.queryInterface(XDialog.class, dialog);
-
-        xButton.addActionListener(new ActionListenerImpl(xControlCont, xNmd, xDialog,
-                xShp));
-
-        XControl xTextControl = (XControl) UnoRuntime.queryInterface(XControl.class, xControlCont.getControl(_textfieldName));
-        xTextComp = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class, xTextControl);
-        xTextComp.addTextListener(new TextListenerImpl(elements, buttonModel));
-
-
-//        XControl xCBControl = xControlCont.getControl(_checkboxName);
-//        XCheckBox xCB = UnoRuntime.queryInterface(XCheckBox.class, xCBControl);
-//        xCB.addItemListener(
-//                new XItemListener() {
+//    //======================
+//    public static Object[] onlyCreateDialog2(final XNamed xNmd, XShape xShp, XComponentContext _xComponentContext, Map<String, XShape> elements) throws com.sun.star.uno.Exception {
+//        XMultiComponentFactory xMultiComponentFactory = _xComponentContext.getServiceManager();
+//        Object[] objs;
+//        // create the dialog model and set the properties
+//        Object dialogModel = xMultiComponentFactory.createInstanceWithContext(
+//                "com.sun.star.awt.UnoControlDialogModel", _xComponentContext);
+//        XPropertySet xPSetDialog = (XPropertySet) UnoRuntime.queryInterface(
+//                XPropertySet.class, dialogModel);
+//        xPSetDialog.setPropertyValue(
+//                "PositionX", new Integer(100));
+//        xPSetDialog.setPropertyValue(
+//                "PositionY", new Integer(100));
+//        xPSetDialog.setPropertyValue(
+//                "Width", new Integer(150));
+//        xPSetDialog.setPropertyValue(
+//                "Height", new Integer(100));
 //
-//                    public void itemStateChanged(ItemEvent arg0) {
-//                        System.out.println("auto");
-//                    }
 //
-//                    public void disposing(com.sun.star.lang.EventObject arg0) {
-//                        //throw new UnsupportedOperationException("Not supported yet.");
-//                    }
-//                });
+//        xPSetDialog.setPropertyValue(
+//                "Title", new String("Properties " + MiscHelper.getGraphElementType(xShp)));
+//
+//        // get the service manager from the dialog model
+//        XMultiServiceFactory xMultiServiceFactory = (XMultiServiceFactory) UnoRuntime.queryInterface(
+//                XMultiServiceFactory.class, dialogModel);
+//
+//        // create the button model and set the properties
+//        Object buttonModel = xMultiServiceFactory.createInstance(
+//                "com.sun.star.awt.UnoControlButtonModel");
+//        MiscHelper.printInfo(buttonModel);
+//        XPropertySet xPSetButton = (XPropertySet) UnoRuntime.queryInterface(
+//                XPropertySet.class, buttonModel);
+//
+//        xPSetButton.setPropertyValue("PositionX", new Integer(20));
+//        xPSetButton.setPropertyValue(
+//                "PositionY", new Integer(70));
+//        xPSetButton.setPropertyValue(
+//                "Width", new Integer(50));
+//        xPSetButton.setPropertyValue(
+//                "Height", new Integer(14));
+//        xPSetButton.setPropertyValue(
+//                "Name", _buttonName);
+//        xPSetButton.setPropertyValue(
+//                "TabIndex", new Short((short) 0));
+//
+//        xPSetButton.setPropertyValue(
+//                "Label", new String("Ok"));
+//
+//
+//        // create the textbox model and set the properties
+//
+//        Object editModel = xMultiServiceFactory.createInstance(
+//                "com.sun.star.awt.UnoControlEditModel");
+//
+//        XTextComponent xTextComp; // = UnoRuntime.queryInterface(XTextComponent.class, editModel);
+//
+//        XPropertySet xPSetEdit = (XPropertySet) UnoRuntime.queryInterface(
+//                XPropertySet.class, editModel);
+//
+//        xPSetEdit.setPropertyValue("PositionX", new Integer(40));
+//        xPSetEdit.setPropertyValue(
+//                "PositionY", new Integer(30));
+//        xPSetEdit.setPropertyValue(
+//                "Width", new Integer(100));
+//        xPSetEdit.setPropertyValue(
+//                "Height", new Integer(14));
+//        xPSetEdit.setPropertyValue(
+//                "Name", _textfieldName);
+//        xPSetEdit.setPropertyValue(
+//                "TabIndex", new Short((short) 0));
+//
+//
+//        //Object propertyEdit
+//
+//        //
+//
+//        Object cbModel = xMultiServiceFactory.createInstance(
+//                "com.sun.star.awt.UnoControlCheckBoxModel");
+//        XPropertySet xPSetCheckBox = (XPropertySet) UnoRuntime.queryInterface(
+//                XPropertySet.class, cbModel);
+//
+//        xPSetCheckBox.setPropertyValue("PositionX", new Integer(40));
+//        xPSetCheckBox.setPropertyValue(
+//                "PositionY", new Integer(50));
+//
+//        xPSetCheckBox.setPropertyValue(
+//                "Name", _checkboxName);
+//        xPSetCheckBox.setPropertyValue(
+//                "TabIndex", new Short((short) 1));
+//
+//        xPSetCheckBox.setPropertyValue(
+//                "Label", "??????????????????????????");
+//
+//
+//        // create a Cancel button model and set the properties
+//        Object cancelButtonModel = xMultiServiceFactory.createInstance(
+//                "com.sun.star.awt.UnoControlButtonModel");
+//        XPropertySet xPSetCancelButton = (XPropertySet) UnoRuntime.queryInterface(
+//                XPropertySet.class, cancelButtonModel);
+//
+//
+//        xPSetCancelButton.setPropertyValue("PositionX", new Integer(80));
+//        xPSetCancelButton.setPropertyValue(
+//                "PositionY", new Integer(70));
+//        xPSetCancelButton.setPropertyValue(
+//                "Width", new Integer(50));
+//        xPSetCancelButton.setPropertyValue(
+//                "Height", new Integer(14));
+//        xPSetCancelButton.setPropertyValue(
+//                "Name", _cancelButtonName);
+//        xPSetCancelButton.setPropertyValue(
+//                "TabIndex", new Short((short) 2));
+//        xPSetCancelButton.setPropertyValue(
+//                "PushButtonType", new Short((short) 2));
+//        xPSetCancelButton.setPropertyValue(
+//                "Label", new String("Cancel"));
+//
+//
+//        ///
+//        Object label1Model = xMultiServiceFactory.createInstance("com.sun.star.awt.UnoControlFixedTextModel");
+//        XPropertySet xPSetLabel1 = (XPropertySet) UnoRuntime.queryInterface(
+//                XPropertySet.class, label1Model);
+//        xPSetLabel1.setPropertyValue("PositionX", new Integer(10));
+//        xPSetLabel1.setPropertyValue("PositionY", new Integer(30));
+//        xPSetLabel1.setPropertyValue("Label", new String("ID"));
+//        xPSetLabel1.setPropertyValue("Name", _idLabelName);
+//        xPSetLabel1.setPropertyValue("Width", new Integer(20));
+//        xPSetLabel1.setPropertyValue(
+//                "Height", new Integer(14));
+//
+//
+//        Object label2Model = xMultiServiceFactory.createInstance("com.sun.star.awt.UnoControlFixedTextModel");
+//        XPropertySet xPSetLabel2 = (XPropertySet) UnoRuntime.queryInterface(
+//                XPropertySet.class, label2Model);
+//        xPSetLabel1.setPropertyValue("PositionX", new Integer(10));
+//        xPSetLabel1.setPropertyValue("PositionY", new Integer(50));
+//        xPSetLabel1.setPropertyValue("Label", new String("Type"));
+//        xPSetLabel1.setPropertyValue("Name", _typeLabelName);
+//        xPSetLabel1.setPropertyValue("Width", new Integer(20));
+//        xPSetLabel1.setPropertyValue(
+//                "Height", new Integer(14));
+//
+//
+//        // add the model to the NameContainer of the dialog model
+//        // insert the control models into the dialog model
+//
+//
+//        XNameContainer xNameCont = (XNameContainer) UnoRuntime.queryInterface(
+//                XNameContainer.class, dialogModel);
+//
+//        xNameCont.insertByName(_buttonName, buttonModel);
+//        xNameCont.insertByName(_textfieldName, editModel);
+//        //xNameCont.insertByName(_checkboxName, cbModel);
+//        xNameCont.insertByName(_cancelButtonName, cancelButtonModel);
+////        xNameCont.insertByName(_textfieldName2, editModel2);
+//        xNameCont.insertByName(_idLabelName, label1Model);
+//        xNameCont.insertByName(_typeLabelName, label2Model);
+//
+//
+//        // create the dialog control and set the model
+//        Object dialog = xMultiComponentFactory.createInstanceWithContext(
+//                "com.sun.star.awt.UnoControlDialog", _xComponentContext);
+//
+//        XControlContainer xControlCont = (XControlContainer) UnoRuntime.queryInterface(
+//                XControlContainer.class, dialog);
+//
+//        XControl xControl = (XControl) UnoRuntime.queryInterface(
+//                XControl.class, dialog);
+//        XControlModel xControlModel = (XControlModel) UnoRuntime.queryInterface(
+//                XControlModel.class, dialogModel);
+//
+//        xControl.setModel(xControlModel);
+//        // add an action listener to the button control
+//
+//        Object objectButton = xControlCont.getControl("Button1");
+//        XButton xButton = (XButton) UnoRuntime.queryInterface(
+//                XButton.class, objectButton);
+//        XDialog xDialog = (XDialog) UnoRuntime.queryInterface(XDialog.class, dialog);
+//
+//        xButton.addActionListener(new ActionListenerImpl(xControlCont, xNmd, xDialog,
+//                xShp));
+//
+//        XControl xTextControl = (XControl) UnoRuntime.queryInterface(XControl.class, xControlCont.getControl(_textfieldName));
+//        xTextComp = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class, xTextControl);
+//        xTextComp.addTextListener(new TextListenerImpl(elements, buttonModel));
+//
+//
+////        XControl xCBControl = xControlCont.getControl(_checkboxName);
+////        XCheckBox xCB = UnoRuntime.queryInterface(XCheckBox.class, xCBControl);
+////        xCB.addItemListener(
+////                new XItemListener() {
+////
+////                    public void itemStateChanged(ItemEvent arg0) {
+////                        System.out.println("auto");
+////                    }
+////
+////                    public void disposing(com.sun.star.lang.EventObject arg0) {
+////                        //throw new UnsupportedOperationException("Not supported yet.");
+////                    }
+////                });
+//
+//// create a peer
+//        Object toolkit = xMultiComponentFactory.createInstanceWithContext(
+//                "com.sun.star.awt.ExtToolkit", _xComponentContext);
+//        XToolkit xToolkit = (XToolkit) UnoRuntime.queryInterface(
+//                XToolkit.class, toolkit);
+//
+//        XWindow xWindow = (XWindow) UnoRuntime.queryInterface(
+//                XWindow.class, xControl);
+//
+//        xWindow.setVisible(
+//                false);
+//
+//        xControl.createPeer(xToolkit,
+//                null);
+//
+//
+//        objs = new Object[]{dialog, dialogModel};
+//        //outDialogModel = dialogModel;
+//        return objs;
+//    }
 
-// create a peer
-        Object toolkit = xMultiComponentFactory.createInstanceWithContext(
-                "com.sun.star.awt.ExtToolkit", _xComponentContext);
-        XToolkit xToolkit = (XToolkit) UnoRuntime.queryInterface(
-                XToolkit.class, toolkit);
-
-        XWindow xWindow = (XWindow) UnoRuntime.queryInterface(
-                XWindow.class, xControl);
-
-        xWindow.setVisible(
-                false);
-
-        xControl.createPeer(xToolkit,
-                null);
-
-
-        objs = new Object[]{dialog, dialogModel};
-        //outDialogModel = dialogModel;
-        return objs;
-    }
-
-    public static void createDialogForShape2(Object objShape, XComponentContext _xComponentContext, Map<String, XShape> elements) throws com.sun.star.uno.Exception {
-        XShape xShape = (XShape) UnoRuntime.queryInterface(
-                XShape.class, objShape);
-        XNamed xNamed = (XNamed) UnoRuntime.queryInterface(
-                XNamed.class, objShape);
-
-
-        Object[] objs = onlyCreateDialog2(xNamed, xShape, _xComponentContext, elements);
-        Object dialog = objs[0];
-        Object dialogModel = objs[1];
-//        XController xContr = UnoRuntime.queryInterface(XController.class, dialog);
-//        XModel xModel = xContr.getModel();
-        XDialog xDialog = (XDialog) UnoRuntime.queryInterface(XDialog.class, dialog);
-
-        XNameContainer xNameCont = (XNameContainer) UnoRuntime.queryInterface(
-                XNameContainer.class, dialogModel);
-        Object tb1 = xNameCont.getByName(_textfieldName);
-
-        XPropertySet xPS = (XPropertySet) UnoRuntime.queryInterface(
-                XPropertySet.class, tb1);
-        xPS.setPropertyValue("Text", xNamed.getName());
-//        xPS
-//        Object tb2 = xNameCont.getByName(_textfieldName2);
-//        xPS = (XPropertySet) UnoRuntime.queryInterface(
-//                XPropertySet.class, tb2);
-
-//        xPS.setPropertyValue("Text", Misc.getUserDefinedAttributeValue(xShape, "AnotherField"));
-        xDialog.execute();
-        XComponent xComponent = (XComponent) UnoRuntime.queryInterface(
-                XComponent.class, xDialog);
-
-        xComponent.dispose();
-
-    }
+//    public static void createDialogForShape2(Object objShape, XComponentContext _xComponentContext, Map<String, XShape> elements) throws com.sun.star.uno.Exception {
+//        XShape xShape = (XShape) UnoRuntime.queryInterface(
+//                XShape.class, objShape);
+//        XNamed xNamed = (XNamed) UnoRuntime.queryInterface(
+//                XNamed.class, objShape);
+//
+//
+//        Object[] objs = onlyCreateDialog2(xNamed, xShape, _xComponentContext, elements);
+//        Object dialog = objs[0];
+//        Object dialogModel = objs[1];
+////        XController xContr = UnoRuntime.queryInterface(XController.class, dialog);
+////        XModel xModel = xContr.getModel();
+//        XDialog xDialog = (XDialog) UnoRuntime.queryInterface(XDialog.class, dialog);
+//
+//        XNameContainer xNameCont = (XNameContainer) UnoRuntime.queryInterface(
+//                XNameContainer.class, dialogModel);
+//        Object tb1 = xNameCont.getByName(_textfieldName);
+//
+//        XPropertySet xPS = (XPropertySet) UnoRuntime.queryInterface(
+//                XPropertySet.class, tb1);
+//        xPS.setPropertyValue("Text", xNamed.getName());
+////        xPS
+////        Object tb2 = xNameCont.getByName(_textfieldName2);
+////        xPS = (XPropertySet) UnoRuntime.queryInterface(
+////                XPropertySet.class, tb2);
+//
+////        xPS.setPropertyValue("Text", Misc.getUserDefinedAttributeValue(xShape, "AnotherField"));
+//        xDialog.execute();
+//        XComponent xComponent = (XComponent) UnoRuntime.queryInterface(
+//                XComponent.class, xDialog);
+//
+//        xComponent.dispose();
+//
+//    }
 
 
 }

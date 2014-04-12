@@ -362,26 +362,26 @@
                     </node>
 
 
-                    <node oor:name="m9" oor:op="replace">
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>ru.ssau.graphplus:DropdownCmd</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value xml:lang="en-US">Dropdownbox</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.drawing.DrawingDocument</value>
-                        </prop>
-                        <prop oor:name="ControlType" oor:type="xs:string">
-                            <value>Dropdownbox</value>
-                        </prop>
-                        <prop oor:name="Width" oor:type="xs:long">
-                            <value>80</value>
-                        </prop>
-                    </node>
+                    <!--<node oor:name="m9" oor:op="replace">-->
+                        <!--<prop oor:name="URL" oor:type="xs:string">-->
+                            <!--<value>ru.ssau.graphplus:DropdownCmd</value>-->
+                        <!--</prop>-->
+                        <!--<prop oor:name="Title" oor:type="xs:string">-->
+                            <!--<value xml:lang="en-US">Dropdownbox</value>-->
+                        <!--</prop>-->
+                        <!--<prop oor:name="Target" oor:type="xs:string">-->
+                            <!--<value>_self</value>-->
+                        <!--</prop>-->
+                        <!--<prop oor:name="Context" oor:type="xs:string">-->
+                            <!--<value>com.sun.star.drawing.DrawingDocument</value>-->
+                        <!--</prop>-->
+                        <!--<prop oor:name="ControlType" oor:type="xs:string">-->
+                            <!--<value>Dropdownbox</value>-->
+                        <!--</prop>-->
+                        <!--<prop oor:name="Width" oor:type="xs:long">-->
+                            <!--<value>80</value>-->
+                        <!--</prop>-->
+                    <!--</node>-->
 
                     <node oor:name="m10" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">

@@ -22,13 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 2/9/14
- * Time: 5:38 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class LinkNodesDialog implements MyDialog {
 
     public static final String A_NODE_COMBO_BOX = "aNodeComboBox";
@@ -253,6 +247,7 @@ public class LinkNodesDialog implements MyDialog {
                       return zNodeItemStatusChanged();
                   }
               })
+//              .put(MyDialogHandler.Event.event(""))
                 .build());
     }
 

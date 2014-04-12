@@ -37,8 +37,22 @@ public abstract class LinkBase implements Link,
 {
 
     @Override
-    public void setPosition(Point position) {
-        // TODO implement
+    public void setPosition(Point newPosition) {
+
+        Point position1 = connShape1.getPosition();
+
+        int dX = newPosition.X - position1.X;
+        int dY = newPosition.Y - position1.Y;
+
+        connShape1.setPosition(newPosition);
+
+        Point position2 = connShape2.getPosition();
+        connShape2.setPosition(new Point(position2.X + dX, position2.Y + dY));
+
+        Point positionT = textShape.getPosition();
+        textShape.setPosition(new Point(positionT.X + dX, positionT.Y + dY));
+
+
 
     }
 
@@ -293,6 +307,16 @@ public abstract class LinkBase implements Link,
         }
         catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException |WrappedTargetException e)
         {
+            throw new RuntimeException(e);
+        }
+
+
+        try {
+            xPS1.setPropertyValue("StartPosition", new Point(0, 200));
+            textShape.setPosition(new Point(700, 200));
+            QI.XText(textShape).setString(getClass().getSimpleName());
+            xPS2.setPropertyValue("EndPosition", new Point(1400, 200));
+        } catch (UnknownPropertyException |PropertyVetoException |IllegalArgumentException|WrappedTargetException e) {
             throw new RuntimeException(e);
         }
 
