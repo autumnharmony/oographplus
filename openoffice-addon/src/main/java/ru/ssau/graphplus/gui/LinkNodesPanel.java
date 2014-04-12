@@ -8,6 +8,7 @@ import com.sun.star.accessibility.XAccessible;
 import com.sun.star.awt.*;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
+import com.sun.star.drawing.XShape;
 import com.sun.star.frame.XController;
 import com.sun.star.frame.XFrame;
 import com.sun.star.frame.XModel;
@@ -31,13 +32,7 @@ import ru.ssau.graphplus.node.NodeBase;
 
 import java.util.logging.Level;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 2/11/14
- * Time: 12:51 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class LinkNodesPanel extends PanelBase {
 
     public static final String A_NODE_COMBO_BOX = "aNodeComboBox";
@@ -199,7 +194,7 @@ public class LinkNodesPanel extends PanelBase {
     }
 
     private Link.LinkType getLinkType() {
-        return Link.LinkType.Control;
+        return Link.LinkType.ControlFlow;
     }
 
 

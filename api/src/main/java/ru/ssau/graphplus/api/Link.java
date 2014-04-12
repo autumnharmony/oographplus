@@ -14,10 +14,12 @@ public interface Link extends
     void setEndNode(Node node2);
 
 
+
+
     public enum LinkType {
-        Link,
-        Message,
-        Control
+        DataFlow,
+        ControlFlow,
+        MixedFlow,
     }
 
 

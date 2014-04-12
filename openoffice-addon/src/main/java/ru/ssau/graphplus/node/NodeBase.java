@@ -1,6 +1,7 @@
 package ru.ssau.graphplus.node;
 
 import com.sun.star.awt.Point;
+import com.sun.star.awt.Rectangle;
 import com.sun.star.awt.Size;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XMultiServiceFactory;
@@ -44,6 +45,12 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
     }
 
 
+    @Override
+    public Rectangle getBound() {
+        Point position = xShape.getPosition();
+        Size size = xShape.getSize();
+        return new Rectangle(position.X, position.Y, size.Width, size.Height);
+    }
 
     @Override
     public String getName() {
@@ -53,7 +60,7 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
             string = QI.XText(xShape).getString();
         }
 
-        if (!name.equals(string) && string != null){
+        if (string != null && !string.equals(name)){
             name = string;
         }
 
@@ -105,6 +112,11 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
         if (xShape!=null){
             xShape.setPosition(new Point(x, y));
         }
+    }
+
+    @Override
+    public void setPosition(Point position) {
+        xShape.setPosition(position);
     }
 
     public abstract XShape buildShape(XMultiServiceFactory xMSF);

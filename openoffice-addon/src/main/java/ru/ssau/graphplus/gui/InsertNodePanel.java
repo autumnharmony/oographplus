@@ -137,11 +137,11 @@ public class InsertNodePanel extends PanelBase {
             } catch (PropertyVetoException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
-            try {
-                Gui.createDialogForShape2(node.getShape(), xContext, new HashMap<String, XShape>());
-            } catch (com.sun.star.uno.Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
+//            try {
+////                Gui.createDialogForShape2(node.getShape(), xContext, new HashMap<String, XShape>());
+//            } catch (com.sun.star.uno.Exception e) {
+//                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+//            }
             myDispatch.getDiagramModel().addDiagramElement(node);
         }
 

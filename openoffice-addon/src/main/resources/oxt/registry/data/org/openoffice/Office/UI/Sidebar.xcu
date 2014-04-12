@@ -42,14 +42,14 @@
                 </prop>
                 <prop oor:name="ContextList">
                     <value oor:separator=";">
-                        any, any, visible ;
+                        any, any, hidden ;
                     </value>
                 </prop>
                 <prop oor:name="ImplementationURL" oor:type="xs:string">
                     <value>private:resource/toolpanel/OOGraphPanelFactory/LinkNodesPanel</value>
                 </prop>
                 <prop oor:name="OrderIndex" oor:type="xs:int">
-                    <value>100</value>
+                    <value>200</value>
                 </prop>
             </node>
 

@@ -58,7 +58,7 @@ public class QI {
 
     private static UnoRuntimeWrapper _unoRuntimeWrapper;
 
-    {
+    static {
         _unoRuntimeWrapper= new UnoRuntimeWrapperImpl();
     }
 

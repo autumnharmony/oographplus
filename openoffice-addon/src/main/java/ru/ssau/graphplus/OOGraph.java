@@ -34,6 +34,45 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.logging.*;
 
+/**───────▄███████████▄▄──────────────
+ *──────▄██▀──────────▀▀██▄────────────
+ *────▄█▀────────────────▀██───────────
+ *──▄█▀────────────────────▀█▄─────────
+ *─█▀──██──────────────██───▀██────────
+ *█▀──────────────────────────██───────
+ *█──███████████████████───────█───────
+ *█────────────────────────────█───────
+ *█▄───────────────────────────█───────
+ *▀█▄─────────────────────────██───────
+ *─▀█▄───────────────────────██────────
+ *──▀█▄────────────────────▄█▀─────────
+ *─────▀█▄──────────────▄█▀────────────
+ *───────▀█▄▄▄──────▄▄▄███████▄▄───────
+ *────────███████████████───▀██████▄───
+ *─────▄███▀▀────────▀███▄──────█─███──
+ *───▄███▄─────▄▄▄▄────███────▄▄████▀──
+ *─▄███▓▓█─────█▓▓█───████████████▀────
+ *─▀▀██▀▀▀▀▀▀▀▀▀▀███████████────█──────
+ *────█─▄▄▄▄▄▄▄▄█▀█▓▓─────██────█──────
+ *────█─█───────█─█─▓▓────██────█──────
+ *────█▄█───────█▄█──▓▓▓▓▓███▄▄▄█──────
+ *────────────────────────██──────────
+ *────────────────────────██───▄███▄───
+ *────────────────────────██─▄██▓▓▓██──
+ *───────────────▄██████████─█▓▓▓█▓▓██▄
+ *─────────────▄██▀───▀▀███──█▓▓▓██▓▓▓█
+ *─▄███████▄──███───▄▄████───██▓▓████▓█
+ *▄██▀──▀▀█████████████▀▀─────██▓▓▓▓███
+ *██▀─────────██──────────────██▓██▓███
+ *██──────────███──────────────█████─██
+ *██───────────███──────────────█─██──█
+ *██────────────██─────────────────█───
+ *██─────────────██────────────────────
+ *██─────────────███───────────────────
+ *██──────────────███▄▄────────────────
+ *███──────────────▀▀███───────────────
+ *─███─────────────────────────────────
+ *──███──────────────────────────────**/
 public class OOGraph extends ComponentBase implements
         com.sun.star.lang.XInitialization,
         com.sun.star.task.XJob,
@@ -75,15 +114,12 @@ public class OOGraph extends ComponentBase implements
     private static ArrayList<FrameObject> _frameObjectList = null;
     private static XComponent m_xComponent = null;
 
-    static {
-        m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
-    }
-
     private final XComponentContext m_xContext;
 
     public static final Logger LOGGER;
 
     static {
+        m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
 
         LOGGER = Logger.getLogger("oograph");
         Handler consoleHandler = new ConsoleHandler();
@@ -146,9 +182,17 @@ public class OOGraph extends ComponentBase implements
     public static XSingleComponentFactory __getComponentFactory(String sImplementationName) {
         XSingleComponentFactory xFactory = null;
 
-        if (sImplementationName.equals(m_implementationName))
+        if (sImplementationName.equals(m_implementationName)){
             xFactory = UnoRuntime.queryInterface(XSingleComponentFactory.class, FactoryHelper.createComponentFactory(OOGraph.class, OOGraph.class.getName()));
-//            xFactory = new MyComponentFactory();
+
+        }
+
+
+         else
+
+        if ( sImplementationName.equals( OptionsDialogHandler.class.getName() ) )
+            xFactory = Factory.createComponentFactory(OptionsDialogHandler.class, OptionsDialogHandler.getServiceNames());
+
         return xFactory;
 
 //        if (sImplementationName.equals(msImplementationName))
@@ -184,6 +228,8 @@ public class OOGraph extends ComponentBase implements
                 m_serviceNames,
                 xRegistryKey);
 
+
+        bResult &= Factory.writeRegistryServiceInfo(OptionsDialogHandler.class.getName(), OptionsDialogHandler.getServiceNames(), xRegistryKey);
         return bResult;
     }
 
@@ -932,7 +978,6 @@ public class OOGraph extends ComponentBase implements
         return myDispatch.getDiagramModel();
     }
 
-
     public enum State {
         Nothing,
         InputTwoShapes,
@@ -1043,6 +1088,10 @@ public class OOGraph extends ComponentBase implements
 
         return null;
     }
+
+
+
+    // settings dialog
 
 
 }

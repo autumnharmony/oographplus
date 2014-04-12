@@ -1,5 +1,10 @@
 package ru.ssau.graphplus.api;
 
+import com.sun.star.awt.Point;
+import com.sun.star.awt.Rectangle;
+
+
+
 public interface DiagramElement  {
 
     /**
@@ -17,6 +22,12 @@ public interface DiagramElement  {
 
 
     void setId(String id);
+
+    Rectangle getBound();
+
+    void setPosition(Point position);
+
+    Point getPosition();
 
 
     // no setName 'coz it's no need
