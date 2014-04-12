@@ -61,6 +61,10 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
 
     }
 
+    public String getText(XShape xShape){
+        return ShapeHelper.getText(xShape);
+    }
+
     @Override
     public Node.NodeType getNodeType(XShape shape){
         String shapeType = shape.getShapeType();

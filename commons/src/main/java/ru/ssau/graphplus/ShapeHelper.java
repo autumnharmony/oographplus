@@ -267,4 +267,11 @@ public class ShapeHelper {
         }
         return false;
     }
+
+    public static String getText(XShape xShape){
+        if (isTextShape(xShape)){
+            return QI.XText(xShape).getString();
+        }
+        throw new IllegalArgumentException();
+    }
 }

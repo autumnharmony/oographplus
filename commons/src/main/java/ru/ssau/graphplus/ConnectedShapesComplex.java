@@ -4,26 +4,34 @@
 
 package ru.ssau.graphplus;
 
+import com.google.inject.Inject;
+import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
+import com.sun.star.lang.*;
+
+import java.lang.IllegalArgumentException;
 
 /**
  * Data object for storing two shapes connected by link three shapes (which consists of three shapes  1. ConnectorShape, 2. TextShape, 3. ConnectorShape
  */
 public class ConnectedShapesComplex {
 
-    public XShape fromShape;
-    public XShape toShape;
+    private XShape fromShape;
+    private XShape toShape;
 
     // connector 1 for case of two connectors
-    public XConnectorShape connector1;
+    private XConnectorShape connector1;
 
     // connector 2 for case of two connectors
-    public XConnectorShape connector2;
-    public XShape textShape;
+    private XConnectorShape connector2;
+    private XShape textShape;
 
     // connector for case of one connector
-    public XConnectorShape connector;
+    private XConnectorShape connector;
+
+    @Inject
+    private static ShapeHelperWrapper shapeHelperWrapper;
 
     public ConnectedShapesComplex(XShape fromShape, XShape toShape, XConnectorShape connector1, XConnectorShape connector2, XShape textShape) {
         this.fromShape = fromShape;
@@ -44,5 +52,30 @@ public class ConnectedShapesComplex {
         this.toShape = toShape;
     }
 
+    public String getLinkText(){
+        try {
+            return textShape != null ? shapeHelperWrapper.getText(textShape) : (String) QI.XPropertySet(connector).getPropertyValue("Text");
+        } catch (UnknownPropertyException e) {
 
+           throw new IllegalArgumentException(e);
+        } catch (WrappedTargetException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public XShape getFromShape() {
+        return fromShape;
+    }
+
+    public void setFromShape(XShape fromShape) {
+        this.fromShape = fromShape;
+    }
+
+    public XShape getToShape() {
+        return toShape;
+    }
+
+    public void setToShape(XShape toShape) {
+        this.toShape = toShape;
+    }
 }

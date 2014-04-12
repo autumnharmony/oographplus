@@ -18,6 +18,7 @@ import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.api.DiagramModel;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Node;
+import ru.ssau.graphplus.gui.Gui;
 
 import java.util.*;
 
@@ -49,6 +50,9 @@ public class DiagramWalker implements Walker<XShape, DiagramModel> {
     Module getModule() {
         return new CodeGeneratorModule();
     }
+
+    @Inject
+    private MatchFactory matchFactory;
 
     public DiagramModel walk(Set<XShape> all, XShape start) {
 
@@ -134,19 +138,24 @@ public class DiagramWalker implements Walker<XShape, DiagramModel> {
             Iterable<ConnectedShapesComplex> filter = Iterables.filter(connectedShapesComplexes, new Predicate<ConnectedShapesComplex>() {
                 @Override
                 public boolean apply(ConnectedShapesComplex input) {
-                    return input.fromShape.equals(finalCurrent);
+                    return input.getFromShape().equals(finalCurrent);
                 }
             });
 
-            for (ConnectedShapesComplex connectedShapesComplex : filter){
+            for (ConnectedShapesComplex one : filter){
 
-//                if ()
-                shapeQueue.add(connectedShapesComplex.toShape);
+                for (Match match : matchFactory.createAll()){
+                    if (match.matches(one)){
+                        System.out.println(match.getClass().getSimpleName());
+                    }
+                }
+                shapeQueue.add(one.getToShape());
             }
 
 
             visited.add(current);
         }
+
 
         return null;
     }

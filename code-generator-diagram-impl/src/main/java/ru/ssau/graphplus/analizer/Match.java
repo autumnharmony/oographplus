@@ -5,6 +5,7 @@
 package ru.ssau.graphplus.analizer;
 
 import com.sun.star.drawing.XShape;
+import ru.ssau.graphplus.ConnectedShapesComplex;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,5 +15,5 @@ import com.sun.star.drawing.XShape;
  * To change this template use File | Settings | File Templates.
  */
 public interface Match {
-    boolean matches(XShape xShape1, XShape xShape2);
+    boolean matches(ConnectedShapesComplex connected);
 }
