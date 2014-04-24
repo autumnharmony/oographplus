@@ -13,4 +13,7 @@ public interface ShapeHelperWrapper {
     boolean isConnectorShape(XShape shape);
 
     Node.NodeType getNodeType(XShape shape);
+
+    String getText(XShape xShape);
+
 }
