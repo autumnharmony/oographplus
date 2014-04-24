@@ -13,6 +13,7 @@ import com.sun.star.lang.*;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import ru.ssau.graphplus.*;
+import ru.ssau.graphplus.commons.QI;
 
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class CreateNodeDialog implements MyDialog<CreateNodeDialog> {
 
     public CreateNodeDialog() {
         createNodeDialogHandler = new CreateNodeDialogHandler(ImmutableMap.<MyDialogHandler.Event, MyDialogHandler.EventHandler>builder()
-                .put(MyDialogHandler.Event.event("notToPromptExecute"), new MyDialogHandler.EventHandler() {
+                .put(MyDialogHandler.Event. event("notToPromptExecute"), new MyDialogHandler.EventHandler() {
                     @Override
                     public boolean handle(XDialog xDialog, Object o, String s) {
                         System.out.println("omg");

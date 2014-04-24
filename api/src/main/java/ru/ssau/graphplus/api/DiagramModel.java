@@ -5,6 +5,7 @@
 package ru.ssau.graphplus.api;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface DiagramModel {
 
@@ -17,7 +18,4 @@ public interface DiagramModel {
     Collection<Link> getLinks();
 
     Collection<Node> getNodes();
-
-
-
 }

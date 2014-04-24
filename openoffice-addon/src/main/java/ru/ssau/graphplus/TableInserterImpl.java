@@ -15,10 +15,11 @@ import com.sun.star.table.*;
 import com.sun.star.uno.*;
 import com.sun.star.util.XModifiable;
 import com.sun.star.util.XModifyListener;
+import ru.ssau.graphplus.commons.OOoUtils;
+import ru.ssau.graphplus.commons.QI;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Created with IntelliJ IDEA.

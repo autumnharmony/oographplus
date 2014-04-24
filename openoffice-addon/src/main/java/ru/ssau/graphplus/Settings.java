@@ -41,7 +41,9 @@ public class Settings {
         try {
             config.setProperty("promptForNodeName", String.valueOf(promptForNodeName));
             config.setProperty("linkingInputMode", String.valueOf(linkingInputMode));
-            config.save(new FileOutputStream(file), "Graphplus Properties");
+            FileOutputStream out = new FileOutputStream(file);
+            config.save(out, "Graphplus Properties");
+            out.flush();
         }
         catch (Exception ex) {
             throw new RuntimeException("Could not save properties\nLocation:" + file + "\n" + ex.getMessage());

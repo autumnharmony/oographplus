@@ -1,12 +1,10 @@
-package ru.ssau.graphplus;
+package ru.ssau.graphplus.commons;
 
-import com.google.inject.Inject;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.WrappedTargetException;
-import com.sun.star.uno.UnoRuntime;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +13,7 @@ import java.util.logging.Logger;
 /**
  * Class for storing two connected by ConnectorShape shapes and connector shape itself
  * Main purpose is for storing temp data which we use for generating
- * @see ru.ssau.graphplus.ConnectedShapesComplex
+ * @see ConnectedShapesComplex
  */
 public class ConnectedShapes {
 

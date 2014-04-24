@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Anton Borisov
  */
 
-package ru.ssau.graphplus;
+package ru.ssau.graphplus.commons;
 
 import com.sun.star.drawing.XShape;
 import ru.ssau.graphplus.api.Node;

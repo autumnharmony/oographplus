@@ -7,26 +7,25 @@ package ru.ssau.graphplus.gui;
 import com.sun.star.accessibility.XAccessible;
 import com.sun.star.awt.*;
 import com.sun.star.beans.PropertyVetoException;
-import com.sun.star.drawing.XShape;
 import com.sun.star.frame.XController;
 import com.sun.star.frame.XFrame;
 import com.sun.star.frame.XModel;
 import com.sun.star.lang.DisposedException;
 import com.sun.star.lang.EventObject;
+import com.sun.star.lang.WrappedTargetException;
 import com.sun.star.lang.XComponent;
 import com.sun.star.ui.LayoutSize;
 import com.sun.star.uno.*;
 import ru.ssau.graphplus.DrawHelper;
-import ru.ssau.graphplus.MiscHelper;
+import ru.ssau.graphplus.commons.MiscHelper;
 import ru.ssau.graphplus.MyDispatch;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.gui.sidebar.PanelBase;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.node.NodeBase;
 import ru.ssau.graphplus.node.NodeFactory;
 
 import java.lang.Exception;
-import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -111,6 +110,21 @@ public class InsertNodePanel extends PanelBase {
         mxWindow.setVisible(true);
         setupButtons();
 
+    }
+
+    @Override
+    public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean callHandlerMethod(XWindow xWindow, Object o, String s) throws WrappedTargetException {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String[] getSupportedMethodNames() {
+        return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     class NodeButtonActionListener implements XActionListener {

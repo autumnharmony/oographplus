@@ -8,18 +8,19 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.sun.star.awt.*;
 import com.sun.star.beans.*;
 import com.sun.star.container.XNameContainer;
 import com.sun.star.deployment.XPackageInformationProvider;
-import com.sun.star.document.DocumentEvent;
-import com.sun.star.document.XDocumentProperties;
-import com.sun.star.document.XDocumentPropertiesSupplier;
+import com.sun.star.document.*;
+import com.sun.star.document.XEventListener;
 import com.sun.star.drawing.XDrawPage;
 import com.sun.star.drawing.XShape;
 import com.sun.star.drawing.XShapes;
 import com.sun.star.frame.*;
 import com.sun.star.lang.*;
+import com.sun.star.lang.EventObject;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.task.XJobExecutor;
 import com.sun.star.uno.*;
@@ -27,7 +28,11 @@ import com.sun.star.uno.Exception;
 import com.sun.star.uno.RuntimeException;
 import com.sun.star.util.URL;
 import ru.ssau.graphplus.analizer.DiagramWalker;
+import ru.ssau.graphplus.api.DiagramService;
 import ru.ssau.graphplus.api.DiagramType;
+import ru.ssau.graphplus.commons.ConnectedShapesComplex;
+import ru.ssau.graphplus.commons.MiscHelper;
+import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.di.AddonModule;
 import ru.ssau.graphplus.document.event.handler.DocumentEventHandler;
 import ru.ssau.graphplus.document.event.handler.DocumentEventsHandler;
@@ -66,6 +71,9 @@ public class MyDispatch implements XDispatch {
     private final LinkFactory linkFactory;
     private final XMultiComponentFactory xMCF;
     private final XComponentContext m_xContext;
+    private final DiagramService diagramService;
+    private final XUndoManager undoManager;
+    private final DiagramWalker diagramWalker;
 
     public NodeFactory getNodeFactory() {
         return nodeFactory;
@@ -73,6 +81,10 @@ public class MyDispatch implements XDispatch {
 
     public LinkFactory getLinkFactory() {
         return linkFactory;
+    }
+
+    public XFrame getFrame() {
+        return m_xFrame;
     }
 
     private final XComponent xDrawDoc;
@@ -93,6 +105,9 @@ public class MyDispatch implements XDispatch {
 
     public MyDispatch(XComponent xDrawDoc, XComponentContext m_xContext, XFrame m_xFrame, OOGraph ooGraph, XMultiComponentFactory xMCF, XMultiServiceFactory xMSF, XComponent m_xComponent) {
         this.xDrawDoc = xDrawDoc;
+        XUndoManagerSupplier xUndoManagerSupplier = QI.XUndoManagerSupplier(xDrawDoc);
+        undoManager = xUndoManagerSupplier.getUndoManager();
+
         this.m_xContext = m_xContext;
         this.m_xFrame = m_xFrame;
         anonymousLogger = Logger.getAnonymousLogger();
@@ -109,20 +124,82 @@ public class MyDispatch implements XDispatch {
 
 
         diagramModel = new DiagramModel(xDrawDoc);
-        diagramController = new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel, xDrawDoc, this);
+        diagramController = new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel, xDrawDoc, this, undoManager);
 
         setupDocumentEventsHandler();
 
-        StageSheetImpl stage = new StageSheetImpl(diagramModel, xDrawDoc);
-        Guice.createInjector(new AddonModule(stage,diagramModel));
-
-        layout = new FlowLayout(stage);
 
 
-        if (Boolean.TRUE.equals(Global.loaded)){
-         onLoadHandler();
+        Injector injector;
+        try {
+            injector = Guice.createInjector(new AddonModule(diagramModel, xMSF, xDrawDoc, diagramController));
+            diagramService = injector.getInstance(DiagramService.class);
+
+            diagramWalker = injector.getInstance(DiagramWalker.class);
+        } catch (java.lang.Exception e) {
+            e.printStackTrace();
+
+            throw new java.lang.RuntimeException(e);
         }
+
+
+
+        layout = injector.getInstance(Layout.class);
+
+
+        if (Boolean.TRUE.equals(Global.loaded)) {
+            onLoadHandler();
+        }
+
+
+        m_xNewBroadcaster = UnoRuntime.queryInterface(XDocumentEventBroadcaster.class, xDrawDoc);
+        m_xOldBroadcaster = UnoRuntime.queryInterface(XEventBroadcaster.class, xDrawDoc);
+
+        m_xNewBroadcaster.addDocumentEventListener(new XDocumentEventListener() {
+            @Override
+            public void documentEventOccured(DocumentEvent documentEvent) {
+                logger.info("XDocumentEventBroadcaster  documentEventOccured");
+                logger.info(documentEvent.EventName);
+            }
+
+            @Override
+            public void disposing(EventObject eventObject) {
+                System.out.println("DISPOSING");
+            }
+        });
+
+
+        m_xOldBroadcaster.addEventListener(new XEventListener() {
+            @Override
+            public void notifyEvent(com.sun.star.document.EventObject eventObject) {
+                if (eventObject.EventName.equals("ShapeModified")) {
+                    XShape shape = QI.XShape(eventObject.Source);
+                    diagramController.onShapeModified(shape);
+                }
+
+                if (eventObject.EventName.equals("ShapeInserted")) {
+                    Object source = eventObject.Source;
+                    XShape xShape = QI.XShape(source);
+                }
+
+                if (eventObject.EventName.equals("ShapeRemoved")){
+                    Object source = eventObject.Source;
+                    XShape xShape = QI.XShape(source);
+
+                    diagramController.onShapeRemoved(xShape);
+                }
+
+            }
+
+            @Override
+            public void disposing(EventObject eventObject) {
+                System.out.println("DISPOSING");
+            }
+        });
     }
+
+    private XDocumentEventBroadcaster m_xNewBroadcaster;
+    private XEventBroadcaster m_xOldBroadcaster;
 
     private void onLoadHandler() {
         try {
@@ -165,6 +242,10 @@ public class MyDispatch implements XDispatch {
         } catch (WrappedTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    public DiagramService getDiagramService() {
+        return diagramService;
     }
 
     private int getLinkCount(DiagramModel modelFromString) {
@@ -618,7 +699,9 @@ public class MyDispatch implements XDispatch {
                 if (node != null) {
 
                     getDiagramModel().addDiagramElement(node);
-                    MiscHelper.setId(node.getShape(), node.getName());
+                    MiscHelper.setId(node.getShape(), node.getId());
+                    MiscHelper.tagShapeAsNode(node.getShape());
+
 
                     layout.layout(new DiagramElementObj(node));
                 }
@@ -630,7 +713,7 @@ public class MyDispatch implements XDispatch {
 
             if (url.Path.compareTo("LinkNodesToolbar") == 0) {
                 XModel xModel = QI.XModel(xDrawDoc);
-                String dialog = createLinkNodesDialog("vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/LinkNodesDialog.xdl", xModel, m_xFrame);
+                LinkNodesDialog dialog = createLinkNodesDialog(xModel, m_xFrame);
 
             }
 
@@ -658,13 +741,13 @@ public class MyDispatch implements XDispatch {
                     DiagramType recognise = diagramTypeRecognition.recognise(shapes);
 
                     //TODO DI
-                    DiagramWalker diagramWalker = new DiagramWalker(new ShapeHelperWrapperImpl(), new UnoRuntimeWrapperImpl());
+
                     diagramWalker.setDiagramType(recognise);
-                    ru.ssau.graphplus.api.DiagramModel walk = diagramWalker.walk(shapes, null);
+                    List<ConnectedShapesComplex> collectedConnectedShapes = diagramWalker.walk(shapes, null);
 
                     CodeGenerator codeGenerator = new DiagramCodeGenerator();
-
-                    String code = codeGenerator.generateCode(new DiagramCodeSource(walk));
+                    diagramModel.setConnectedShapesComplexes(collectedConnectedShapes);
+                    String code = codeGenerator.generateCode(new DiagramCodeSource(diagramModel, collectedConnectedShapes));
 
 
                     GetCodeDialog myDialog = new GetCodeDialog(code, oClipboard);
@@ -791,7 +874,10 @@ public class MyDispatch implements XDispatch {
     }
 
 
-    public String createLinkNodesDialog(String DialogURL, XModel xModel, XFrame xFrame) {
+    public LinkNodesDialog createLinkNodesDialog(XModel xModel, XFrame xFrame) {
+
+        String DialogURL =
+        "vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/LinkNodesDialog.xdl";
 
         try {
             XMultiComponentFactory xMCF = m_xContext.getServiceManager();
@@ -813,30 +899,31 @@ public class MyDispatch implements XDispatch {
                     UnoRuntime.queryInterface(XDialogProvider2.class, obj);
 
 //            "aNodeReset", "zNodeReset", "aNodeSet", "zNodeSet"
-            LinkNodesDialog linkNodesDialog = new LinkNodesDialog(getDiagramModel(), null);
+            LinkNodesDialog linkNodesDialog = new LinkNodesDialog(getDiagramModel(), this);
 
             XDialog xDialog = xDialogProvider.createDialogWithHandler(DialogURL,
                    linkNodesDialog.getDialogHandler());
             XControl xControl = (XControl) UnoRuntime.queryInterface(
                     XControl.class, xDialog);
 
-
-
             diagramController.addNodeSelectionListener(linkNodesDialog.getNodeSelectionListener());
 
-
-
-
-
-
             if (xDialog != null){
-                QI.XPropertySet(xControl.getModel()).setPropertyValue("Visible", Boolean.TRUE);
+//                QI.XPropertySet(xControl.getModel()).setPropertyValue("Visible", Boolean.TRUE);
+//                xDialog.execute();
+                return linkNodesDialog;
             }
 
+
         } catch (Exception e) {
+
             e.printStackTrace();
+            throw new java.lang.RuntimeException(e);
+
         }
-        return "Created dialog \"" + DialogURL + "\"";
+
+
+        throw new java.lang.RuntimeException("can't create dialog");
     }
 
 

@@ -8,7 +8,9 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
 import com.sun.star.uno.AnyConverter;
 import com.sun.star.uno.UnoRuntime;
-import ru.ssau.graphplus.api.Node;
+import ru.ssau.graphplus.commons.OOoUtils;
+import ru.ssau.graphplus.commons.QI;
+import ru.ssau.graphplus.commons.ShapeHelper;
 import ru.ssau.graphplus.node.NodeBase;
 
 import java.util.Collection;

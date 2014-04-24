@@ -18,6 +18,7 @@ public interface Node extends DiagramElement{
     public enum NodeType {
 
 
+
         // Process Diagram Type
 
         /**

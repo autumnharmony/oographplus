@@ -9,7 +9,7 @@ import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.WrappedTargetException;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.QI;
 
 import java.io.Serializable;
 import java.util.logging.Level;

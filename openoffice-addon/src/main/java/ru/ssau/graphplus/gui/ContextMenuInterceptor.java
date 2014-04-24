@@ -19,10 +19,10 @@ import com.sun.star.uno.Exception;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import ru.ssau.graphplus.DiagramController;
-import ru.ssau.graphplus.ShapeHelper;
+import ru.ssau.graphplus.commons.ShapeHelper;
 import ru.ssau.graphplus.api.DiagramElement;
-import ru.ssau.graphplus.MiscHelper;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.MiscHelper;
+import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.api.Link;
 
 import java.util.ArrayList;

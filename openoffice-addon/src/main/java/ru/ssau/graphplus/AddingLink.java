@@ -20,6 +20,7 @@ public class AddingLink implements DiagramEventHandler {
 
     @Override
     public void onEvent(Event event) {
+
         System.out.println("elementModified");
     }
 }

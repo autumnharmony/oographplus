@@ -1,12 +1,13 @@
 
 package ru.ssau.graphplus.link;
 
+import com.google.inject.Inject;
 import com.sun.star.drawing.XDrawPage;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
 import ru.ssau.graphplus.DiagramElementFactory;
-import ru.ssau.graphplus.MiscHelper;
+import ru.ssau.graphplus.commons.MiscHelper;
 import ru.ssau.graphplus.api.Link;
 
 /**
@@ -19,6 +20,7 @@ public class LinkFactory extends DiagramElementFactory{
 
 
 
+    @Inject
     public LinkFactory(XMultiServiceFactory xmsf) {
         super(xmsf);
 

@@ -8,7 +8,7 @@ import com.sun.star.drawing.HomogenMatrixLine3;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XMultiServiceFactory;
 import ru.ssau.graphplus.OOGraph;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.QI;
 
 import java.io.Serializable;
 import java.util.logging.Level;

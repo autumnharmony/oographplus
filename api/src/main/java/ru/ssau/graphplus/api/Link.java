@@ -13,7 +13,7 @@ public interface Link extends
 
     void setEndNode(Node node2);
 
-
+    boolean isConnected();
 
 
     public enum LinkType {

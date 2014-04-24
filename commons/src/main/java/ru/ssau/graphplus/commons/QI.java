@@ -13,7 +13,7 @@
  * See:  http://www.gnu.org/licenses/lgpl.html 
  */
 
-package ru.ssau.graphplus;
+package ru.ssau.graphplus.commons;
 
 
 //---------------------------------------------------------------------- 
@@ -27,6 +27,7 @@ import com.sun.star.chart.XChartDocument;
 import com.sun.star.chart.XDiagram;
 import com.sun.star.container.*;
 import com.sun.star.document.XEmbeddedObjectSupplier;
+import com.sun.star.document.XUndoManagerSupplier;
 import com.sun.star.drawing.*;
 import com.sun.star.frame.*;
 import com.sun.star.lang.XComponent;
@@ -306,5 +307,13 @@ public class QI {
 
     public static XButton XButton(Object o) {
         return _unoRuntimeWrapper.queryInterface(XButton.class, o);
+    }
+
+    public static XListBox XListBox(Object o) {
+        return _unoRuntimeWrapper.queryInterface(XListBox.class, o);
+    }
+
+    public static XUndoManagerSupplier XUndoManagerSupplier(Object o) {
+        return _unoRuntimeWrapper.queryInterface(XUndoManagerSupplier.class, o);
     }
 }

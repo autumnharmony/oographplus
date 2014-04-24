@@ -2,8 +2,8 @@ package ru.ssau.graphplus.events;
 
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
-import ru.ssau.graphplus.ConnectedShapes;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.ConnectedShapes;
+import ru.ssau.graphplus.commons.QI;
 
 import java.util.Date;
 

@@ -18,6 +18,9 @@ import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.DiagramModel;
 import ru.ssau.graphplus.api.*;
 import ru.ssau.graphplus.api.DiagramElement;
+import ru.ssau.graphplus.commons.ConnectedShapes;
+import ru.ssau.graphplus.commons.MiscHelper;
+import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.node.NodeBase;
 
 import java.util.ArrayList;
@@ -35,6 +38,21 @@ public abstract class LinkBase implements Link,
         StringSerializable,
         ShapesProvider
 {
+
+    boolean removed;
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    @Override
+    public boolean isConnected() {
+        return node1 != null && node2 != null;
+    }
 
     @Override
     public void setPosition(Point newPosition) {

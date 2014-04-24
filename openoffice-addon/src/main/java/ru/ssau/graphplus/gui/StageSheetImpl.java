@@ -6,14 +6,14 @@ package ru.ssau.graphplus.gui;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
+import com.google.inject.Inject;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.drawing.XDrawPage;
 import com.sun.star.lang.WrappedTargetException;
 import com.sun.star.lang.XComponent;
 import ru.ssau.graphplus.DiagramModel;
 import ru.ssau.graphplus.DrawHelper;
-import ru.ssau.graphplus.OOoUtils;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.OOoUtils;
 import ru.ssau.graphplus.api.DiagramElement;
 
 import java.awt.*;
@@ -24,6 +24,7 @@ public class StageSheetImpl implements Layout.Stage {
     private DiagramModel diagramModel;
     private XComponent drawDocument;
 
+    @Inject
     public StageSheetImpl(DiagramModel diagramModel, XComponent drawDocument) {
         this.diagramModel = diagramModel;
         this.drawDocument = drawDocument;

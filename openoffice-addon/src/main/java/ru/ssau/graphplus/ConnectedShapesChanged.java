@@ -1,6 +1,7 @@
 package ru.ssau.graphplus;
 
 import com.sun.star.drawing.XConnectorShape;
+import ru.ssau.graphplus.commons.ConnectedShapes;
 import ru.ssau.graphplus.events.ShapeEvent;
 import ru.ssau.graphplus.events.ShapeEventType;
 

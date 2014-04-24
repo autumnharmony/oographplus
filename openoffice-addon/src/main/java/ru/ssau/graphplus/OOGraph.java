@@ -23,6 +23,9 @@ import com.sun.star.uno.*;
 import com.sun.star.uno.Exception;
 import com.sun.star.util.URL;
 import com.sun.star.util.XModifiable;
+import ru.ssau.graphplus.commons.OOoUtils;
+import ru.ssau.graphplus.commons.QI;
+import ru.ssau.graphplus.commons.ShapeHelper;
 import ru.ssau.graphplus.document.event.handler.DocumentEventsHandler;
 import ru.ssau.graphplus.document.event.handler.impl.DocumentEventsHandlerImpl;
 import ru.ssau.graphplus.gui.*;
@@ -82,45 +85,19 @@ public class OOGraph extends ComponentBase implements
         com.sun.star.task.XAsyncJob,
         com.sun.star.document.XEventListener,
         XComponent,
-        XUIElementFactory {
+        XUIElementFactory,
+        XDialogEventHandler {
 
 
-    private static final String msURLhead = "private:resource/toolpanel/OOGraphPanelFactory";
-
-
-    private static final String m_implementationName = OOGraph.class.getName();
     public static final String RU_SSAU_GRAPHPLUS_SIDEBAR_OOGRAPH_PANEL_FACTORY = "ru.ssau.graphplus.sidebar.OOGraphPanelFactory";
-    private static final String[] m_serviceNames = {
-            "com.sun.star.frame.ProtocolHandler",
-            "com.sun.star.task.Job",
-            "com.sun.star.task.AsyncJob",
-            RU_SSAU_GRAPHPLUS_SIDEBAR_OOGRAPH_PANEL_FACTORY
-    };
-
-    private static final String DIAGRAM_TYPE_CHANGED = "diagramTypeChanged";
-    private static final String DIAGRAM_NAME_CHANGED = "diagramNameChanged";
-    private static final String CANCEL_BUTTON = "cancelButton";
-    private static final String CREATE_BUTTON = "createButton";
-    private static final ArrayList<String> m_aSupportedModules = new ArrayList(1);
     public static final String ENV_TYPE = "EnvType";
     public static final String MODEL = "Model";
     public static final String EVENT_NAME = "EventName";
     public static final String DIAGRAM_MODEL = "DiagramModel";
-    public static StatusBarInterceptionController aController;
-    private static List<WeakReference<OOGraph>> weakReferences = new ArrayList<>();
-    private static XMultiComponentFactory xMCF = null;
-    private static XMultiServiceFactory xMSF = null;
-
-    private static ArrayList<FrameObject> _frameObjectList = null;
-    private static XComponent m_xComponent = null;
-
-    private final XComponentContext m_xContext;
-
     public static final Logger LOGGER;
-
+    private static final ArrayList<String> m_aSupportedModules = new ArrayList(1);
     static {
         m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
-
         LOGGER = Logger.getLogger("oograph");
         Handler consoleHandler = new ConsoleHandler();
         consoleHandler.setFormatter(new SimpleFormatter());
@@ -135,22 +112,46 @@ public class OOGraph extends ComponentBase implements
         }
 
     }
+    final static String msProtocol = "ru.ssau.graphplus";
+    final static String msShowCommand = "ShowOptionsDialog";
+    private static final String msURLhead = "private:resource/toolpanel/OOGraphPanelFactory";
+    private static final String m_implementationName = OOGraph.class.getName();
+    private static final String[] m_serviceNames = {
+            "com.sun.star.frame.ProtocolHandler",
+            "com.sun.star.task.Job",
+            "com.sun.star.task.AsyncJob",
+            RU_SSAU_GRAPHPLUS_SIDEBAR_OOGRAPH_PANEL_FACTORY
+    };
 
+
+    public static StatusBarInterceptionController aController;
+    static Map<String, XDispatch> frameToDispatch = new HashMap<>();
+    static Map<String, XFrame> frames = new HashMap<>();
+    static Map<XFrame, MyDispatch> dispatchByFrame = new WeakHashMap<>();
+    private static List<WeakReference<OOGraph>> weakReferences = new ArrayList<>();
+    private static XMultiComponentFactory xMCF = null;
+    private static XMultiServiceFactory xMSF = null;
+    private static ArrayList<FrameObject> _frameObjectList = null;
+    private static XComponent m_xComponent = null;
+    private final XComponentContext m_xContext;
+    TableInserter tableInserter = new TableInserterImpl(xMSF);
     private MyDispatch myDispatch;
+//    private XNameAccess accessLeaves;
     private com.sun.star.frame.XFrame m_xFrame;
     private Map<MyURL, Set<XStatusListener>> statusListeners = new HashMap();
     private String diagramName;
     private String diagramType;
 
+//    public static OOGraph temp(XComponentContext xComponentContext) {
+//        return new OOGraphProxy(xComponentContext);
+//    }
     private XEventBroadcaster m_xEventBroadcaster = null;
     private boolean isAliveDocumentEventListener = false;
-//    private XNameAccess accessLeaves;
-
     private XModel2 m_xModel;
     private XModuleManager m_xModuleManager;
-
-
     private Map<URL, XStatusListener> maListeners;
+    //TODO remove
+    private DocumentEventsHandler documentEventsHandler = new DocumentEventsHandlerImpl();
 
     public OOGraph(XComponentContext context) {
 
@@ -174,10 +175,6 @@ public class OOGraph extends ComponentBase implements
 //        setupDocumentEventsHandler();
 
     }
-
-//    public static OOGraph temp(XComponentContext xComponentContext) {
-//        return new OOGraphProxy(xComponentContext);
-//    }
 
     public static XSingleComponentFactory __getComponentFactory(String sImplementationName) {
         XSingleComponentFactory xFactory = null;
@@ -237,6 +234,9 @@ public class OOGraph extends ComponentBase implements
 
     }
 
+    static MyDispatch getDispatchByFrame(XFrame frame) {
+        return dispatchByFrame.get(frame);
+    }
 
     @Override
     public void dispose() {
@@ -253,19 +253,18 @@ public class OOGraph extends ComponentBase implements
         //TODO implement
     }
 
-
     public String getDiagramType() {
         return diagramType;
     }
 
-    public void addEventListener() {
+    private void addEventListener() {
         if (!this.isAliveDocumentEventListener) {
             this.m_xEventBroadcaster.addEventListener(this);
             this.isAliveDocumentEventListener = true;
         }
     }
 
-    public void removeEventListener() {
+    private void removeEventListener() {
         if (this.isAliveDocumentEventListener) {
             this.m_xEventBroadcaster.removeEventListener(this);
             this.isAliveDocumentEventListener = false;
@@ -413,10 +412,6 @@ public class OOGraph extends ComponentBase implements
         return myDispatch;
     }
 
-    //TODO remove
-    private DocumentEventsHandler documentEventsHandler = new DocumentEventsHandlerImpl();
-
-
     private void addDocumentEventListener(XComponent m_xComponent) {
         XDocumentEventBroadcaster xDEB = UnoRuntime.queryInterface(XDocumentEventBroadcaster.class, m_xComponent);
 
@@ -436,11 +431,9 @@ public class OOGraph extends ComponentBase implements
         });
     }
 
-
     private boolean needToHandle(DocumentEvent documentEvent) {
         return true;
     }
-
 
     // com.sun.star.task.XJob:
     public Object execute(com.sun.star.beans.NamedValue[] Arguments) throws com.sun.star.lang.IllegalArgumentException, com.sun.star.uno.Exception {
@@ -628,79 +621,7 @@ public class OOGraph extends ComponentBase implements
     }
 
     private void handleOnNew() throws Exception {
-        // dialog for diagram name
-        XMultiComponentFactory xMCF = m_xContext.getServiceManager();
-        Object obj;
 
-        // If valid we must pass the XModel when creating a DialogProvider object
-
-        obj = xMCF.createInstanceWithContext(
-                "com.sun.star.awt.DialogProvider2", m_xContext);
-
-        XDialogProvider2 xDialogProvider = (XDialogProvider2)
-                UnoRuntime.queryInterface(XDialogProvider2.class, obj);
-
-        diagramType = null;
-        diagramName = null;
-
-
-        XDialog xDialog = xDialogProvider.createDialogWithHandler("vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/OnNewDialog.xdl", new XDialogEventHandler() {
-
-            //diagramNameChanged
-            //diagramTypeChanged
-            @Override
-            public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
-
-
-                boolean handled = true;
-                boolean end = false;
-                String s1 = s;
-                switch (s) {
-                    case CREATE_BUTTON:
-                        if (diagramName != null && diagramType != null) {
-                            createFrame();
-                            end = true;
-                        } else {
-                            end = false;
-                        }
-                        break;
-                    case DIAGRAM_TYPE_CHANGED:
-
-                        ItemEvent o1 = (ItemEvent) o;
-                        XListBox xListBox = UnoRuntime.queryInterface(XListBox.class, o1.Source);
-                        String selectedItem = xListBox.getSelectedItem();
-                        String diagramType1 = MiscHelper.diagramTypeConvert(selectedItem);
-                        diagramType = diagramType1;
-                        //                                diagramModel.setDiagramType(diagramType1);
-                        break;
-
-                    case DIAGRAM_NAME_CHANGED:
-                        String trim = QI.XTextComponent(((TextEvent) o).Source).getText().trim();
-                        diagramName = trim;
-                        getDiagramModel().setName(trim);
-                        break;
-
-                    case CANCEL_BUTTON:
-                        end = true;
-                        break;
-                }
-
-                if (end) {
-                    xDialog.endExecute();
-                    getDiagramModel().setDiagramType(diagramType);
-                }
-
-
-                return handled;
-            }
-
-            @Override
-            public String[] getSupportedMethodNames() {
-                return new String[]{"diagramNameChanged", "diagramTypeChanged", "createButton", "cancelButton"};
-            }
-        });
-
-        xDialog.execute();
     }
 
     public com.sun.star.frame.XDispatch queryDispatch(com.sun.star.util.URL aURL, String TargetFrameName, int SearchFlags) {
@@ -722,20 +643,6 @@ public class OOGraph extends ComponentBase implements
 
 
     }
-
-
-    final static String msProtocol = "ru.ssau.graphplus";
-    final static String msShowCommand = "ShowOptionsDialog";
-
-    static Map<String, XDispatch> frameToDispatch = new HashMap<>();
-    static Map<String, XFrame> frames = new HashMap<>();
-
-    static Map<XFrame, MyDispatch> dispatchByFrame = new WeakHashMap<>();
-
-    static MyDispatch getDispatchByFrame(XFrame frame) {
-        return dispatchByFrame.get(frame);
-    }
-
 
     private XDispatch getDispatchForFrame(URL aURL, String targetFrameName, int searchFlags) {
         XDispatch xDispatch = frameToDispatch.get(targetFrameName);
@@ -789,18 +696,18 @@ public class OOGraph extends ComponentBase implements
         // TODO: Insert your implementation for "close" here.
     }
 
+//    @Override
+//    public void dispatch(URL url, PropertyValue[] propertyValues) {
+//
+//
+//    }
+
     // com.sun.star.task.XAsyncJob:
     public void executeAsync(com.sun.star.beans.NamedValue[] Arguments, com.sun.star.task.XJobListener Listener) throws com.sun.star.lang.IllegalArgumentException {
 
         OOGraph.LOGGER.info("executeAsync");
         save();
     }
-
-//    @Override
-//    public void dispatch(URL url, PropertyValue[] propertyValues) {
-//
-//
-//    }
 
     public void addStatusListener(XStatusListener xl, URL url) {
     }
@@ -890,9 +797,6 @@ public class OOGraph extends ComponentBase implements
 
     }
 
-
-    TableInserter tableInserter = new TableInserterImpl(xMSF);
-
     @Override
     public void disposing(EventObject eventObject) {
         //To change body of implemented methods use File | Settings | File Templates.
@@ -935,7 +839,6 @@ public class OOGraph extends ComponentBase implements
         }
     }
 
-
     @Override
     public void notifyEvent(com.sun.star.document.EventObject docEvent) {
         if (docEvent.EventName.equals("OnViewClosed")) {
@@ -977,17 +880,6 @@ public class OOGraph extends ComponentBase implements
     public DiagramModel getDiagramModel() {
         return myDispatch.getDiagramModel();
     }
-
-    public enum State {
-        Nothing,
-        InputTwoShapes,
-        AddingLink
-    }
-
-    static {
-        m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
-    }
-
 
     /**
      * The main factory method has two parts:
@@ -1060,7 +952,10 @@ public class OOGraph extends ComponentBase implements
 
             LinkNodesPanel aPanel = new LinkNodesPanel(
                     xFrame, xParentWindow, m_xContext, myDispatch1.getDiagramController());
-            LinkNodesDialog linkNodesDialog = new LinkNodesDialog(myDispatch1);
+            XModel xModel = QI.XModel(myDispatch1.getDiagramModel().getDrawDoc());
+
+
+            LinkNodesDialog linkNodesDialog = myDispatch1.createLinkNodesDialog(xModel, myDispatch1.getFrame());
             aPanel.setLinkNodesDialog(linkNodesDialog);
 
             linkNodesDialog.init(aPanel);
@@ -1087,6 +982,25 @@ public class OOGraph extends ComponentBase implements
         }
 
         return null;
+    }
+
+    @Override
+    public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
+        return true;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String[] getSupportedMethodNames() {
+        return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public enum State {
+        Nothing,
+        InputTwoShapes,
+        AddingLink
+    }
+    static {
+        m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
     }
 
 

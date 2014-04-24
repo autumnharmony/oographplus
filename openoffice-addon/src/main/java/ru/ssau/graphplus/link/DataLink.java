@@ -10,8 +10,7 @@ import com.sun.star.drawing.LineStyle;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.*;
 import com.sun.star.lang.IllegalArgumentException;
-import ru.ssau.graphplus.QI;
-import ru.ssau.graphplus.api.DiagramModel;
+import ru.ssau.graphplus.commons.QI;
 
 import java.io.Serializable;
 import java.util.logging.Level;

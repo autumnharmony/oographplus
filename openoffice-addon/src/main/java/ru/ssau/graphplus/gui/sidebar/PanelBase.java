@@ -3,16 +3,7 @@ package ru.ssau.graphplus.gui.sidebar;
 import java.util.Vector;
 
 import com.sun.star.accessibility.XAccessible;
-import com.sun.star.awt.Rectangle;
-import com.sun.star.awt.Size;
-import com.sun.star.awt.WindowAttribute;
-import com.sun.star.awt.WindowClass;
-import com.sun.star.awt.WindowDescriptor;
-import com.sun.star.awt.WindowEvent;
-import com.sun.star.awt.XToolkit;
-import com.sun.star.awt.XWindow;
-import com.sun.star.awt.XWindowListener;
-import com.sun.star.awt.XWindowPeer;
+import com.sun.star.awt.*;
 import com.sun.star.lang.DisposedException;
 import com.sun.star.lang.EventObject;
 import com.sun.star.lang.XComponent;
@@ -25,7 +16,7 @@ import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 
 public abstract class PanelBase
-	implements XToolPanel, XWindowListener, XSidebarPanel, XComponent
+	implements XToolPanel, XWindowListener, XSidebarPanel, XComponent, XDialogEventHandler, XContainerWindowEventHandler
 {
 	/** This is the one method that a derived class has to implement:
 	 *  how to react to size changes of the content window.

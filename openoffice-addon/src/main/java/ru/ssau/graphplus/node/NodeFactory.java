@@ -2,6 +2,7 @@
 package ru.ssau.graphplus.node;
 
 
+import com.google.inject.Inject;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
@@ -30,6 +31,7 @@ public class NodeFactory extends DiagramElementFactory {
     private static final String NODE_PREFIX = "node";
 
 
+    @Inject
     public NodeFactory(XMultiServiceFactory xmsf) {
         super(xmsf);
         nodeFactorySet.add(this);

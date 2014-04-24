@@ -8,8 +8,8 @@ import com.sun.star.container.XIndexContainer;
 import com.sun.star.drawing.*;
 import com.sun.star.lang.*;
 import com.sun.star.uno.UnoRuntime;
-import ru.ssau.graphplus.PostCreationAction;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.PostCreationAction;
+import ru.ssau.graphplus.commons.QI;
 
 import java.io.Serializable;
 import java.util.logging.Level;

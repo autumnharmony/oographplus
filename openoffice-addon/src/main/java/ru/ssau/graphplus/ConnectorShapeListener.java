@@ -30,6 +30,7 @@ import com.sun.star.lang.XServiceInfo;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import ru.ssau.graphplus.api.DiagramElement;
+import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.events.*;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.link.LinkBase;

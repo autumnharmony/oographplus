@@ -8,29 +8,21 @@ import com.sun.star.accessibility.XAccessible;
 import com.sun.star.awt.*;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
-import com.sun.star.drawing.XShape;
 import com.sun.star.frame.XController;
 import com.sun.star.frame.XFrame;
-import com.sun.star.frame.XModel;
-import com.sun.star.lang.*;
+import com.sun.star.lang.DisposedException;
 import com.sun.star.lang.EventObject;
 import com.sun.star.lang.IllegalArgumentException;
+import com.sun.star.lang.WrappedTargetException;
 import com.sun.star.text.XText;
-import com.sun.star.text.XTextRange;
 import com.sun.star.ui.LayoutSize;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
-import com.sun.star.util.XSearchDescriptor;
-import com.sun.star.util.XSearchable;
-import com.sun.star.view.XSelectionSupplier;
 import ru.ssau.graphplus.DiagramController;
 import ru.ssau.graphplus.OOGraph;
-import ru.ssau.graphplus.QI;
-import ru.ssau.graphplus.gui.sidebar.PanelBase;
+import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.api.Link;
-import ru.ssau.graphplus.node.NodeBase;
-
-import java.util.logging.Level;
+import ru.ssau.graphplus.gui.sidebar.PanelBase;
 
 
 public class LinkNodesPanel extends PanelBase {
@@ -55,8 +47,6 @@ public class LinkNodesPanel extends PanelBase {
 
         this.diagramController = diagramController;
         mxController = xFrame.getController();
-        mxModel = mxController.getModel();
-        maLastSearchResult = null;
 
         XWindowPeer xParentPeer = (XWindowPeer) UnoRuntime.queryInterface(XWindowPeer.class, xParentWindow);
         if (xParentPeer == null)
@@ -179,33 +169,23 @@ public class LinkNodesPanel extends PanelBase {
             }
         });
 
-        XButton linkButton = QI.XButton(xControlContainer.getControl(LINK_BUTTON));
-        linkButton.addActionListener(new XActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                diagramController.linkNodes((NodeBase)getLinkNodesDialog().getaNode(), (NodeBase)getLinkNodesDialog().getzNode(), getLinkType());
-            }
-
-            @Override
-            public void disposing(EventObject eventObject) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        });
+//        XButton linkButton = QI.XButton(xControlContainer.getControl(LINK_BUTTON));
+//        linkButton.addActionListener(new XActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent actionEvent) {
+//                diagramController.linkNodes((NodeBase)getLinkNodesDialog().getaNode(), (NodeBase)getLinkNodesDialog().getzNode(), getLinkType());
+//            }
+//
+//            @Override
+//            public void disposing(EventObject eventObject) {
+//                //To change body of implemented methods use File | Settings | File Templates.
+//            }
+//        });
     }
 
     private Link.LinkType getLinkType() {
         return Link.LinkType.ControlFlow;
     }
-
-
-    private void setupButton(){
-
-    }
-
-
-
-
-
 
 
     private void setupComboBox(XComboBox xComboBox1, XTextListener xTextListener) {
@@ -249,63 +229,6 @@ public class LinkNodesPanel extends PanelBase {
             }
         });
     }
-
-
-    /** Search for the next occurence of the search string.
-     *  When sReplacement is given (i.e. not null) then also replace the found text.
-     */
-    private void ProcessSearchAndReplace (
-            final String sSearchText,
-            final String sReplacementText)
-    {
-        final XSearchable xSearchable = (XSearchable)UnoRuntime.queryInterface(
-                XSearchable.class,
-                mxModel);
-        if (xSearchable == null)
-            return;
-
-        // Setup the search.
-        final XSearchDescriptor xDescriptor = xSearchable.createSearchDescriptor();
-        xDescriptor.setSearchString(sSearchText);
-
-        // Start or continue the search.
-        final Object aSearchResult;
-        if (maLastSearchResult == null)
-            aSearchResult = xSearchable.findFirst(xDescriptor);
-        else
-            aSearchResult = xSearchable.findNext(maLastSearchResult.getEnd(), xDescriptor);
-
-        // Convert the result to XTextRange.  This is the document type specific part.
-        // Only Writer is supported at the moment.
-        if (aSearchResult != null)
-            maLastSearchResult = (XTextRange)UnoRuntime.queryInterface(XTextRange.class, aSearchResult);
-        else
-            maLastSearchResult = null;
-
-        // Do the replacement (when the search text was found and a replacement is given).
-        if (maLastSearchResult!=null && sReplacementText!=null)
-        {
-            maLastSearchResult.setString(sReplacementText);
-        }
-
-        // Select the found (or replaced) text.
-        final XSelectionSupplier xSelectionSupplier = (XSelectionSupplier)UnoRuntime.queryInterface(
-                XSelectionSupplier.class,
-                mxController);
-        if (xSelectionSupplier != null)
-        {
-            try
-            {
-                xSelectionSupplier.select(maLastSearchResult);
-            }
-            catch (com.sun.star.lang.IllegalArgumentException aException)
-            {
-                OOGraph.LOGGER.log(Level.WARNING, aException.getMessage(), aException);
-            }
-        }
-    }
-
-
 
 
     /** Lookup the XControl object in the dialog for the given name.
@@ -449,12 +372,21 @@ public class LinkNodesPanel extends PanelBase {
                 0);
     }
 
-
-
-
     private XWindow mxWindow;
     private XController mxController;
-    private XModel mxModel;
-    private XTextRange maLastSearchResult;
 
+    @Override
+    public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
+        return linkNodesDialog.getDialogHandler().callHandlerMethod(xDialog, o, s);
+    }
+
+    @Override
+    public boolean callHandlerMethod(XWindow xWindow, Object o, String s) throws WrappedTargetException {
+        return linkNodesDialog.getDialogHandler().callHandlerMethod((XWindow) null, o ,s);
+    }
+
+    @Override
+    public String[] getSupportedMethodNames() {
+        return linkNodesDialog.getDialogHandler().getSupportedMethodNames();
+    }
 }

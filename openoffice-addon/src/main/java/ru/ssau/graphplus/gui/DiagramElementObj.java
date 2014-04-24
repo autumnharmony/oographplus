@@ -56,6 +56,10 @@ public class DiagramElementObj implements Layout.Obj {
         return true;
     }
 
+    public DiagramElement getDiagramElement() {
+        return diagramElement;
+    }
+
     @Override
     public int hashCode() {
         return diagramElement.hashCode();

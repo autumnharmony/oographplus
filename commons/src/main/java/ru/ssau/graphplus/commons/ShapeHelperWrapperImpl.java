@@ -2,8 +2,9 @@
  * Copyright (c) 2014. Anton Borisov
  */
 
-package ru.ssau.graphplus;
+package ru.ssau.graphplus.commons;
 
+import com.google.inject.Inject;
 import com.sun.star.awt.Point;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.drawing.XShape;
@@ -12,8 +13,19 @@ import ru.ssau.graphplus.api.Node;
 
 public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
 
+    private MiscHelperWrapper miscHelper;
+
     public boolean isTextShape(XShape start_) {
         return ShapeHelper.isTextShape(start_);
+    }
+
+    public ShapeHelperWrapperImpl() {
+       miscHelper = new MiscHelperWrapperImpl();
+    }
+
+    @Inject
+    public ShapeHelperWrapperImpl(MiscHelperWrapper miscHelper) {
+        this.miscHelper = miscHelper;
     }
 
     @Override
@@ -31,11 +43,9 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
 
         int leftDownIndex = -1;
 
-        for (int i=0; i< point.length; i++)
-        {
+        for (int i = 0; i < point.length; i++) {
             Point _p = point[i];
-            if (_p.X < minX && _p.Y < minY)
-            {
+            if (_p.X < minX && _p.Y < minY) {
                 minX = _p.X;
                 minY = _p.Y;
                 leftDown = _p;
@@ -46,13 +56,11 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
         assert leftDownIndex != -1;
 
         int k = 0;
-        for (int j = leftDownIndex; j < point.length; j++)
-        {
+        for (int j = leftDownIndex; j < point.length; j++) {
             newPoints[k++] = point[j];
         }
 
-        for (int j = 0; j < leftDownIndex; j++)
-        {
+        for (int j = 0; j < leftDownIndex; j++) {
             newPoints[k++] = point[j];
         }
 
@@ -62,17 +70,25 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
     }
 
     @Override
-    public Node.NodeType getNodeType(XShape shape){
+    public Node.NodeType getNodeType(XShape shape) {
+        String nodeType;
+
+        try {
+            nodeType = miscHelper.getNodeType(shape);
+            return Node.NodeType.valueOf(nodeType);
+        } catch (Exception ex) {
+          // so sad
+        }
+
         String shapeType = shape.getShapeType();
-        if (shapeType.contains("Rectangle")){
+        if (shapeType.contains("Rectangle")) {
             //  procedure or process
             try {
                 int cornerRadius = OOoUtils.getIntProperty(shape, "CornerRadius");
-                if (cornerRadius != 0){
+                if (cornerRadius != 0) {
                     // rounded
                     return Node.NodeType.MethodOfProcess;
-                }
-                else {
+                } else {
                     // not rounded
                     return Node.NodeType.StartMethodOfProcess;
                 }
@@ -83,24 +99,24 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
             }
         }
 
-        if (shapeType.contains("PolyPolygonShape")){
+        if (shapeType.contains("PolyPolygonShape")) {
             // client or server
             Object polyPolygon = null;
             try {
                 polyPolygon = QI.XPropertySet(shape).getPropertyValue("PolyPolygon");
-                Point[][] points  = (Point[][]) polyPolygon;
-                if (points.length > 1){
+                Point[][] points = (Point[][]) polyPolygon;
+                if (points.length > 1) {
                     throw new com.sun.star.uno.RuntimeException("Error", new com.sun.star.lang.IllegalArgumentException("Strange polygon argument, i can't get type"));
                 }
                 Point[] sort = sort(points);
 
-                if (sort[3].X > sort[2].X && sort[3].X > sort[4].X){
+                if (sort[3].X > sort[2].X && sort[3].X > sort[4].X) {
                     // >
                     // client
                     return Node.NodeType.ClientPort;
                 }
 
-                if ((sort[3].X < sort[2].X && sort[3].X < sort[4].X) || (sort[3].X < sort[2].X && sort[3].X < sort[1].X) ){
+                if ((sort[3].X < sort[2].X && sort[3].X < sort[4].X) || (sort[3].X < sort[2].X && sort[3].X < sort[1].X)) {
                     // <
                     // server
                     return Node.NodeType.ServerPort;

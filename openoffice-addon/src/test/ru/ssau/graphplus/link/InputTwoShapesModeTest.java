@@ -4,36 +4,15 @@
 
 package ru.ssau.graphplus.link;
 
-import com.sun.star.beans.PropertyValue;
 import com.sun.star.drawing.XShape;
-import com.sun.star.frame.FrameSearchFlag;
-import com.sun.star.frame.XComponentLoader;
 import com.sun.star.lang.XComponent;
-import com.sun.star.uno.UnoRuntime;
-import com.sun.star.uno.XComponentContext;
-import junit.framework.Assert;
 //import ooo.connector.BootstrapSocketConnector;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Ignore;
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import ru.ssau.graphplus.DiagramController;
-import ru.ssau.graphplus.DiagramModel;
-import ru.ssau.graphplus.DrawHelper;
-import ru.ssau.graphplus.QI;
-import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
-import ru.ssau.graphplus.node.NodeFactory;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * User: anton

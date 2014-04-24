@@ -16,6 +16,7 @@ import com.sun.star.lang.XServiceInfo;
 import com.sun.star.lib.uno.helper.WeakBase;
 import com.sun.star.uno.*;
 import com.sun.star.uno.Exception;
+import com.sun.star.uno.RuntimeException;
 
 import java.util.Arrays;
 
@@ -160,7 +161,7 @@ public class OptionsDialogHandler extends WeakBase implements XServiceInfo, XCon
             Settings.getSettings().save();
         }
         catch (java.lang.RuntimeException ex) {
-            ex.printStackTrace();
+            throw new RuntimeException("can't save settings", ex);
         }
     }
 

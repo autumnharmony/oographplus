@@ -9,6 +9,9 @@ import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.api.*;
 import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.DiagramModel;
+import ru.ssau.graphplus.commons.MiscHelper;
+import ru.ssau.graphplus.commons.PostCreationAction;
+import ru.ssau.graphplus.commons.QI;
 
 import java.io.Serializable;
 

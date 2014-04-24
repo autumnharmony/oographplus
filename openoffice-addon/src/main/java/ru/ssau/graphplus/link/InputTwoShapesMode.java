@@ -13,6 +13,7 @@ import com.sun.star.uno.UnoRuntime;
 import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.Link;
+import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.node.NodeBase;
 
 /**

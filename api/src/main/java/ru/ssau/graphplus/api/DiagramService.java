@@ -4,17 +4,16 @@
 
 package ru.ssau.graphplus.api;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 4/6/14
- * Time: 6:11 PM
- * To change this template use File | Settings | File Templates.
- */
 public interface DiagramService {
 
     void addDiagramElement(DiagramElement diagramElement);
     void removeDiagramElement(DiagramElement diagramElement);
+
+    Node createNode(String name, Node.NodeType nodeType);
+    Link createLink(String name, Link.LinkType linkType);
+
+    void insertNode(Node node);
+    void insertLink(Link link);
 
     void linkNodes(Node node1, Node node2, Link link);
 }

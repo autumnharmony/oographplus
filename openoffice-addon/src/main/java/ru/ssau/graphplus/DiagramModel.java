@@ -2,8 +2,6 @@ package ru.ssau.graphplus;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.sun.star.drawing.XConnectorShape;
@@ -15,6 +13,11 @@ import com.sun.star.uno.UnoRuntime;
 import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
+import ru.ssau.graphplus.commons.ConnectedShapes;
+import ru.ssau.graphplus.commons.ConnectedShapesComplex;
+import ru.ssau.graphplus.commons.MiscHelper;
+import ru.ssau.graphplus.events.*;
+import ru.ssau.graphplus.events.EventListener;
 import ru.ssau.graphplus.link.LinkBase;
 import ru.ssau.graphplus.link.LinkFactory;
 import ru.ssau.graphplus.link.LinkHelper;
@@ -22,13 +25,13 @@ import ru.ssau.graphplus.link.Validatable;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.node.NodeBase;
 import ru.ssau.graphplus.node.NodeFactory;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.QI;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.*;
 
-import static ru.ssau.graphplus.MiscHelper.*;
+import static ru.ssau.graphplus.commons.MiscHelper.*;
 
 
 public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Serializable, Validatable {
@@ -37,7 +40,6 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     private Set<DiagramElement> diagramElements;
     private Map<String, String> info;
     private Map<String, String> nameToIdMap;
-    private transient BiMap<XShape,DiagramElement> shapeDiagramElementBiMap;
     private transient Map<XShape, DiagramElement> shapeToDiagramElementMap;
     private transient Map<XConnectorShape, ConnectedShapes> connectedShapes;
     private transient Map<String, XShape> idToShape;
@@ -51,6 +53,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     private transient XComponent xDrawDoc;
 
     private transient static List<WeakReference<DiagramModel>> instances = new ArrayList<>();
+    private Map<String, DiagramElement> idToDiagramElement;
 
     public static List<WeakReference<DiagramModel>> getInstances() {
         return Collections.unmodifiableList(instances);
@@ -60,18 +63,29 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         return xDrawDoc;
     }
 
+    private List<ConnectedShapesComplex> connectedShapesComplexes;
+
+    public List<ConnectedShapesComplex> getConnectedShapesComplexList() {
+        return connectedShapesComplexes;
+    }
+
+    public void setConnectedShapesComplexes(List<ConnectedShapesComplex> connectedShapesComplexes) {
+        this.connectedShapesComplexes = connectedShapesComplexes;
+    }
+
     public DiagramModel(XComponent xDrawDoc) {
         instances.add(new WeakReference<DiagramModel>(this));
         diagramElements = new HashSet<>();
         shapeToDiagramElementMap = new HashMap();
         connectedShapes = new HashMap();
         idToShape = new HashMap();
+        idToDiagramElement = new HashMap<>();
         nameToIdMap = new HashMap();
 
         info = new HashMap();
         this.xDrawDoc = xDrawDoc;
 
-        shapeDiagramElementBiMap =  HashBiMap.create();
+
 //        idNameBiMap = HashBiMap.create();
     }
 
@@ -111,7 +125,42 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     }
 
     public DiagramElement getDiagramElementByShape(XShape xS) {
-                    return shapeToDiagramElementMap.get(xS);
+
+        DiagramElement diagramElement = shapeToDiagramElementMap.get(xS);
+        if (diagramElement == null) {
+            String id = MiscHelper.getId(xS);
+            if (id != null) {
+                DiagramElement diagramElement1 = idToDiagramElement.get(id);
+                if (diagramElement1 != null) return diagramElement1;
+            } else {
+
+            }
+        }
+        return diagramElement;
+    }
+
+    public DiagramElement getDiagramElementById(String id) {
+        return idToDiagramElement.get(id);
+    }
+
+    private Map<Class<Event>, List<EventListener>> eventListeners = new WeakHashMap<>();
+
+    public void addEventListener(Class<? extends Event> event, EventListener eventListener) {
+        if (!eventListeners.containsKey(event)) {
+            eventListeners.put((Class<Event>) event, new ArrayList<EventListener>());
+        }
+        eventListeners.get(event).add(eventListener);
+    }
+
+    void fireEvent(Event event) {
+
+        List<EventListener> eventListeners1 = eventListeners.get(event.getClass());
+        if (eventListeners1 == null) {
+            return;
+        }
+        for (EventListener eventListener : eventListeners1) {
+            eventListener.onEvent(event);
+        }
     }
 
     public DiagramModel addDiagramElement(DiagramElement de) {
@@ -129,15 +178,24 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
 
             setLinkId(link, connShape1, connShape2, textShape);
 
-            idToShape.put(getId(textShape), textShape);
-            idToShape.put(getId(connShape1), connShape1);
-            idToShape.put(getId(connShape2), connShape2);
+            String tsId = getId(textShape);
+            idToShape.put(tsId, textShape);
+            String connId = getId(connShape1);
+            idToShape.put(connId, connShape1);
+            String conn2Id = getId(connShape2);
+            idToShape.put(conn2Id, connShape2);
+
+            idToDiagramElement.put(tsId, link);
+            idToDiagramElement.put(connId, link);
+            idToDiagramElement.put(conn2Id, link);
 
         } else if (de instanceof NodeBase) {
             NodeBase node = (NodeBase) de;
             shapeToDiagramElementMap.put(node.getShape(), de);
-            idToShape.put(node.getId(), node.getShape());
-
+            String id = node.getId();
+            idToShape.put(id, node.getShape());
+            idToDiagramElement.put(id, node);
+            fireEvent(new NodeAddedEvent(node));
 //            idNameBiMap.put(node.getId(),node.getName());
         }
         return this;
@@ -157,13 +215,16 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
 
             connectedShapes.remove(QI.XConnectorShape(link.getConnShape1()));
             connectedShapes.remove(QI.XConnectorShape(link.getConnShape2()));
+            fireEvent(new LinkRemovedEvent(link));
         }
         if (de instanceof Node) {
             Node node = (Node) de;
-
+            fireEvent(new NodeRemovedEvent(node));
         }
 
         diagramElements.remove(de);
+
+
     }
 
     /**
@@ -352,7 +413,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     public void refreshModel() {
         for (DiagramElement diagramElement : diagramElements) {
             if (diagramElement instanceof Refreshable)
-                ((Refreshable)diagramElement).refresh(this);
+                ((Refreshable) diagramElement).refresh(this);
         }
     }
 
@@ -360,7 +421,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         List<DiagramElement> notActual = new ArrayList();
         for (DiagramElement diagramElement : diagramElements) {
             if (!isActual(diagramElement, xDrawPage)) {
-                if (diagramElement instanceof Refreshable){
+                if (diagramElement instanceof Refreshable) {
                     Refreshable refreshable = (Refreshable) diagramElement;
                     refreshable.refresh(this);
                 }
@@ -400,7 +461,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
                 Iterables.<DiagramElement, Node>transform(Iterables.filter(diagramElements, new Predicate<DiagramElement>() {
                     @Override
                     public boolean apply(DiagramElement input) {
-                        boolean b = input instanceof Link;
+                        boolean b = input instanceof Node;
                         return b;
                     }
                 }), new Function<DiagramElement, Node>() {
@@ -413,7 +474,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     }
 
     @Override
-    public Collection<Link> getLinks(){
+    public Collection<Link> getLinks() {
         return Lists.newArrayList(
                 Iterables.<DiagramElement, Link>transform(Iterables.filter(diagramElements, new Predicate<DiagramElement>() {
                     @Override
@@ -573,7 +634,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         }
     }
 
-    public void buildModel(){
+    public void buildModel() {
 
     }
 

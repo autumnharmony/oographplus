@@ -6,9 +6,7 @@ package ru.ssau.graphplus.analizer;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.*;
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
@@ -18,11 +16,12 @@ import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.api.DiagramModel;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Node;
+import ru.ssau.graphplus.commons.*;
 
 import java.util.*;
 
 
-public class DiagramWalker implements Walker<XShape, DiagramModel> {
+public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex>> {
 
 
     private final UnoRuntimeWrapper unoRuntimeWrapper;
@@ -50,7 +49,7 @@ public class DiagramWalker implements Walker<XShape, DiagramModel> {
         return new CodeGeneratorModule();
     }
 
-    public DiagramModel walk(Set<XShape> all, XShape start) {
+    public List<ConnectedShapesComplex> walk(Set<XShape> all, XShape start) {
 
         visited = Sets.newHashSet();
 
@@ -61,23 +60,14 @@ public class DiagramWalker implements Walker<XShape, DiagramModel> {
 
         }
 
-        Set<XConnectorShape> connectorShapes = Sets.newHashSet();
 
-        // non-text shape -> text shape
-        Multimap<XShape, XShape> nonTextToText = ArrayListMultimap.create();
-
-        // text shape -> non-text shape
-        Multimap<XShape, XShape> textToNonText = ArrayListMultimap.create();
-
-        // non-text -> non-text
-        Multimap<XShape, XShape> nontextToNonText = ArrayListMultimap.create();
 
         List<ConnectedShapesComplex> connectedShapesComplexes = new ArrayList<>();
 
         Queue<XShape> shapeQueue = new LinkedList<>();
         shapeQueue.add(start);
 
-
+        Table<XShape, XShape, ConnectedShapesComplex> fromTo = HashBasedTable.create();
 
         for (XShape shape : all) {
             if (shapeHelperWrapper.isConnectorShape(shape)) {
@@ -89,35 +79,56 @@ public class DiagramWalker implements Walker<XShape, DiagramModel> {
                 XShape start_ = connectedShapes.getStart();
                 XShape end_ = connectedShapes.getEnd();
 
+//                fromTo.put(start_, end_, new ConnectedShapesComplex(start_, end_));
+
+
                 if (shapeHelperWrapper.isTextShape(start_) && !shapeHelperWrapper.isTextShape(end_)) {
-                    textToNonText.put(start_, end_);
+                    // text -> non text
+                    // second part of complex link
+                    // start_ is text
+
+                    boolean already = fromTo.column(start_).size() == 1;
+                    if (already) {
+                        ConnectedShapesComplex connectedShapesComplex = fromTo.row(start_).get(0);
+
+//                        assert start_.equals(connectedShapesComplex.toShape);
+
+                        fromTo.put(connectedShapesComplex.fromShape, end_, new ConnectedShapesComplex(connectedShapesComplex.fromShape, end_, connectedShapesComplex.connector, connectorShape, connectedShapesComplex.toShape));
+                        fromTo.remove(connectedShapesComplex.fromShape, connectedShapesComplex.toShape);
+                    }
+                    else {
+                        fromTo.put(start_, end_, new ConnectedShapesComplex(start_, end_, connectorShape));
+                    }
+
+
                 } else if (!shapeHelperWrapper.isTextShape(start_) && shapeHelperWrapper.isTextShape(end_)) {
-                    nonTextToText.put(start_, end_);
+
+                    // non text -> text
+                    // first part of complex link
+                    // end_ is text
+
+
+                    boolean already = fromTo.row(end_).size() == 1;
+                    if (already) {
+                        ConnectedShapesComplex connectedShapesComplex = fromTo.column(end_).get(0);
+
+//                        assert connectedShapesComplex.fromShape.equals(end_);
+
+                        fromTo.put(start_, connectedShapesComplex.toShape, new ConnectedShapesComplex(connectedShapesComplex.fromShape, end_, connectedShapesComplex.connector, connectorShape, connectedShapesComplex.toShape));
+                        fromTo.remove(connectedShapesComplex.fromShape, connectedShapesComplex.toShape);
+                    }
+                    else {
+                        fromTo.put(start_, end_, new ConnectedShapesComplex(start_, end_, connectorShape));
+                    }
+
                 } else {
-                    nontextToNonText.put(start_, end_);
+                    fromTo.put(start_, end_, new ConnectedShapesComplex(start_, end_, connectorShape));
                 }
             }
         }
 
-        beSureThatOneItem(textToNonText);
-        beSureThatOneItem(nonTextToText);
 
 
-        for (XShape nonText1 : nonTextToText.keySet()) {
-            XShape text = nonTextToText.get(nonText1).iterator().next();
-            XShape nonText2 = textToNonText.get(text).iterator().next();
-
-            ConnectedShapesComplex connectedShapesComplex = new ConnectedShapesComplex(nonText1,nonText2,text);
-            connectedShapesComplexes.add(connectedShapesComplex);
-        }
-
-        for (XShape shape : nontextToNonText.keySet()){
-            Collection<XShape> shapes = nontextToNonText.get(shape);
-            for (XShape shape2 : shapes){
-                ConnectedShapesComplex connectedShapesComplex = new ConnectedShapesComplex(shape, shape2, null );
-                connectedShapesComplexes.add(connectedShapesComplex);
-            }
-        }
 
         XShape current;
 
@@ -138,9 +149,7 @@ public class DiagramWalker implements Walker<XShape, DiagramModel> {
                 }
             });
 
-            for (ConnectedShapesComplex connectedShapesComplex : filter){
-
-//                if ()
+            for (ConnectedShapesComplex connectedShapesComplex : filter) {
                 shapeQueue.add(connectedShapesComplex.toShape);
             }
 
@@ -148,20 +157,13 @@ public class DiagramWalker implements Walker<XShape, DiagramModel> {
             visited.add(current);
         }
 
-        return null;
+        return connectedShapesComplexes;
     }
 
-    private void beSureThatOneItem(Multimap<XShape, XShape> textToNonText) {
-        for (XShape shape : textToNonText.keySet()) {
-            if (textToNonText.get(shape).size() > 1) {
-                throw new RuntimeException("", new IllegalArgumentException());
-            }
-        }
-    }
 
     private XShape getStart(Set<XShape> all) {
-
-        if (diagramType.equals(DiagramType.Channel)){
+        if (all == null) throw new java.lang.IllegalArgumentException("no nulls please");
+        if (diagramType.equals(DiagramType.Channel)) {
             for (XShape xShape : all) {
                 Node.NodeType nodeType = shapeHelperWrapper.getNodeType(xShape);
                 if (nodeType.equals(Node.NodeType.StartMethodOfProcess)) {
@@ -170,7 +172,7 @@ public class DiagramWalker implements Walker<XShape, DiagramModel> {
             }
         }
 
-        if (diagramType.equals(DiagramType.Process)){
+        if (diagramType.equals(DiagramType.Process)) {
             return all.iterator().next();
         }
 

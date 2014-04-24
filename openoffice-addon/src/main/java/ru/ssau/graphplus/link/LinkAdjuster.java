@@ -7,7 +7,7 @@ import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.WrappedTargetException;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.QI;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

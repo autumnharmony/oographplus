@@ -18,6 +18,10 @@ import org.mockito.stubbing.Answer;
 import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Node;
+import ru.ssau.graphplus.commons.ConnectedShapes;
+import ru.ssau.graphplus.commons.QI;
+import ru.ssau.graphplus.commons.ShapeHelperWrapper;
+import ru.ssau.graphplus.commons.UnoRuntimeWrapper;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

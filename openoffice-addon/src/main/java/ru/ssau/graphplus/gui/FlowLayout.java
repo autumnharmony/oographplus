@@ -5,10 +5,13 @@
 package ru.ssau.graphplus.gui;
 
 
+import com.google.inject.Inject;
+import ru.ssau.graphplus.api.DiagramElement;
+import ru.ssau.graphplus.api.Link;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -20,6 +23,7 @@ public class FlowLayout implements Layout {
     private Stage stage;
     private Logger logger;
 
+    @Inject
     public FlowLayout(Stage stage) {
         this();
         this.stage = stage;
@@ -32,9 +36,29 @@ public class FlowLayout implements Layout {
     @Override
     public void layout(Stage stage, Obj obj) {
 
+        if (obj instanceof DiagramElementObj){
+            DiagramElementObj diagramElementObj = (DiagramElementObj) obj;
+            DiagramElement diagramElement = diagramElementObj.getDiagramElement();
+            if (diagramElement instanceof Link){
+                Link link = (Link) diagramElement;
+                if (link.isConnected()){
 
-        int x = 0;
-        int y = 0;
+//                    while ()
+
+                    return;
+                }
+            }
+        }
+
+        findPlace(stage, obj, new Point(0,0));
+
+    }
+
+    private Point findPlace(Stage stage, Obj obj, Point startPoint) {
+
+
+        int x = startPoint.x;
+        int y = startPoint.y;
 
 
         boolean placed = false;
@@ -81,7 +105,7 @@ public class FlowLayout implements Layout {
                 placed = true;
             }
         }
-
+        return new Point(x,y);
     }
 
     Dimension getShift(List<Obj> interesectsWith, Obj o) {

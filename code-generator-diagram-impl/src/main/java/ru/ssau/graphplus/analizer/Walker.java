@@ -4,7 +4,6 @@
 
 package ru.ssau.graphplus.analizer;
 
-import java.util.Collection;
 import java.util.Set;
 
 public interface Walker<Item,Result> {

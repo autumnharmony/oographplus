@@ -11,7 +11,7 @@
  * See:  http://www.gnu.org/licenses/lgpl.html 
  */
 
-package ru.ssau.graphplus;
+package ru.ssau.graphplus.commons;
 
 
 //---------------------------------------------------------------------- 

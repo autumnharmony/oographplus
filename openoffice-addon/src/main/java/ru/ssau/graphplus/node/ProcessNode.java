@@ -7,8 +7,8 @@ import com.sun.star.beans.XPropertySet;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XMultiServiceFactory;
 import ru.ssau.graphplus.DrawHelper;
-import ru.ssau.graphplus.QI;
-import ru.ssau.graphplus.ShapeHelper;
+import ru.ssau.graphplus.commons.QI;
+import ru.ssau.graphplus.commons.ShapeHelper;
 
 import java.awt.*;
 import java.io.Serializable;

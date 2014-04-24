@@ -1,5 +1,5 @@
 
-package ru.ssau.graphplus;
+package ru.ssau.graphplus.commons;
 
 import com.sun.star.awt.Point;
 import com.sun.star.beans.*;
@@ -17,9 +17,7 @@ import ru.ssau.graphplus.api.Node;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author anton
- */
+
 public class MiscHelper {
 
     public static final String GRAPH_ELEMENT_TYPE = "GraphElementType";

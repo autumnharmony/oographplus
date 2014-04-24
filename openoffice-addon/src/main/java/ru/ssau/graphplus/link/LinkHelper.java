@@ -7,8 +7,8 @@ package ru.ssau.graphplus.link;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.WrappedTargetException;
-import ru.ssau.graphplus.ConnectedShapes;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.ConnectedShapes;
+import ru.ssau.graphplus.commons.QI;
 
 /**
  * User: anton

@@ -2,10 +2,11 @@
  * Copyright (c) 2014. Anton Borisov
  */
 
-package ru.ssau.graphplus;
+package ru.ssau.graphplus.commons;
 
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
+import ru.ssau.graphplus.api.Link;
 
 /**
  * Data object for storing two shapes connected by link three shapes (which consists of three shapes  1. ConnectorShape, 2. TextShape, 3. ConnectorShape
@@ -39,10 +40,27 @@ public class ConnectedShapesComplex {
         this.textShape = textShape;
     }
 
+
+    public ConnectedShapesComplex(XShape fromShape, XShape toShape, XConnectorShape connector) {
+        this.fromShape = fromShape;
+        this.toShape = toShape;
+        this.connector = connector;
+    }
+
     public ConnectedShapesComplex(XShape fromShape, XShape toShape) {
         this.fromShape = fromShape;
         this.toShape = toShape;
     }
+
+    public String getConnectorText(){
+        try {
+        return textShape != null ? QI.XText(textShape).getString() : QI.XText(connector).getString();
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
+
 
 
 }

@@ -18,7 +18,7 @@ import com.sun.star.uno.Type;
 import com.sun.star.uno.UnoRuntime;
 import ru.ssau.graphplus.MyDialog;
 import ru.ssau.graphplus.MyDialogHandler;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.QI;
 
 public class GetCodeDialog implements MyDialog<GetCodeDialog> {
 

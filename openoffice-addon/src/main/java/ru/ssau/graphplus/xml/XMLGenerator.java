@@ -14,8 +14,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.api.DiagramElement;
-import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
+import ru.ssau.graphplus.commons.ConnectedShapes;
+import ru.ssau.graphplus.commons.MiscHelper;
+import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.link.LinkBase;
 import ru.ssau.graphplus.node.NodeBase;
 

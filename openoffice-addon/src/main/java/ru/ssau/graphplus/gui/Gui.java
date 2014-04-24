@@ -13,9 +13,9 @@ import com.sun.star.ui.dialogs.XExecutableDialog;
 import com.sun.star.ui.dialogs.XFilePicker;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
-import ru.ssau.graphplus.MiscHelper;
-import ru.ssau.graphplus.QI;
-import ru.ssau.graphplus.ShapeHelper;
+import ru.ssau.graphplus.commons.MiscHelper;
+import ru.ssau.graphplus.commons.QI;
+import ru.ssau.graphplus.commons.ShapeHelper;
 
 import java.util.Map;
 import java.util.Map.Entry;

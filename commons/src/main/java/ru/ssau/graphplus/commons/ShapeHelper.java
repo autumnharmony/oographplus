@@ -31,7 +31,7 @@
  *  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *************************************************************************/
-package ru.ssau.graphplus;
+package ru.ssau.graphplus.commons;
 // __________ Imports __________
 
 import com.sun.star.awt.Point;
@@ -47,7 +47,6 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
 import com.sun.star.text.*;
 import com.sun.star.uno.UnoRuntime;
-import ru.ssau.graphplus.PostCreationAction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -213,7 +212,12 @@ public class ShapeHelper {
         postCreationAction.postCreate(xShape);
     }
 
+//    private static Logger logger = Logger.getLogger(ShapeHelper.class.getName());
+
     public static boolean removeShape(XShape xShape, XDrawPage xDP) {
+
+//        logger.entering(ShapeHelper.class.getCanonicalName(), "removeShape");
+
         for (int i = 0; i < xDP.getCount(); i++) {
             try {
                 Object byIndex = xDP.getByIndex(i);
@@ -223,12 +227,13 @@ public class ShapeHelper {
                     return true;
                 }
 
-            } catch (com.sun.star.lang.IndexOutOfBoundsException e) {
+            } catch (com.sun.star.lang.IndexOutOfBoundsException | WrappedTargetException e) {
                 e.printStackTrace();
-            } catch (WrappedTargetException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
+
+//        logger.exiting(ShapeHelper.class.getCanonicalName(), "removeShape");
         return false;
     }
 

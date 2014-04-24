@@ -5,7 +5,7 @@ import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.WrappedTargetException;
-import ru.ssau.graphplus.QI;
+import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.api.Link;
 
 import java.util.logging.Level;
