@@ -61,7 +61,6 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
         }
 
 
-
         List<ConnectedShapesComplex> connectedShapesComplexes = new ArrayList<>();
 
         Queue<XShape> shapeQueue = new LinkedList<>();
@@ -87,16 +86,15 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
                     // second part of complex link
                     // start_ is text
 
-                    boolean already = fromTo.column(start_).size() == 1;
+                    boolean already = fromTo.column(start_) != null && fromTo.column(start_).size() == 1 && fromTo.column(start_).get(0).toShape.equals(start_);
                     if (already) {
-                        ConnectedShapesComplex connectedShapesComplex = fromTo.row(start_).get(0);
+                        ConnectedShapesComplex connectedShapesComplex = fromTo.column(start_).get(0);
 
 //                        assert start_.equals(connectedShapesComplex.toShape);
 
                         fromTo.put(connectedShapesComplex.fromShape, end_, new ConnectedShapesComplex(connectedShapesComplex.fromShape, end_, connectedShapesComplex.connector, connectorShape, connectedShapesComplex.toShape));
                         fromTo.remove(connectedShapesComplex.fromShape, connectedShapesComplex.toShape);
-                    }
-                    else {
+                    } else {
                         fromTo.put(start_, end_, new ConnectedShapesComplex(start_, end_, connectorShape));
                     }
 
@@ -108,16 +106,15 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
                     // end_ is text
 
 
-                    boolean already = fromTo.row(end_).size() == 1;
+                    boolean already = fromTo.row(end_) != null && fromTo.row(end_).size() == 1;
                     if (already) {
-                        ConnectedShapesComplex connectedShapesComplex = fromTo.column(end_).get(0);
+                        ConnectedShapesComplex connectedShapesComplex = fromTo.row(end_).get(0);
 
 //                        assert connectedShapesComplex.fromShape.equals(end_);
 
                         fromTo.put(start_, connectedShapesComplex.toShape, new ConnectedShapesComplex(connectedShapesComplex.fromShape, end_, connectedShapesComplex.connector, connectorShape, connectedShapesComplex.toShape));
                         fromTo.remove(connectedShapesComplex.fromShape, connectedShapesComplex.toShape);
-                    }
-                    else {
+                    } else {
                         fromTo.put(start_, end_, new ConnectedShapesComplex(start_, end_, connectorShape));
                     }
 
@@ -126,8 +123,6 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
                 }
             }
         }
-
-
 
 
         XShape current;
@@ -164,12 +159,19 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
     private XShape getStart(Set<XShape> all) {
         if (all == null) throw new java.lang.IllegalArgumentException("no nulls please");
         if (diagramType.equals(DiagramType.Channel)) {
-            for (XShape xShape : all) {
-                Node.NodeType nodeType = shapeHelperWrapper.getNodeType(xShape);
-                if (nodeType.equals(Node.NodeType.StartMethodOfProcess)) {
-                    return xShape;
+
+            XShape xShape = Iterables.find(all, new Predicate<XShape>() {
+                @Override
+                public boolean apply(XShape shape) {
+                    Node.NodeType nodeType = shapeHelperWrapper.getNodeType(shape);
+                    if (Node.NodeType.StartMethodOfProcess.equals(nodeType)) {
+                        return true;
+                    }
+                    return false;
                 }
-            }
+            });
+            return xShape;
+
         }
 
         if (diagramType.equals(DiagramType.Process)) {

@@ -7,28 +7,35 @@ package ru.ssau.graphplus;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.sun.star.awt.*;
+import com.sun.star.awt.XContainerWindowEventHandler;
+import com.sun.star.awt.XDialog;
+import com.sun.star.awt.XDialogEventHandler;
+import com.sun.star.awt.XWindow;
 import com.sun.star.lang.WrappedTargetException;
+import com.sun.star.uno.*;
 
-import java.util.ArrayList;
+import java.lang.Exception;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MyDialogHandler implements XDialogEventHandler, XContainerWindowEventHandler {
 
     Map<Event, EventHandler> eventHandlerMap = new HashMap<>();
-    private final Iterable<Object> transform;
+
 
     public static class Event {
-        String s;
+        private String s;
 
         public Event(String s) {
             this.s = s;
         }
 
-        public static Event event(String s){
-             return new Event(s);
+        public static Event event(String s) {
+            return new Event(s);
+        }
+
+        public String getName() {
+            return s;
         }
 
         @Override
@@ -57,12 +64,6 @@ public class MyDialogHandler implements XDialogEventHandler, XContainerWindowEve
 
         this.eventHandlerMap = eventHandlerMap;
 
-        transform = Iterables.transform(eventHandlerMap.keySet(), new Function<Event, Object>() {
-            @Override
-            public Object apply(ru.ssau.graphplus.MyDialogHandler.Event input) {
-                return input.s;
-            }
-        });
 
     }
 
@@ -73,9 +74,8 @@ public class MyDialogHandler implements XDialogEventHandler, XContainerWindowEve
             Event event = Event.event(s);
             EventHandler eventHandler = eventHandlerMap.get(event);
             return eventHandler.handle(xDialog, o, s);
-        }
-        catch (Exception ex){
-            throw new RuntimeException(ex);
+        } catch (Exception ex) {
+            throw new com.sun.star.uno.RuntimeException("error", ex);
             // TODO !!!
 //            return false;
         }
@@ -87,9 +87,8 @@ public class MyDialogHandler implements XDialogEventHandler, XContainerWindowEve
             Event event = Event.event(s);
             EventHandler eventHandler = eventHandlerMap.get(event);
             return eventHandler.handle(null, o, s);
-        }
-        catch (Exception ex){
-            throw new RuntimeException(ex);
+        } catch (Exception ex) {
+            throw new com.sun.star.uno.RuntimeException("error", ex);
             // TODO !!!
 //            return false;
         }
@@ -98,7 +97,13 @@ public class MyDialogHandler implements XDialogEventHandler, XContainerWindowEve
     @Override
     public String[] getSupportedMethodNames() {
 
-        Object[] objects = Lists.newArrayList(transform).toArray();
-        return (String[]) objects;
+        Iterable<String> transform = Iterables.transform(eventHandlerMap.keySet(), new Function<Event, String>() {
+            @Override
+            public String apply(Event event) {
+                return event.getName();
+            }
+        });
+
+        return Iterables.toArray(transform, String.class);
     }
 }

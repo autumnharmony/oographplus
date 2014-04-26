@@ -108,6 +108,9 @@ public class MyDispatch implements XDispatch {
         XUndoManagerSupplier xUndoManagerSupplier = QI.XUndoManagerSupplier(xDrawDoc);
         undoManager = xUndoManagerSupplier.getUndoManager();
 
+
+
+
         this.m_xContext = m_xContext;
         this.m_xFrame = m_xFrame;
         anonymousLogger = Logger.getAnonymousLogger();
@@ -712,8 +715,8 @@ public class MyDispatch implements XDispatch {
             }
 
             if (url.Path.compareTo("LinkNodesToolbar") == 0) {
-                XModel xModel = QI.XModel(xDrawDoc);
-                LinkNodesDialog dialog = createLinkNodesDialog(xModel, m_xFrame);
+//                XModel xModel = QI.XModel(xDrawDoc);
+//                XWindow linkNodesDialog = createLinkNodesDialog(xModel, m_xFrame);
 
             }
 
@@ -871,59 +874,6 @@ public class MyDispatch implements XDispatch {
         }
         return xDialog;
 
-    }
-
-
-    public LinkNodesDialog createLinkNodesDialog(XModel xModel, XFrame xFrame) {
-
-        String DialogURL =
-        "vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/LinkNodesDialog.xdl";
-
-        try {
-            XMultiComponentFactory xMCF = m_xContext.getServiceManager();
-            Object obj;
-
-            // If valid we must pass the XModel when creating a DialogProvider object
-            if (xModel != null) {
-                Object[] args = new Object[1];
-                args[0] = xModel;
-
-                obj = xMCF.createInstanceWithArgumentsAndContext(
-                        "com.sun.star.awt.DialogProvider2", args, m_xContext);
-            } else {
-                obj = xMCF.createInstanceWithContext(
-                        "com.sun.star.awt.DialogProvider2", m_xContext);
-            }
-
-            XDialogProvider2 xDialogProvider = (XDialogProvider2)
-                    UnoRuntime.queryInterface(XDialogProvider2.class, obj);
-
-//            "aNodeReset", "zNodeReset", "aNodeSet", "zNodeSet"
-            LinkNodesDialog linkNodesDialog = new LinkNodesDialog(getDiagramModel(), this);
-
-            XDialog xDialog = xDialogProvider.createDialogWithHandler(DialogURL,
-                   linkNodesDialog.getDialogHandler());
-            XControl xControl = (XControl) UnoRuntime.queryInterface(
-                    XControl.class, xDialog);
-
-            diagramController.addNodeSelectionListener(linkNodesDialog.getNodeSelectionListener());
-
-            if (xDialog != null){
-//                QI.XPropertySet(xControl.getModel()).setPropertyValue("Visible", Boolean.TRUE);
-//                xDialog.execute();
-                return linkNodesDialog;
-            }
-
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            throw new java.lang.RuntimeException(e);
-
-        }
-
-
-        throw new java.lang.RuntimeException("can't create dialog");
     }
 
 

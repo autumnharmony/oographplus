@@ -1,31 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="LinkNodesDialog" dlg:left="0" dlg:top="0" dlg:width="80" dlg:height="129" dlg:closeable="true" dlg:moveable="true" dlg:withtitlebar="false">
- <dlg:bulletinboard>
-  <dlg:combobox dlg:id="aNodeComboBox" dlg:tab-index="0" dlg:left="5" dlg:top="10" dlg:width="70" dlg:height="10" dlg:value="aNodeComboBox" dlg:spin="true">
-   <!--<script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:aNodeComboboxExecute" script:language="UNO"/>-->
-   <!--<script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.UNO:aNodeComboboxTextModified" script:language="UNO"/>-->
-   <!--<script:event script:event-name="on-focus" script:macro-name="vnd.sun.star.UNO:aNodeReceivedFocus" script:language="UNO"/>-->
-  </dlg:combobox>
-  <dlg:combobox dlg:id="zNodeComboBox" dlg:tab-index="1" dlg:left="5" dlg:top="25" dlg:width="70" dlg:height="10" dlg:value="zNodeComboBox" dlg:spin="true">
-   <!--<script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:zNodeComboboxExecute" script:language="UNO"/>-->
-   <!--<script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.UNO:zNodeComboboxTextModified" script:language="UNO"/>-->
-   <!--<script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.UNO:zNodeComboboxItemStatusChanged" script:language="UNO"/>-->
-   <!--<script:event script:event-name="on-focus" script:macro-name="vnd.sun.star.UNO:zNodeReceivedFocus" script:language="UNO"/>-->
-  </dlg:combobox>
-  <dlg:button dlg:id="aNodeResetButton" dlg:tab-index="2" dlg:left="75" dlg:top="10" dlg:width="10" dlg:height="10" dlg:value="" dlg:align="left" dlg:image-position="left-center" dlg:image-align="left" dlg:image-src="vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/cancel.png">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:aNodeReset" script:language="UNO"/>
-  </dlg:button>
-  <dlg:button dlg:id="zNodeResetButton" dlg:tab-index="3" dlg:left="75" dlg:top="25" dlg:width="10" dlg:height="10" dlg:value="" dlg:align="left" dlg:image-position="left-center" dlg:image-align="left" dlg:image-src="vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/cancel.png">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:zNodeReset" script:language="UNO"/>
-  </dlg:button>
-  <dlg:button dlg:id="aNodeSetButton" dlg:tab-index="4" dlg:visible="false" dlg:left="6" dlg:top="47" dlg:width="71" dlg:height="14" dlg:value="aNodeSetButton">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:aNodeSet" script:language="UNO"/>
-  </dlg:button>
-  <dlg:button dlg:id="zNodeSetButton" dlg:tab-index="5" dlg:visible="false" dlg:left="83" dlg:top="47" dlg:width="65" dlg:height="14" dlg:value="zNodeSetButton">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:zNodeSetButton" script:language="UNO"/>
-  </dlg:button>
-  <dlg:menulist dlg:id="linkTypeListBox" dlg:tab-index="6" dlg:left="5" dlg:top="50" dlg:width="70" dlg:height="40"/>
-  <dlg:button dlg:id="linkButton" dlg:tab-index="7" dlg:left="5" dlg:top="90" dlg:width="70" dlg:height="19" dlg:value="LINK"/>
- </dlg:bulletinboard>
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script"
+            dlg:id="LinkNodesDialog" dlg:left="0" dlg:top="0" dlg:width="80" dlg:height="129" dlg:closeable="true"
+            dlg:moveable="true" dlg:withtitlebar="false">
+    <dlg:bulletinboard>
+        <dlg:combobox dlg:id="aNodeComboBox" dlg:tab-index="0" dlg:left="5" dlg:top="10" dlg:width="70" dlg:height="10"
+                      dlg:value="aNodeComboBox" dlg:spin="true">
+            <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:aNodeComboboxExecute"
+                          script:language="UNO"/>
+            <script:event script:event-name="on-textchange"
+                          script:macro-name="vnd.sun.star.UNO:aNodeComboboxTextModified" script:language="UNO"/>
+            <script:event script:event-name="on-focus" script:macro-name="vnd.sun.star.UNO:aNodeReceivedFocus"
+                          script:language="UNO"/>
+        </dlg:combobox>
+        <dlg:combobox dlg:id="zNodeComboBox" dlg:tab-index="1" dlg:left="5" dlg:top="25" dlg:width="70" dlg:height="10"
+                      dlg:value="zNodeComboBox" dlg:spin="true">
+            <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:zNodeComboboxExecute"
+                          script:language="UNO"/>
+            <script:event script:event-name="on-textchange"
+                          script:macro-name="vnd.sun.star.UNO:zNodeComboboxTextModified" script:language="UNO"/>
+            <script:event script:event-name="on-itemstatechange"
+                          script:macro-name="vnd.sun.star.UNO:zNodeComboboxItemStatusChanged" script:language="UNO"/>
+            <script:event script:event-name="on-focus" script:macro-name="vnd.sun.star.UNO:zNodeReceivedFocus"
+                          script:language="UNO"/>
+        </dlg:combobox>
+        <dlg:button dlg:id="aNodeResetButton" dlg:tab-index="2" dlg:left="75" dlg:top="10" dlg:width="10"
+                    dlg:height="10" dlg:value="" dlg:align="left" dlg:image-position="left-center"
+                    dlg:image-align="left"
+                    dlg:image-src="vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/cancel.png">
+            <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:aNodeReset"
+                          script:language="UNO"/>
+        </dlg:button>
+        <dlg:button dlg:id="zNodeResetButton" dlg:tab-index="3" dlg:left="75" dlg:top="25" dlg:width="10"
+                    dlg:height="10" dlg:value="" dlg:align="left" dlg:image-position="left-center"
+                    dlg:image-align="left"
+                    dlg:image-src="vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/cancel.png">
+            <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:zNodeReset"
+                          script:language="UNO"/>
+        </dlg:button>
+        <dlg:button dlg:id="aNodeSetButton" dlg:tab-index="4" dlg:visible="false" dlg:left="6" dlg:top="47"
+                    dlg:width="71" dlg:height="14" dlg:value="aNodeSetButton">
+            <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:aNodeSet"
+                          script:language="UNO"/>
+        </dlg:button>
+        <dlg:button dlg:id="zNodeSetButton" dlg:tab-index="5" dlg:visible="false" dlg:left="83" dlg:top="47"
+                    dlg:width="65" dlg:height="14" dlg:value="zNodeSetButton">
+            <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:zNodeSetButton"
+                          script:language="UNO"/>
+        </dlg:button>
+        <dlg:menulist dlg:id="linkTypeListBox" dlg:tab-index="6" dlg:left="5" dlg:top="50" dlg:width="70"
+                      dlg:height="40"/>
+        <dlg:button dlg:id="linkButton" dlg:tab-index="7" dlg:left="5" dlg:top="90" dlg:width="70" dlg:height="19"
+                    dlg:value="LINK">
+            <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:linkButtonPerformAction"
+                          script:language="UNO"/>
+        </dlg:button>
+    </dlg:bulletinboard>
 </dlg:window>

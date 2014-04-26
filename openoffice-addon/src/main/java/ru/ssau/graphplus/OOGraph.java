@@ -951,14 +951,11 @@ public class OOGraph extends ComponentBase implements
             MyDispatch myDispatch1 = dispatchByFrame.get(xFrame);
 
             LinkNodesPanel aPanel = new LinkNodesPanel(
-                    xFrame, xParentWindow, m_xContext, myDispatch1.getDiagramController());
+                    xFrame, xParentWindow, m_xContext, myDispatch1);
             XModel xModel = QI.XModel(myDispatch1.getDiagramModel().getDrawDoc());
 
 
-            LinkNodesDialog linkNodesDialog = myDispatch1.createLinkNodesDialog(xModel, myDispatch1.getFrame());
-            aPanel.setLinkNodesDialog(linkNodesDialog);
 
-            linkNodesDialog.init(aPanel);
             return new UIElement(
                     sResourceURL,
                     aPanel);

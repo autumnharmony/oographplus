@@ -18,10 +18,9 @@ import org.mockito.stubbing.Answer;
 import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Node;
-import ru.ssau.graphplus.commons.ConnectedShapes;
-import ru.ssau.graphplus.commons.QI;
-import ru.ssau.graphplus.commons.ShapeHelperWrapper;
-import ru.ssau.graphplus.commons.UnoRuntimeWrapper;
+import ru.ssau.graphplus.commons.*;
+
+import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -116,9 +115,10 @@ public class DiagramWalkerTest {
 
         diagramWalker.setDiagramType(DiagramType.Process);
 
-        diagramWalker.walk(Sets.newHashSet(method, link1Shape, link2Shape, linkTextShape, serverPort), null);
+        List<ConnectedShapesComplex> walk = diagramWalker.walk(Sets.newHashSet(method, link1Shape, link2Shape, linkTextShape, serverPort), null);
 
         Assert.assertEquals(diagramWalker.visited.size(), 5);
+        Assert.assertEquals(walk.size(), 1);
     }
 
 
