@@ -2,18 +2,20 @@
 package ru.ssau.graphplus.link;
 
 import com.google.inject.Inject;
-import com.sun.star.drawing.XDrawPage;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
-import ru.ssau.graphplus.DiagramElementFactory;
+import ru.ssau.graphplus.AbstractDiagramElementFactory;
+import ru.ssau.graphplus.commons.ConnectedShapesComplex;
 import ru.ssau.graphplus.commons.MiscHelper;
 import ru.ssau.graphplus.api.Link;
+import ru.ssau.graphplus.recognition.LinkTypeRecogniser;
+import ru.ssau.graphplus.recognition.LinkTypeRecogniserImpl;
 
 /**
  * @author anton
  */
-public class LinkFactory extends DiagramElementFactory{
+public class LinkFactory extends AbstractDiagramElementFactory {
 
 
     private static final String LINK_PREFIX = "link";
@@ -26,48 +28,22 @@ public class LinkFactory extends DiagramElementFactory{
 
     }
 
-    public Link create(Link.LinkType type, XComponent xComp) {
+    public Link create(Link.LinkType type) {
         LinkBase link = null;
         switch (type) {
             case ControlFlow:
-                link = new ControlLink(xmsf,  xComp, LINK_PREFIX + getCount());
+                link = new ControlLink(xmsf, LINK_PREFIX + getCount());
                 break;
             case MixedFlow:
-                link = new MixedLink(xmsf,  xComp, LINK_PREFIX + getCount());
+                link = new MixedLink(xmsf, LINK_PREFIX + getCount());
                 break;
             case DataFlow:
-                link = new DataLink(xmsf, xComp, LINK_PREFIX + getCount());
+                link = new DataLink(xmsf, LINK_PREFIX + getCount());
                 break;
         }
 
 
         return link;
-    }
-
-    /**
-     *
-     * @param type
-     * @return  Link object w/o shapes
-     */
-    public Link createPrototype(Link.LinkType type){
-        LinkBase link = null;
-        switch (type) {
-            case ControlFlow:
-                link = new ControlLink();
-                break;
-            case MixedFlow:
-                link = new MixedLink();
-                break;
-            case DataFlow:
-                link = new DataLink();
-                break;
-        }
-        return link;
-    }
-
-
-    public Link create(Link.LinkType type, XComponent xComp, XDrawPage xDP, XShape xShape1, XShape xShape2, Boolean separatedTextShape) {
-        return create(type, xComp);
     }
 
 
@@ -84,6 +60,14 @@ public class LinkFactory extends DiagramElementFactory{
                 MiscHelper.setId(shape, link.getId() + "/text");
             }
         }
+    }
+
+
+
+    public Link create(ConnectedShapesComplex connectedShapesComplex){
+        LinkTypeRecogniser linkTypeRecogniser = new LinkTypeRecogniserImpl();
+        Link.LinkType type = linkTypeRecogniser.getType(connectedShapesComplex.connector1 != null ? connectedShapesComplex.connector1 : connectedShapesComplex.connector, connectedShapesComplex.textShape, connectedShapesComplex.connector2);
+        return create(type);
     }
 
 

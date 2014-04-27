@@ -58,7 +58,7 @@ public interface Node extends DiagramElement{
 
 
 
-        // Channel Diagram Type
+//        Channel Diagram Type
 
         ClientPortState,
         ServerPortState,

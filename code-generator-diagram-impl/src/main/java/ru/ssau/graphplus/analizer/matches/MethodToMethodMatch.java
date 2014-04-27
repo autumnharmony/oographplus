@@ -5,16 +5,18 @@
 package ru.ssau.graphplus.analizer.matches;
 
 import com.google.inject.Inject;
+import ru.ssau.graphplus.CodeProviderAnnotation;
+import ru.ssau.graphplus.LinkCodeBaseImpl;
 import ru.ssau.graphplus.commons.ConnectedShapesComplex;
 import ru.ssau.graphplus.commons.ShapeHelperWrapper;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.recognition.LinkTypeRecogniser;
 
+@CodeProviderAnnotation(codeProvider = LinkCodeBaseImpl.class)
 public class MethodToMethodMatch extends MatchBase {
 
-
     @Inject
-    protected MethodToMethodMatch(ShapeHelperWrapper shapeHelperWrapper, LinkTypeRecogniser linkTypeRecogniser) {
+    public MethodToMethodMatch(ShapeHelperWrapper shapeHelperWrapper, LinkTypeRecogniser linkTypeRecogniser) {
         super(shapeHelperWrapper, linkTypeRecogniser);
     }
 

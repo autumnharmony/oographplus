@@ -152,9 +152,9 @@ public abstract class LinkBase implements Link,
         this.id = id;
     }
 
-    public LinkBase(XMultiServiceFactory xMSF, XComponent xDrawDoc, String c) {
+    public LinkBase(XMultiServiceFactory xMSF, String id) {
 
-        LinkShapes linkShapes = buildShapes(xMSF, xDrawDoc);
+        LinkShapes linkShapes = buildShapes(xMSF);
 
         shapes = new ArrayList<XShape>();
         shapes.add(linkShapes.connShape1);
@@ -168,7 +168,7 @@ public abstract class LinkBase implements Link,
         this.connShape2 = linkShapes.connShape2;
 
 
-        setId(c);
+        setId(id);
 
     }
 
@@ -224,7 +224,7 @@ public abstract class LinkBase implements Link,
         xPStext = QI.XPropertySet(textShape);
     }
 
-    protected LinkShapes buildShapes(XMultiServiceFactory xMSF, XComponent xDrawDoc) {
+    protected LinkShapes buildShapes(XMultiServiceFactory xMSF) {
 
         LinkShapes linkShapes = new LinkShapes();
         try {

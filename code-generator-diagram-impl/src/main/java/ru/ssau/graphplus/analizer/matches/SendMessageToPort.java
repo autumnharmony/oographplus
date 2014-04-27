@@ -5,21 +5,25 @@
 package ru.ssau.graphplus.analizer.matches;
 
 import com.google.inject.Inject;
+import ru.ssau.graphplus.CodeProviderAnnotation;
+import ru.ssau.graphplus.PortMessageCode;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.commons.ConnectedShapesComplex;
 import ru.ssau.graphplus.commons.ShapeHelperWrapper;
 import ru.ssau.graphplus.recognition.LinkTypeRecogniser;
 
+@CodeProviderAnnotation(codeProvider = PortMessageCode.class)
 public class SendMessageToPort extends AbstractDataMatch {
 
     @Inject
-    protected SendMessageToPort(ShapeHelperWrapper shapeHelperWrapper, LinkTypeRecogniser linkTypeRecogniser) {
+    public SendMessageToPort(ShapeHelperWrapper shapeHelperWrapper, LinkTypeRecogniser linkTypeRecogniser) {
         super(shapeHelperWrapper, linkTypeRecogniser);
     }
 
     @Override
     public boolean matches(ConnectedShapesComplex connectedShapesComplex) {
-        Node.NodeType nodeType = shapeHelperWrapper.getNodeType(connectedShapesComplex.toShape);
-        return super.matches(connectedShapesComplex) && (nodeType.equals(Node.NodeType.ClientPort) || nodeType.equals(Node.NodeType.ServerPort));
+        Node.NodeType toType = shapeHelperWrapper.getNodeType(connectedShapesComplex.toShape);
+        Node.NodeType fromType = shapeHelperWrapper.getNodeType(connectedShapesComplex.fromShape);
+        return super.matches(connectedShapesComplex) && (toType.equals(Node.NodeType.ClientPort) || toType.equals(Node.NodeType.ServerPort)) && (fromType.equals(Node.NodeType.MethodOfProcess) || fromType.equals(Node.NodeType.StartMethodOfProcess));
     }
 }

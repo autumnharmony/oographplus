@@ -43,7 +43,9 @@ public class LinkNodesPanel extends PanelBase {
     private final static String DIALOG_PATH = "vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/LinkNodesDialog.xdl";
     private final MyDispatch dispatch;
     private final DiagramController diagramController;
-    DiagramController.NodeSelectionListener nodeSelectionListener = new DiagramController.NodeSelectionListener() {
+
+
+    private DiagramController.NodeSelectionListener nodeSelectionListener = new DiagramController.NodeSelectionListener() {
         @Override
         public void nodeSelected(Node node) {
 
@@ -61,6 +63,7 @@ public class LinkNodesPanel extends PanelBase {
 
         }
     };
+
     private DiagramModel diagramModel;
     private Node aNode;
     private Node zNode;
@@ -356,9 +359,11 @@ public class LinkNodesPanel extends PanelBase {
                     }
                 })
 
+
                 .put(event("zNodeReceivedFocus"), new MyDialogHandler.EventHandler() {
                     @Override
                     public boolean handle(XDialog xDialog, Object o, String s) {
+
                         zNodeComboBox.removeItems((short) 0, zNodeComboBox.getItemCount());
                         short i = 0;
                         zNodeComboBox.setDropDownLineCount((short) diagramModel.getNodes().size());

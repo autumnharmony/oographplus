@@ -423,7 +423,7 @@ public class DiagramController implements
 
 
     public void linkNodes(NodeBase node, NodeBase node1, Link.LinkType type) {
-        Link link = linkFactory.create(type, xDrawDoc);
+        Link link = linkFactory.create(type);
 
         if (link instanceof Linker) {
             ((Linker) link).link(node.getShape(), node1.getShape());

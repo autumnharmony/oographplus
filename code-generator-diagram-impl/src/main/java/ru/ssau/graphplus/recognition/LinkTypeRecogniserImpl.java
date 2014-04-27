@@ -40,12 +40,12 @@ public class LinkTypeRecogniserImpl implements LinkTypeRecogniser {
 
                 if (lineStyle1.equals(LineStyle.DASH) && lineStyle2.equals(LineStyle.DASH))
                     return Link.LinkType.DataFlow;
-                if (lineStyle1.equals(LineStyle.SOLID) && lineStyle2.equals(LineStyle.SOLID_value))
+                if (lineStyle1.equals(LineStyle.SOLID) && lineStyle2.equals(LineStyle.SOLID))
                     return Link.LinkType.ControlFlow;
 
-                if (lineStyle1.equals(LineStyle.DASH) && lineStyle2.equals(LineStyle.SOLID_value))
+                if (lineStyle1.equals(LineStyle.DASH) && lineStyle2.equals(LineStyle.SOLID))
                     return Link.LinkType.MixedFlow;
-                if (lineStyle2.equals(LineStyle.DASH) && lineStyle1.equals(LineStyle.SOLID_value))
+                if (lineStyle2.equals(LineStyle.DASH) && lineStyle1.equals(LineStyle.SOLID))
                     return Link.LinkType.MixedFlow;
 
 

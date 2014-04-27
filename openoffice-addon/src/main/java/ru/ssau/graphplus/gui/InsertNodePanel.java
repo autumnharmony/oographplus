@@ -139,7 +139,7 @@ public class InsertNodePanel extends PanelBase {
 
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            NodeBase node = nodeFactory.create(type, m_xComponent);
+            NodeBase node = nodeFactory.create(type);
             DrawHelper.insertShapeOnCurrentPage(node.getShape(), myDispatch.getDiagramModel().getDrawDoc());
 
             MiscHelper.addUserDefinedAttributes(node.getShape(), myDispatch.getxMSF());

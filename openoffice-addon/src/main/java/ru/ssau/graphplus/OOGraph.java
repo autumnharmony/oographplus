@@ -491,11 +491,11 @@ public class OOGraph extends ComponentBase implements
         if (sEventName != null) {
 
             switch (sEventName){
-                case "RemoveConnectorShapes" : {
-
-                    OOGraph.LOGGER.info("RemoveConnectorShapes");
-                    break;
-                }
+//                case "RemoveConnectorShapes" : {
+//
+//                    OOGraph.LOGGER.info("RemoveConnectorShapes");
+//                    break;
+//                }
                 case "OnSave":
                     onSaveSaveAs(Arguments[0], model);
                     break;
@@ -549,8 +549,14 @@ public class OOGraph extends ComponentBase implements
 
                 case "OnLoadFinished":{
 
-                    OOGraph.LOGGER.info("OnLoadFinished");
-                    Global.loaded = Boolean.TRUE;
+//                    OOGraph.LOGGER.info("OnLoadFinished");
+                    try {
+                        Global.loaded = Boolean.TRUE;
+                    }
+                    catch (java.lang.Exception e){
+                        OOGraph.LOGGER.log(Level.WARNING, e.getMessage());
+                    }
+
                     documentEventsHandler.documentEventOccured(sEventName);
                     break;
                 }
@@ -625,7 +631,7 @@ public class OOGraph extends ComponentBase implements
     }
 
     public com.sun.star.frame.XDispatch queryDispatch(com.sun.star.util.URL aURL, String TargetFrameName, int SearchFlags) {
-        OOGraph.LOGGER.info("queryDispatch");
+//        OOGraph.LOGGER.info("queryDispatch");
 
         if (aURL.Protocol.compareTo("ru.ssau.graphplus:") == 0) {
             return getDispatchForFrame(aURL, TargetFrameName, SearchFlags);

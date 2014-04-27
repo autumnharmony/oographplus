@@ -5,6 +5,7 @@
 package ru.ssau.graphplus;
 
 import ru.ssau.graphplus.api.Node;
+import ru.ssau.graphplus.codegen.NodeCode;
 
 public abstract class NodeCodeBase implements NodeCode {
 

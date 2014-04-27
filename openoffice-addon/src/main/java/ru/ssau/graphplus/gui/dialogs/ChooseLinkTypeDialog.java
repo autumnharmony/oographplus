@@ -13,7 +13,6 @@ import com.sun.star.lang.XMultiComponentFactory;
 import com.sun.star.lang.XMultiServiceFactory;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
-import ru.ssau.graphplus.DrawHelper;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.gui.MyXActionListener;
 import ru.ssau.graphplus.link.LinkFactory;
@@ -118,7 +117,7 @@ public class ChooseLinkTypeDialog {
 
                             XShape xShStart = (XShape) UnoRuntime.queryInterface(XShape.class, startShape);
                             XShape xShEnd = (XShape) UnoRuntime.queryInterface(XShape.class, endShape);
-                            Link linkReplace = linkFactory.create(Link.LinkType.valueOf(selectedItem), m_xComponent, DrawHelper.getCurrentDrawPage(m_xComponent), xShStart, xShEnd, false);
+                            Link linkReplace = linkFactory.create(Link.LinkType.valueOf(selectedItem));
                             Linker linker = new LinkerImpl(linkReplace, xConnectorShape);
                             linker.link(xShStart, xShEnd);
                             dialogControl.dispose();

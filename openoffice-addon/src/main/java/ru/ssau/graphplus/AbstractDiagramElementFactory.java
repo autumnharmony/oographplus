@@ -7,7 +7,7 @@ package ru.ssau.graphplus;
 import com.sun.star.lang.XMultiServiceFactory;
 
 
-public class DiagramElementFactory {
+public class AbstractDiagramElementFactory {
 
     protected int counter;
 
@@ -21,14 +21,14 @@ public class DiagramElementFactory {
         this.counter = counter;
     }
 
-    public DiagramElementFactory(XMultiServiceFactory xmsf) {
+    public AbstractDiagramElementFactory(XMultiServiceFactory xmsf) {
         counter  = 0;
         this.xmsf = xmsf;
     }
 
 
 
-    public DiagramElementFactory() {
+    public AbstractDiagramElementFactory() {
         counter = 0;
     }
 }

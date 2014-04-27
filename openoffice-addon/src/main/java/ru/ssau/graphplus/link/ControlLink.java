@@ -20,8 +20,8 @@ public class ControlLink extends LinkBase implements Linker, Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    public ControlLink(XMultiServiceFactory xmsf, XComponent xComp, String c) {
-        super(xmsf, xComp, c);
+    public ControlLink(XMultiServiceFactory xmsf, String c) {
+        super(xmsf, c);
 
     }
 
@@ -30,9 +30,9 @@ public class ControlLink extends LinkBase implements Linker, Serializable {
     }
 
     @Override
-    protected LinkShapes buildShapes(XMultiServiceFactory xMSF, XComponent xDrawDoc) {
+    protected LinkShapes buildShapes(XMultiServiceFactory xMSF) {
 
-        LinkShapes linkShapes = super.buildShapes(xMSF, xDrawDoc);
+        LinkShapes linkShapes = super.buildShapes(xMSF);
 
         try {
 

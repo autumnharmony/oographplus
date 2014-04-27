@@ -5,34 +5,30 @@
 package ru.ssau.graphplus;
 
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import org.reflections.Reflections;
-import ru.ssau.graphplus.analizer.Match;
+import ru.ssau.graphplus.analizer.matches.Match;
+import ru.ssau.graphplus.analizer.matches.MatchFactoryImpl;
+import ru.ssau.graphplus.api.DiagramType;
+import ru.ssau.graphplus.codegen.CodeGenerator;
+import ru.ssau.graphplus.codegen.CodeProvider;
+import ru.ssau.graphplus.codegen.CodeSource;
 import ru.ssau.graphplus.commons.ConnectedShapesComplex;
+import ru.ssau.graphplus.commons.MiscHelperWrapperImpl;
+import ru.ssau.graphplus.commons.ShapeHelperWrapperImpl;
+import ru.ssau.graphplus.recognition.LinkTypeRecogniserImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class DiagramCodeGenerator implements CodeGenerator {
 
-
-    private final List<Match> matches;
+    private Map<Match, CodeProvider> codeProviderMap;
+    private final MatchFactoryImpl matchFactory;
 
     public DiagramCodeGenerator() {
 
-        matches = new ArrayList<>();
-
-        Set<Class<? extends Match>> subTypesOf = new Reflections("ru.ssau.graphplus.analizer.*").getSubTypesOf(Match.class);
-        Injector injector = Guice.createInjector(new CodeGeneratorModule());
-        for (Class<? extends Match> aClass : subTypesOf) {
-            Match instance = injector.getInstance(aClass);
-            matches.add(instance);
-        }
+        // TODO DI
+        matchFactory = new MatchFactoryImpl(new ShapeHelperWrapperImpl(new MiscHelperWrapperImpl()), new LinkTypeRecogniserImpl());
 
     }
-
 
     @Override
     public String generateCode(CodeSource codeSource) {
@@ -42,6 +38,9 @@ public class DiagramCodeGenerator implements CodeGenerator {
         }
 
         DiagramCodeSource diagramCodeSource = (DiagramCodeSource) codeSource;
+
+        codeProviderMap = matchFactory.getMatchToCodeProvider(diagramCodeSource.getDiagramType());
+
         List<ConnectedShapesComplex> connectedShapesComplexes = diagramCodeSource.getConnectedShapesComplexes();
 
         ru.ssau.graphplus.api.DiagramModel diagramModel = diagramCodeSource.getDiagramModel();
@@ -49,18 +48,20 @@ public class DiagramCodeGenerator implements CodeGenerator {
         StringBuffer buffer = new StringBuffer();
 
         for (ConnectedShapesComplex connectedShapesComplex : connectedShapesComplexes) {
-            for (Match match : matches) {
-                if (match.matches(connectedShapesComplex)){
-                    buffer.append(match.getClass().getSimpleName());
+            for (Match match : codeProviderMap.keySet()) {
+                if (match.matches(connectedShapesComplex)) {
+
+                    CodeProvider codeP = codeProviderMap.get(match);
+                    if (codeP instanceof LinkCodeBase){
+                        LinkCodeBase linkCodeBase = (LinkCodeBase) codeP;
+                        linkCodeBase.setConnectedShapesComplex(connectedShapesComplex);
+                    }
+                    String code = codeP.getCode();
+                    buffer.append(code).append("\n");
                 }
             }
         }
-
-
-        // TODO
-        return "Generated Code:"+buffer.toString();
+        return buffer.toString();
     }
 
-//
-//    private
 }

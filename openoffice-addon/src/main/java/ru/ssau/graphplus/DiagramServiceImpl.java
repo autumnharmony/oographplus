@@ -69,12 +69,12 @@ public class DiagramServiceImpl implements DiagramService {
 
     @Override
     public Node createNode(String name, Node.NodeType nodeType) {
-        return nodeFactory.create(nodeType, xDrawDoc);
+        return nodeFactory.create(nodeType);
     }
 
     @Override
     public Link createLink(String name, Link.LinkType linkType) {
-        return linkFactory.create(linkType, xDrawDoc);
+        return linkFactory.create(linkType);
     }
 
     @Override

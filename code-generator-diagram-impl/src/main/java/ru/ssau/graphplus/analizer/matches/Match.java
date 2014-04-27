@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Anton Borisov
  */
 
-package ru.ssau.graphplus.analizer;
+package ru.ssau.graphplus.analizer.matches;
 
 import ru.ssau.graphplus.commons.ConnectedShapesComplex;
 

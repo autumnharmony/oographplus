@@ -5,6 +5,7 @@
 package ru.ssau.graphplus;
 
 import com.google.common.base.Joiner;
+import ru.ssau.graphplus.codegen.CodeProvider;
 
 import java.util.Collections;
 

@@ -36,6 +36,7 @@ package ru.ssau.graphplus.commons;
 
 import com.sun.star.awt.Point;
 import com.sun.star.awt.Size;
+import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.container.XEnumeration;
 import com.sun.star.container.XEnumerationAccess;
@@ -47,6 +48,7 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
 import com.sun.star.text.*;
 import com.sun.star.uno.UnoRuntime;
+import ru.ssau.graphplus.api.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -178,8 +180,7 @@ public class ShapeHelper {
     public static void insertShape(XShape xShape, XShapes xShapes) {
         try {
             xShapes.add(xShape);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
@@ -189,8 +190,7 @@ public class ShapeHelper {
         try {
             xShapes.add(xShape);
             xShape.setPosition(point);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
@@ -273,10 +273,119 @@ public class ShapeHelper {
         return false;
     }
 
-    public static String getText(XShape xShape){
-        if (isTextShape(xShape)){
-            return QI.XText(xShape).getString();
+    public static Node.NodeType getNodeType(XShape shape){
+        String nodeType;
+
+        try {
+            nodeType = MiscHelper.getNodeType(shape);
+            return Node.NodeType.valueOf(nodeType);
+        } catch (Exception ex) {
+            // so sad
         }
-        throw new IllegalArgumentException();
+
+        String shapeType = shape.getShapeType();
+        if (shapeType.contains("Rectangle")) {
+            //  procedure or process
+            try {
+                int cornerRadius = OOoUtils.getIntProperty(shape, "CornerRadius");
+                if (cornerRadius != 0) {
+                    // rounded
+                    return Node.NodeType.MethodOfProcess;
+                } else {
+                    // not rounded
+                    return Node.NodeType.StartMethodOfProcess;
+                }
+            } catch (UnknownPropertyException e) {
+                throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
+            } catch (WrappedTargetException e) {
+                throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
+            }
+        }
+
+        if (shapeType.contains("PolyPolygonShape")) {
+            // client or server
+            Object polyPolygon = null;
+            try {
+                polyPolygon = QI.XPropertySet(shape).getPropertyValue("PolyPolygon");
+                Point[][] points = (Point[][]) polyPolygon;
+                if (points.length > 1) {
+                    throw new com.sun.star.uno.RuntimeException("Error", new com.sun.star.lang.IllegalArgumentException("Strange polygon argument, i can't get type"));
+                }
+                Point[] sort = sort(points);
+
+                if (sort[3].X > sort[2].X && sort[3].X > sort[4].X) {
+                    // >
+                    // client
+                    return Node.NodeType.ClientPort;
+                }
+
+                if ((sort[3].X < sort[2].X && sort[3].X < sort[4].X) || (sort[3].X < sort[2].X && sort[3].X < sort[1].X)) {
+                    // <
+                    // server
+                    return Node.NodeType.ServerPort;
+                }
+
+
+            } catch (UnknownPropertyException e) {
+                throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
+            } catch (WrappedTargetException e) {
+                throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
+            }
+
+        }
+        return null;
+    }
+
+    private static Point[] sort(Point[][] points) {
+        Point[] point = points[0];
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        Point leftDown;
+
+        Point[] newPoints = new Point[point.length];
+
+        int leftDownIndex = -1;
+
+        for (int i = 0; i < point.length; i++) {
+            Point _p = point[i];
+            if (_p.X < minX && _p.Y < minY) {
+                minX = _p.X;
+                minY = _p.Y;
+                leftDown = _p;
+                leftDownIndex = i;
+            }
+        }
+
+        assert leftDownIndex != -1;
+
+        int k = 0;
+        for (int j = leftDownIndex; j < point.length; j++) {
+            newPoints[k++] = point[j];
+        }
+
+        for (int j = 0; j < leftDownIndex; j++) {
+            newPoints[k++] = point[j];
+        }
+
+        return newPoints;
+
+
+    }
+
+    public static String getText(XShape xShape) {
+        try {
+            return QI.XText(xShape).getString();
+        } catch (Exception ex) {
+
+            XPropertySet xPropertySet = QI.XPropertySet(xShape);
+            try {
+                String text = (String) xPropertySet.getPropertyValue("Text");
+                return text;
+            } catch (UnknownPropertyException | WrappedTargetException e) {
+                throw new IllegalArgumentException();
+            }
+        }
+
+
     }
 }

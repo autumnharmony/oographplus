@@ -24,17 +24,17 @@ public class DataLink extends LinkBase implements Linker, Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    public DataLink(XMultiServiceFactory xmsf, XComponent xComp, String c) {
-        super(xmsf, xComp, c);
+    public DataLink(XMultiServiceFactory xmsf, String c) {
+        super(xmsf, c);
     }
 
     DataLink() {
 
     }
 
-    public LinkShapes buildShapes(XMultiServiceFactory xMSF, XComponent xDrawDoc) {
+    public LinkShapes buildShapes(XMultiServiceFactory xMSF) {
         try {
-            LinkShapes linkShapes = super.buildShapes(xMSF, xDrawDoc);
+            LinkShapes linkShapes = super.buildShapes(xMSF);
 
             Object half1 = xMSF.createInstance("com.sun.star.drawing.ConnectorShape");
             Object half2 = xMSF.createInstance("com.sun.star.drawing.ConnectorShape");

@@ -30,6 +30,7 @@ import com.sun.star.util.URL;
 import ru.ssau.graphplus.analizer.DiagramWalker;
 import ru.ssau.graphplus.api.DiagramService;
 import ru.ssau.graphplus.api.DiagramType;
+import ru.ssau.graphplus.codegen.CodeGenerator;
 import ru.ssau.graphplus.commons.ConnectedShapesComplex;
 import ru.ssau.graphplus.commons.MiscHelper;
 import ru.ssau.graphplus.commons.QI;
@@ -109,8 +110,6 @@ public class MyDispatch implements XDispatch {
         undoManager = xUndoManagerSupplier.getUndoManager();
 
 
-
-
         this.m_xContext = m_xContext;
         this.m_xFrame = m_xFrame;
         anonymousLogger = Logger.getAnonymousLogger();
@@ -132,7 +131,6 @@ public class MyDispatch implements XDispatch {
         setupDocumentEventsHandler();
 
 
-
         Injector injector;
         try {
             injector = Guice.createInjector(new AddonModule(diagramModel, xMSF, xDrawDoc, diagramController));
@@ -146,12 +144,12 @@ public class MyDispatch implements XDispatch {
         }
 
 
-
         layout = injector.getInstance(Layout.class);
 
 
         if (Boolean.TRUE.equals(Global.loaded)) {
             onLoadHandler();
+            Global.loaded = false;
         }
 
 
@@ -185,7 +183,7 @@ public class MyDispatch implements XDispatch {
                     XShape xShape = QI.XShape(source);
                 }
 
-                if (eventObject.EventName.equals("ShapeRemoved")){
+                if (eventObject.EventName.equals("ShapeRemoved")) {
                     Object source = eventObject.Source;
                     XShape xShape = QI.XShape(source);
 
@@ -205,46 +203,10 @@ public class MyDispatch implements XDispatch {
     private XEventBroadcaster m_xOldBroadcaster;
 
     private void onLoadHandler() {
-        try {
-            XComponent xComponent = this.m_xComponent;
-            diagramModel.refreshModel();
 
-            XDocumentPropertiesSupplier xDocumentPropertiesSupplier = UnoRuntime.queryInterface(XDocumentPropertiesSupplier.class, xComponent);
-            XPropertyContainer userDefinedProperties = xDocumentPropertiesSupplier.getDocumentProperties().getUserDefinedProperties();//.rea;
-            XPropertySet xPropertySet = QI.XPropertySet(userDefinedProperties);
-            Object modelFromProperties = null;
+        diagramModel.init(nodeFactory, linkFactory);
 
-            modelFromProperties = xPropertySet.getPropertyValue("DiagramModel");
 
-            String diagramModelAsString = (String) modelFromProperties;
-
-            Object o = null;
-            try {
-                o = StringSerializer.fromString(diagramModelAsString);
-                DiagramModel modelFromString = (DiagramModel) o;
-                boolean remap = modelFromString.remap(xComponent);
-                Gui.showErrorMessageBox(null, "DiagramElements:", Joiner.on('\n').join(modelFromString.getDiagramElements().iterator()), xMCF, m_xContext);
-                if (remap) {
-
-                    // successfully remapped deserialized DiagramModel to document
-                    setDiagramModel(modelFromString);
-                    nodeFactory.setCount(getNodeCount(modelFromString));
-                    linkFactory.setCount(getLinkCount(modelFromString));
-                } else {
-
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-        } catch (UnknownPropertyException e) {
-            e.printStackTrace();
-        } catch (WrappedTargetException e) {
-            e.printStackTrace();
-        }
     }
 
     public DiagramService getDiagramService() {
@@ -522,7 +484,7 @@ public class MyDispatch implements XDispatch {
                     XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, xPage);
 
 
-                    NodeBase processNode = nodeFactory.create(Node.NodeType.StartMethodOfProcess, m_xComponent);
+                    NodeBase processNode = nodeFactory.create(Node.NodeType.StartMethodOfProcess);
                     node = processNode;
 
 
@@ -556,7 +518,7 @@ public class MyDispatch implements XDispatch {
                 try {
 
                     XDrawPage xPage = PageHelper.getDrawPageByIndex(getDiagramModel().getDrawDoc(), 0);
-                    ProcedureNode procedureNode = (ProcedureNode) nodeFactory.create(Node.NodeType.MethodOfProcess, m_xComponent);//createAndInsert(NodeBase.NodeType.StartMethodOfProcess, m_xComponent, xShapes);
+                    ProcedureNode procedureNode = (ProcedureNode) nodeFactory.create(Node.NodeType.MethodOfProcess);//createAndInsert(NodeBase.NodeType.StartMethodOfProcess, m_xComponent, xShapes);
                     node = procedureNode;
 
                     DrawHelper.insertShapeOnCurrentPage(procedureNode.getShape(), getDiagramModel().getDrawDoc());
@@ -584,7 +546,7 @@ public class MyDispatch implements XDispatch {
 
             if (url.Path.compareTo(CLIENT_NODE) == 0) {
                 try {
-                    ClientNode clientNode = (ClientNode) nodeFactory.create(Node.NodeType.ClientPort, m_xComponent);
+                    ClientNode clientNode = (ClientNode) nodeFactory.create(Node.NodeType.ClientPort);
                     node = clientNode;
 
                     DrawHelper.insertNodeOnCurrentPage(clientNode, getDiagramModel().getDrawDoc());
@@ -609,7 +571,7 @@ public class MyDispatch implements XDispatch {
 
             if (url.Path.compareTo(SERVER_NODE) == 0) {
                 try {
-                    ServerNode serverNode = (ServerNode) nodeFactory.create(Node.NodeType.ServerPort, m_xComponent);
+                    ServerNode serverNode = (ServerNode) nodeFactory.create(Node.NodeType.ServerPort);
                     node = serverNode;
 
                     DrawHelper.insertShapeOnCurrentPage(serverNode.getShape(), getDiagramModel().getDrawDoc());
@@ -636,7 +598,7 @@ public class MyDispatch implements XDispatch {
 
             if (url.Path.compareTo(MIXED_LINK) == 0) {
 
-                MixedLink mixedLink = (MixedLink) linkFactory.create(Link.LinkType.MixedFlow, getDiagramModel().getDrawDoc());
+                MixedLink mixedLink = (MixedLink) linkFactory.create(Link.LinkType.MixedFlow);
                 link = mixedLink;
                 linkShapes = mixedLink.getShapes();
 
@@ -644,7 +606,7 @@ public class MyDispatch implements XDispatch {
 
             if (url.Path.compareTo(DATA_LINK) == 0) {
 
-                DataLink dataLink = (DataLink) linkFactory.create(Link.LinkType.DataFlow, getDiagramModel().getDrawDoc());
+                DataLink dataLink = (DataLink) linkFactory.create(Link.LinkType.DataFlow);
                 link = dataLink;
                 linkShapes = dataLink.getShapes();
 
@@ -652,7 +614,7 @@ public class MyDispatch implements XDispatch {
 
             if (url.Path.compareTo(CONTROL_LINK) == 0) {
 
-                ControlLink controlLink = (ControlLink) linkFactory.create(Link.LinkType.ControlFlow, getDiagramModel().getDrawDoc());
+                ControlLink controlLink = (ControlLink) linkFactory.create(Link.LinkType.ControlFlow);
                 link = controlLink;
                 linkShapes = controlLink.getShapes();
 
@@ -671,17 +633,16 @@ public class MyDispatch implements XDispatch {
 
                     getDiagramController().setLinker(link);
 
-                    if (Settings.getSettings().mouseLinkingMode() && diagramModel.getNodes().size() >= 2){
+                    if (Settings.getSettings().mouseLinkingMode() && diagramModel.getNodes().size() >= 2) {
                         getDiagramController().setInputMode(new InputTwoShapesMode(getDiagramController(), link));
                     }
 
                     statusChangedDisable(url);
-                        getDiagramModel().addDiagramElement(link);
-                        diagramController.configureListeners(link);
+                    getDiagramModel().addDiagramElement(link);
+                    diagramController.configureListeners(link);
 
                     layout.layout(new DiagramElementObj(link));
                 }
-
 
 
                 return;
@@ -689,13 +650,13 @@ public class MyDispatch implements XDispatch {
 
 
             if (anyNode(url)) {
-                    if (Settings.getSettings().promptForNodeName()){
-                        CreateNodeDialog createNodeDialog = new CreateNodeDialog(node.getShape(), m_xContext);
-                        XModel xModel = QI.XModel(xDrawDoc);
-                        XDialog dialog = createDialog(CreateNodeDialog.CREATE_NODE_DIALOG_XDL, xModel, m_xFrame, createNodeDialog, false);
-                        createNodeDialog.init(dialog);
-                        dialog.execute();
-                     }
+                if (Settings.getSettings().promptForNodeName()) {
+                    CreateNodeDialog createNodeDialog = new CreateNodeDialog(node.getShape(), m_xContext);
+                    XModel xModel = QI.XModel(xDrawDoc);
+                    XDialog dialog = createDialog(CreateNodeDialog.CREATE_NODE_DIALOG_XDL, xModel, m_xFrame, createNodeDialog, false);
+                    createNodeDialog.init(dialog);
+                    dialog.execute();
+                }
 
 
                 // common for all nodes
@@ -710,7 +671,6 @@ public class MyDispatch implements XDispatch {
                 }
 
 
-
                 return;
             }
 
@@ -720,7 +680,7 @@ public class MyDispatch implements XDispatch {
 
             }
 
-            if (url.Path.compareTo("GetCode") == 0){
+            if (url.Path.compareTo("GetCode") == 0) {
                 XModel xModel = QI.XModel(xDrawDoc);
 
                 try {
@@ -735,22 +695,22 @@ public class MyDispatch implements XDispatch {
                     xShapes = QI.XShapes(currentDrawPage);
                     Set<XShape> shapes = Sets.newHashSet();
 
-                    for (int i = 0; i < xShapes.getCount(); i++){
+                    for (int i = 0; i < xShapes.getCount(); i++) {
                         shapes.add(QI.XShape(xShapes.getByIndex(i)));
                     }
 
 
                     DiagramTypeRecognition diagramTypeRecognition = new DiagramTypeRecognitionImpl();
-                    DiagramType recognise = diagramTypeRecognition.recognise(shapes);
+                    DiagramType diagramType = diagramTypeRecognition.recognise(shapes);
 
                     //TODO DI
 
-                    diagramWalker.setDiagramType(recognise);
+                    diagramWalker.setDiagramType(diagramType);
                     List<ConnectedShapesComplex> collectedConnectedShapes = diagramWalker.walk(shapes, null);
 
                     CodeGenerator codeGenerator = new DiagramCodeGenerator();
                     diagramModel.setConnectedShapesComplexes(collectedConnectedShapes);
-                    String code = codeGenerator.generateCode(new DiagramCodeSource(diagramModel, collectedConnectedShapes));
+                    String code = codeGenerator.generateCode(new DiagramCodeSource(diagramModel, collectedConnectedShapes, diagramType));
 
 
                     GetCodeDialog myDialog = new GetCodeDialog(code, oClipboard);
@@ -760,14 +720,13 @@ public class MyDispatch implements XDispatch {
                     dialog.execute();
 
                 } catch (Exception e) {
-                    throw new RuntimeException("",e);
+                    throw new RuntimeException("", e);
                 }
-
 
 
             }
 
-            if (url.Path.compareTo("About")==0){
+            if (url.Path.compareTo("About") == 0) {
                 XModel xModel = QI.XModel(xDrawDoc);
                 XDialog dialog = createDialog("vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/AboutDialog.xdl", xModel, m_xFrame);
 
@@ -778,8 +737,6 @@ public class MyDispatch implements XDispatch {
 
 //            if (url.Complete.endsWith(msShowCommand))
 //                PanelOptionDialog.Show();
-
-
 
 
         }
@@ -797,7 +754,7 @@ public class MyDispatch implements XDispatch {
         return url.Path.equals(CLIENT_NODE) || url.Path.equals(PROCEDURE_NODE) || url.Path.equals(PROCESS_NODE) || url.Path.equals(SERVER_NODE);
     }
 
-    public XDialog createDialog(String xdlUrl, XModel xModel, XFrame xFrame){
+    public XDialog createDialog(String xdlUrl, XModel xModel, XFrame xFrame) {
         XDialog xDialog = null;
         try {
             XMultiComponentFactory xMCF = m_xContext.getServiceManager();

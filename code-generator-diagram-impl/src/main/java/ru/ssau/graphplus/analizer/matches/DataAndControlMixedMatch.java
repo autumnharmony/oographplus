@@ -6,14 +6,17 @@ package ru.ssau.graphplus.analizer.matches;
 
 
 import com.google.inject.Inject;
+import ru.ssau.graphplus.CodeProviderAnnotation;
+import ru.ssau.graphplus.DataAndControlMixedCode;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.commons.ConnectedShapesComplex;
 import ru.ssau.graphplus.commons.ShapeHelperWrapper;
 import ru.ssau.graphplus.recognition.LinkTypeRecogniser;
 
+@CodeProviderAnnotation(codeProvider = DataAndControlMixedCode.class)
 public class DataAndControlMixedMatch extends MatchBase {
     @Inject
-    protected DataAndControlMixedMatch(ShapeHelperWrapper shapeHelperWrapper, LinkTypeRecogniser linkTypeRecogniser) {
+    public DataAndControlMixedMatch(ShapeHelperWrapper shapeHelperWrapper, LinkTypeRecogniser linkTypeRecogniser) {
         super(shapeHelperWrapper, linkTypeRecogniser);
     }
 

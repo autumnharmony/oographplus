@@ -535,13 +535,19 @@ public class Gui {
      * @param _sMessage          the message of the messagebox
      */
     public static void showErrorMessageBox(XWindowPeer _xParentWindowPeer, String _sTitle, String _sMessage, XMultiComponentFactory m_xMCF, XComponentContext m_xContext) {
+
+        showMesageBox(MessageBoxType.ERRORBOX, _xParentWindowPeer, _sTitle, _sMessage, m_xMCF, m_xContext);
+    }
+
+    public static void showMesageBox(MessageBoxType messageBoxType, XWindowPeer _xParentWindowPeer, String _sTitle, String _sMessage, XMultiComponentFactory m_xMCF, XComponentContext m_xContext) {
+
         XComponent xComponent = null;
         try {
             Object oToolkit = m_xMCF.createInstanceWithContext("com.sun.star.awt.Toolkit", m_xContext);
             XMessageBoxFactory xMessageBoxFactory = (XMessageBoxFactory) UnoRuntime.queryInterface(XMessageBoxFactory.class, oToolkit);
             // rectangle may be empty if position is in the center of the parent peer
             Rectangle aRectangle = new Rectangle();
-            XMessageBox xMessageBox = xMessageBoxFactory.createMessageBox(_xParentWindowPeer, MessageBoxType.ERRORBOX, com.sun.star.awt.MessageBoxButtons.BUTTONS_OK, _sTitle, _sMessage);
+            XMessageBox xMessageBox = xMessageBoxFactory.createMessageBox(_xParentWindowPeer, messageBoxType, com.sun.star.awt.MessageBoxButtons.BUTTONS_OK, _sTitle, _sMessage);
             xComponent = (XComponent) UnoRuntime.queryInterface(XComponent.class, xMessageBox);
             if (xMessageBox != null) {
                 short nResult = xMessageBox.execute();
@@ -554,6 +560,7 @@ public class Gui {
                 xComponent.dispose();
             }
         }
+
     }
 
     //======================

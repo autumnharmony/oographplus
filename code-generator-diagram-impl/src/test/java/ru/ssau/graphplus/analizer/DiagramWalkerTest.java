@@ -60,12 +60,12 @@ public class DiagramWalkerTest {
 
         // link start
         XShape link1Shape = mock(XShape.class, "link1Shape");
-        XConnectorShape link1Connector = mock(XConnectorShape.class,"link1ConnectorShape");
+        final XConnectorShape link1Connector = mock(XConnectorShape.class,"link1ConnectorShape");
         XPropertySet link1PropertySet = mock(XPropertySet.class, "link1PropertySet");
 
 
         XShape link2Shape = mock(XShape.class, "link2Shape");
-        XConnectorShape link2Connector = mock(XConnectorShape.class, "link2ConnectorShape");
+        final XConnectorShape link2Connector = mock(XConnectorShape.class, "link2ConnectorShape");
         XPropertySet link2PropertySet = mock(XPropertySet.class, "link2PropertySet");
 
         XShape linkTextShape = mock(XShape.class, "linkTextShape");
@@ -105,6 +105,22 @@ public class DiagramWalkerTest {
         when(unoRuntimeWrapper.queryInterface(XShape.class, method)).thenReturn(method);
         when(unoRuntimeWrapper.queryInterface(XShape.class, linkTextShape)).thenReturn(linkTextShape);
 
+        when(unoRuntimeWrapper.queryInterface(XConnectorShape.class, link2Shape)).thenAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return link2Connector;
+            }
+        });
+
+        when(unoRuntimeWrapper.queryInterface(XConnectorShape.class, link1Shape)).thenAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                return(link1Connector);
+            }
+        });
+
+        when(unoRuntimeWrapper.queryInterface(XConnectorShape.class, link1Connector)).thenReturn(link1Connector);
+        when(unoRuntimeWrapper.queryInterface(XConnectorShape.class, link2Connector)).thenReturn(link2Connector);
 
         when(shapeHelperWrapper.isTextShape(linkTextShape)).thenReturn(true);
         when(linkTextPropertySet.getPropertyValue("Text")).thenReturn("msg");
@@ -119,6 +135,14 @@ public class DiagramWalkerTest {
 
         Assert.assertEquals(diagramWalker.visited.size(), 5);
         Assert.assertEquals(walk.size(), 1);
+        ConnectedShapesComplex connectedShapesComplex = walk.get(0);
+        Assert.assertEquals(connectedShapesComplex.fromShape, serverPort);
+        Assert.assertEquals(connectedShapesComplex.toShape, method);
+        Assert.assertEquals(connectedShapesComplex.textShape, linkTextShape);
+
+
+
+
     }
 
 
