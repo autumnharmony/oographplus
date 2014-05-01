@@ -12,6 +12,7 @@ public interface DiagramService {
     Node createNode(String name, Node.NodeType nodeType);
     Link createLink(String name, Link.LinkType linkType);
 
+
     void insertNode(Node node);
     void insertLink(Link link);
 

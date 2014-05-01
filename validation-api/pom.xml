@@ -7,12 +7,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>code-generator-api</artifactId>
+    <artifactId>validation-api</artifactId>
     <packaging>jar</packaging>
 
-    <name>graphplus::code-generator</name>
+    <name>validation-api</name>
+    <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+
+    </dependencies>
 </project>

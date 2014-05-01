@@ -4,62 +4,78 @@
 
 package ru.ssau.graphplus;
 
+import com.google.common.base.Strings;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 4/2/14
- * Time: 9:09 PM
- * To change this template use File | Settings | File Templates.
- */
 public class Settings {
 
+    public static final String ADD_TEXT_SHAPE_TO_LINK = "addTextShapeToLink";
+    public static final String PROMPT_FOR_NODE_NAME = "promptForNodeName";
+    public static final String LINKING_INPUT_MODE = "linkingInputMode";
     protected static Settings singleton;
     private File file;
     private Properties config;
 
     public Settings(File _file) {
         config = new Properties();
-        file   = _file;
+        file = _file;
     }
 
     public void load() {
         try {
             config.load(new FileInputStream(file));
-            setPromptForNodeName(Boolean.parseBoolean(config.getProperty("promptForNodeName")));
-            linkingInputMode = LinkingInputMode.valueOf(config.getProperty("linkingInputMode"));
+            setPromptForNodeName(Boolean.parseBoolean(config.getProperty(PROMPT_FOR_NODE_NAME)));
+            setAddTextToShapeToLink(Boolean.parseBoolean(config.getProperty(ADD_TEXT_SHAPE_TO_LINK)));
+            String linkingInputModeString = config.getProperty(LINKING_INPUT_MODE);
+            linkingInputMode = Strings.isNullOrEmpty(linkingInputModeString) || linkingInputModeString.equals("null") ? LinkingInputMode.Silent : LinkingInputMode.valueOf(linkingInputModeString);
+        }
+        catch (FileNotFoundException e){
+            // first time run
+            // ignore
         }
         catch (Exception ex) {
+            throw new RuntimeException("Could not load properties",ex);
         }
     }
 
     public void save() {
         try {
-            config.setProperty("promptForNodeName", String.valueOf(promptForNodeName));
-            config.setProperty("linkingInputMode", String.valueOf(linkingInputMode));
+            config.setProperty(PROMPT_FOR_NODE_NAME, String.valueOf(promptForNodeName));
+            config.setProperty(LINKING_INPUT_MODE, String.valueOf(linkingInputMode));
+            config.setProperty(ADD_TEXT_SHAPE_TO_LINK, String.valueOf(addTextToShapeToLink));
+
             FileOutputStream out = new FileOutputStream(file);
             config.save(out, "Graphplus Properties");
             out.flush();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new RuntimeException("Could not save properties\nLocation:" + file + "\n" + ex.getMessage());
         }
     }
 
 
-
+    public void save(String name, String value) {
+        try {
+            config.setProperty(name, value);
+            FileOutputStream out = new FileOutputStream(file);
+            config.save(out, "Graphplus Properties");
+            out.flush();
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not save properties\nLocation:" + file + "\n" + ex.getMessage());
+        }
+    }
 
 
     public synchronized static Settings getSettings() {
-            if (singleton == null) {
-                singleton = new Settings(new File(System.getProperty("user.home"), ".graphplus"));
-                singleton.load();
-            }
-            return singleton;
+        if (singleton == null) {
+            singleton = new Settings(new File(System.getProperty("user.home"), ".graphplus"));
+            singleton.load();
+        }
+        return singleton;
 
     }
 
@@ -68,18 +84,18 @@ public class Settings {
 
     private boolean promptForNodeName;
 
-    public boolean promptForNodeName(){
+    public boolean promptForNodeName() {
         return promptForNodeName;
     }
 
-    public void setPromptForNodeName(boolean b){
+    public void setPromptForNodeName(boolean b) {
         promptForNodeName = b;
-        save();
+        save(PROMPT_FOR_NODE_NAME, String.valueOf(b));
     }
 
-    public void setLinkingInputMode(LinkingInputMode linkingInputMode_){
+    public void setLinkingInputMode(LinkingInputMode linkingInputMode_) {
         linkingInputMode = linkingInputMode_;
-        save();
+        save(LINKING_INPUT_MODE, linkingInputMode_.toString());
     }
 
     public LinkingInputMode getLinkingInputMode() {
@@ -89,12 +105,29 @@ public class Settings {
     private LinkingInputMode linkingInputMode;
 
 
-    public boolean mouseLinkingMode(){
+    public boolean mouseLinkingMode() {
         return linkingInputMode != null && linkingInputMode.equals(LinkingInputMode.MouseClicking);
     }
 
     public enum LinkingInputMode {
         MouseClicking,
         Silent
+    }
+
+    private boolean addTextToShapeToLink;
+
+    public boolean isAddTextToShapeToLink() {
+        return addTextToShapeToLink;
+    }
+
+    public void setAddTextToShapeToLink(boolean addTextToShapeToLink) {
+        this.addTextToShapeToLink = addTextToShapeToLink;
+        save(ADD_TEXT_SHAPE_TO_LINK, String.valueOf(addTextToShapeToLink));
+    }
+
+
+
+    private void fireChangeEvent(String name, String value){
+
     }
 }

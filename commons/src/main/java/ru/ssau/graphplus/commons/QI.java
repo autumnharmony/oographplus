@@ -316,4 +316,8 @@ public class QI {
     public static XUndoManagerSupplier XUndoManagerSupplier(Object o) {
         return _unoRuntimeWrapper.queryInterface(XUndoManagerSupplier.class, o);
     }
+
+    public static XCheckBox XCheckBox(Object o) {
+        return _unoRuntimeWrapper.queryInterface(XCheckBox.class, o);
+    }
 }

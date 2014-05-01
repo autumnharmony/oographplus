@@ -36,10 +36,10 @@ public abstract class LinkBase implements Link,
         Refreshable<ru.ssau.graphplus.api.DiagramModel>,
         DeferredInitializable<XShape>,
         StringSerializable,
-        ShapesProvider
-{
+        ShapesProvider {
 
     boolean removed;
+    protected boolean withTextShape;
 
     public void setRemoved(boolean removed) {
         this.removed = removed;
@@ -71,7 +71,6 @@ public abstract class LinkBase implements Link,
         textShape.setPosition(new Point(positionT.X + dX, positionT.Y + dY));
 
 
-
     }
 
     @Override
@@ -91,19 +90,19 @@ public abstract class LinkBase implements Link,
 
     //    @Override
     public void setStartNode(Node node1) {
-        if (node1 instanceof NodeBase){
+        if (node1 instanceof NodeBase) {
             setStartNode(node1);
         }
     }
 
-//    @Override
+    //    @Override
     public void setEndNode(Node node2) {
-        if (node2 instanceof NodeBase){
+        if (node2 instanceof NodeBase) {
             setEndNode(node2);
         }
     }
 
-//    @Override
+    //    @Override
     public void refresh(ru.ssau.graphplus.api.DiagramModel diagramModel) {
         // TODO
     }
@@ -114,6 +113,8 @@ public abstract class LinkBase implements Link,
     protected transient XPropertySet xPS1;
     protected transient XPropertySet xPS2;
     protected transient XPropertySet xPStext;
+
+    protected transient XPropertySet xPS;
 
 
     protected volatile transient XShape textShape;
@@ -154,11 +155,16 @@ public abstract class LinkBase implements Link,
 
     public LinkBase(XMultiServiceFactory xMSF, String id) {
 
+        withTextShape = Settings.getSettings().isAddTextToShapeToLink();
+
+
         LinkShapes linkShapes = buildShapes(xMSF);
 
         shapes = new ArrayList<XShape>();
         shapes.add(linkShapes.connShape1);
         shapes.add(linkShapes.connShape2);
+
+
         shapes.add(linkShapes.textShape);
 
         this.textShape = linkShapes.textShape;
@@ -227,17 +233,21 @@ public abstract class LinkBase implements Link,
     protected LinkShapes buildShapes(XMultiServiceFactory xMSF) {
 
         LinkShapes linkShapes = new LinkShapes();
-        try {
 
-            Object text = xMSF.createInstance("com.sun.star.drawing.TextShape");
-            XShape xTextSh = QI.XShape(text);
 
-            linkShapes.textShape = xTextSh;
-            textShape = xTextSh;
-            xPStext = QI.XPropertySet(text);
+        if (withTextShape) {
+            try {
 
-        } catch (Exception ex) {
-            Logger.getLogger(LinkBase.class.getName()).log(Level.SEVERE, null, ex);
+                Object text = xMSF.createInstance("com.sun.star.drawing.TextShape");
+                XShape xTextSh = QI.XShape(text);
+
+                linkShapes.textShape = xTextSh;
+                textShape = xTextSh;
+                xPStext = QI.XPropertySet(text);
+
+            } catch (Exception ex) {
+                Logger.getLogger(LinkBase.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return linkShapes;
     }
@@ -245,7 +255,9 @@ public abstract class LinkBase implements Link,
 
     interface LinkStyle {
         void applyStyleForHalf1(XPropertySet xPropertySet) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException;
+
         void applyStyleForHalf2(XPropertySet xPropertySet) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException;
+
         void applyStyleForText(XPropertySet xPropertySet) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException;
     }
 
@@ -253,9 +265,9 @@ public abstract class LinkBase implements Link,
         @Override
         public void applyStyleForText(XPropertySet xPStext) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
 
-                xPStext.setPropertyValue("TextVerticalAdjust", TextVerticalAdjust.CENTER);
-                xPStext.setPropertyValue("TextHorizontalAdjust", TextHorizontalAdjust.CENTER);
-                xPStext.setPropertyValue("TextAutoGrowWidth", new Boolean(true));
+            xPStext.setPropertyValue("TextVerticalAdjust", TextVerticalAdjust.CENTER);
+            xPStext.setPropertyValue("TextHorizontalAdjust", TextHorizontalAdjust.CENTER);
+            xPStext.setPropertyValue("TextAutoGrowWidth", new Boolean(true));
 
         }
     }
@@ -267,17 +279,17 @@ public abstract class LinkBase implements Link,
     class LinkApplyerImpl implements LinkApplyer {
         @Override
         public void apply(LinkStyle linkStyle, LinkBase linkBase) {
-         try {
-                    linkStyle.applyStyleForHalf1( QI.XPropertySet(linkBase.getConnShape1()));
-                    linkStyle.applyStyleForText(QI.XPropertySet(linkBase.getTextShape()));
-                    linkStyle.applyStyleForHalf2(QI.XPropertySet(linkBase.getConnShape2()));
-            } catch (UnknownPropertyException | PropertyVetoException | com.sun.star.lang.IllegalArgumentException|WrappedTargetException e) {
+            try {
+                linkStyle.applyStyleForHalf1(QI.XPropertySet(linkBase.getConnShape1()));
+                linkStyle.applyStyleForText(QI.XPropertySet(linkBase.getTextShape()));
+                linkStyle.applyStyleForHalf2(QI.XPropertySet(linkBase.getConnShape2()));
+            } catch (UnknownPropertyException | PropertyVetoException | com.sun.star.lang.IllegalArgumentException | WrappedTargetException e) {
                 throw new WrappedTargetRuntimeException("Error"); // TODO wrap exception
             }
         }
     }
 
-    private void applyStyle(LinkStyle style){
+    private void applyStyle(LinkStyle style) {
         new LinkApplyerImpl().apply(style, this);
     }
 
@@ -302,7 +314,7 @@ public abstract class LinkBase implements Link,
         int maxx = 0;
         int maxy = 0;
 
-        for (XShape xShape : xShapes){
+        for (XShape xShape : xShapes) {
             int xw = xShape.getPosition().X + xShape.getSize().Width;
             if (xw > maxx) {
                 maxx = xw;
@@ -314,19 +326,20 @@ public abstract class LinkBase implements Link,
             }
         }
 
-        return new Rectangle(x,y, maxx - x, maxy - y);
+        return new Rectangle(x, y, maxx - x, maxy - y);
     }
 
     public void setProps() {
 
-        try {
-            xPS1.setPropertyValue("EndShape", getTextShape());
-            xPS2.setPropertyValue("StartShape", getTextShape());
-        }
-        catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException |WrappedTargetException e)
-        {
-            throw new RuntimeException(e);
-        }
+//        if ()
+
+
+            try {
+                xPS1.setPropertyValue("EndShape", getTextShape());
+                xPS2.setPropertyValue("StartShape", getTextShape());
+            } catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException | WrappedTargetException e) {
+                throw new RuntimeException(e);
+            }
 
 
         try {
@@ -334,7 +347,7 @@ public abstract class LinkBase implements Link,
             textShape.setPosition(new Point(700, 200));
             QI.XText(textShape).setString(getClass().getSimpleName());
             xPS2.setPropertyValue("EndPosition", new Point(1400, 200));
-        } catch (UnknownPropertyException |PropertyVetoException |IllegalArgumentException|WrappedTargetException e) {
+        } catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException | WrappedTargetException e) {
             throw new RuntimeException(e);
         }
 
@@ -345,16 +358,15 @@ public abstract class LinkBase implements Link,
 //            MiscHelper.setId(connShape2, getName() + "/conn2");
 //            MiscHelper.setId(textShape, getName() + "/text");
 
-            MiscHelper.setLinkType(connShape1, getType());
-            MiscHelper.setLinkType(connShape2, getType());
-            MiscHelper.setLinkType(textShape, getType());
+        MiscHelper.setLinkType(connShape1, getType());
+        MiscHelper.setLinkType(connShape2, getType());
+        MiscHelper.setLinkType(textShape, getType());
 
-            MiscHelper.tagShapeAsLink(connShape1);
-            MiscHelper.tagShapeAsLink(connShape2);
-            MiscHelper.tagShapeAsLink(textShape);
+        MiscHelper.tagShapeAsLink(connShape1);
+        MiscHelper.tagShapeAsLink(connShape2);
+        MiscHelper.tagShapeAsLink(textShape);
 
-            shapes = Arrays.asList(connShape1, connShape2, textShape);
-
+        shapes = Arrays.asList(connShape1, connShape2, textShape);
 
 
     }
@@ -367,22 +379,22 @@ public abstract class LinkBase implements Link,
     }
 
 
-//    @Override
+    //    @Override
     public XShape getConnShape1() {
         return connShape1;
     }
 
-//    @Override
+    //    @Override
     public XShape getConnShape2() {
         return connShape2;
     }
 
-//    @Override
+    //    @Override
     public XShape getTextShape() {
         return textShape;
     }
 
-//    @Override
+    //    @Override
     public Iterable<XShape> getShapes() {
         return shapes;
     }
@@ -414,7 +426,7 @@ public abstract class LinkBase implements Link,
         // select all text and make active
     }
 
-//    @Override
+    //    @Override
     public XShape getStartNodeShape() {
         try {
             return QI.XShape(QI.XPropertySet(connShape1).getPropertyValue(ConnectedShapes.START_SHAPE));
@@ -426,7 +438,7 @@ public abstract class LinkBase implements Link,
         return null;
     }
 
-//    @Override
+    //    @Override
     public XShape getEndNodeShape() {
         try {
             return QI.XShape(QI.XPropertySet(connShape2).getPropertyValue(ConnectedShapes.END_SHAPE));
@@ -565,7 +577,7 @@ public abstract class LinkBase implements Link,
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() +"{" +
+        return getClass().getSimpleName() + "{" +
                 "id='" + id + '\'' +
                 ", linkType=" + getType().toString() +
                 ", node1=" + node1 != null ? node1.getName() : "null" +

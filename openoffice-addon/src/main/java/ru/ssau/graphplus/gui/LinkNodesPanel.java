@@ -83,6 +83,9 @@ public class LinkNodesPanel extends PanelBase {
     private XWindow mxWindow;
     private XController mxController;
 
+    private XControlModel addTextModel;
+    private XCheckBox addTextControl;
+
 
     public LinkNodesPanel(XFrame xFrame, XWindow xParentWindow, XComponentContext xContext, MyDispatch myDispatch) {
 
@@ -406,6 +409,15 @@ public class LinkNodesPanel extends PanelBase {
                         return true;
                     }
                 })
+
+                .put(event("addTextShapeStatusChanged"), new MyDialogHandler.EventHandler() {
+                    @Override
+                    public boolean handle(XDialog xDialog, Object o, String s) {
+                        boolean addTextToShapeToLink = addTextControl.getState() == 1;
+                        Settings.getSettings().setAddTextToShapeToLink(addTextToShapeToLink);
+                        return true;
+                    }
+                })
                 .build()));
     }
 
@@ -501,6 +513,15 @@ public class LinkNodesPanel extends PanelBase {
 
 
         linkButtonModel = xControlCont.getControl("linkButton").getModel();
+
+
+        XControl addTextControl = xControlCont.getControl("addTextShapeToLink");
+        this.addTextControl = QI.XCheckBox(addTextControl);
+        addTextModel = addTextControl.getModel();
+
+        boolean addTextToShapeToLink = Settings.getSettings().isAddTextToShapeToLink();
+        this.addTextControl.setState((short) (addTextToShapeToLink ? 1 : 0));
+
 
         refreshNodes(diagramModel.getNodes());
         setState(State.NothingEntered);

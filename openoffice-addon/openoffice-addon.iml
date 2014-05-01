@@ -19,6 +19,7 @@
     <orderEntry type="library" name="Maven: org.openoffice:unoil:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.openoffice:officebean:4.0" level="project" />
     <orderEntry type="module" module-name="api" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:15.0" level="project" />
     <orderEntry type="library" name="Maven: xerces:xercesImpl:2.8.1" level="project" />
     <orderEntry type="library" name="Maven: xml-apis:xml-apis:1.0.b2" level="project" />
     <orderEntry type="library" name="Maven: xalan:xalan:2.7.1" level="project" />
@@ -26,7 +27,6 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: org.jdom:jdom:2.0.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.8.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-all:1.8.4" level="project" />
-    <orderEntry type="library" name="Maven: com.google.guava:guava:15.0" level="project" />
     <orderEntry type="module" module-name="code-generator" />
     <orderEntry type="module" module-name="code-generator-diagram-impl" />
     <orderEntry type="library" name="Maven: org.reflections:reflections:0.9.9-RC1" level="project" />

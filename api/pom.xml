@@ -14,51 +14,10 @@
     <name>graphplus::api</name>
     <url>http://maven.apache.org</url>
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
 
 
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>juh</artifactId>
-            <scope>system</scope>
-            <systemPath>${oo_artifacts_path}juh.jar</systemPath>
-            <version>3.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>jurt</artifactId>
-            <scope>system</scope>
-            <systemPath>${oo_artifacts_path}jurt.jar</systemPath>
-            <version>3.2.1</version>
-        </dependency>
 
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>ridl</artifactId>
-            <scope>system</scope>
-            <systemPath>${oo_artifacts_path}ridl.jar</systemPath>
-            <version>3.2.1</version>
-        </dependency>
 
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>unoil</artifactId>
-            <scope>system</scope>
-            <systemPath>${oo_artifacts_path}unoil.jar</systemPath>
-            <version>3.2.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>officebean</artifactId>
-            <version>4.0</version>
-            <scope>system</scope>
-            <systemPath>${oo_artifacts_path}officebean.jar</systemPath>
-        </dependency>
 
 
     </dependencies>

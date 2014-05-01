@@ -4,7 +4,6 @@
 
 package ru.ssau.graphplus;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.inject.Guice;
@@ -51,7 +50,6 @@ import ru.ssau.graphplus.recognition.DiagramTypeRecognitionImpl;
 import static ru.ssau.graphplus.Constants.*;
 
 import java.io.*;
-import java.lang.ClassNotFoundException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;

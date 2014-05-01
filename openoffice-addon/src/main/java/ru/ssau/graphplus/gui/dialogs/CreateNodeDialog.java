@@ -14,6 +14,7 @@ import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.commons.QI;
+import ru.ssau.graphplus.gui.MyDialog;
 
 import java.util.Map;
 

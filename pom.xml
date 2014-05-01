@@ -21,6 +21,8 @@
         <module>code-generator-diagram-impl</module>
         <module>commons</module>
         <module>logging</module>
+        <module>validation-api</module>
+        <module>validation-impl</module>
     </modules>
 
     <dependencyManagement>
@@ -105,5 +107,55 @@
 
         </plugins>
 
+
+
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <!--<version>15.0</version>-->
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>juh</artifactId>
+            <scope>system</scope>
+            <systemPath>${oo_artifacts_path}juh.jar</systemPath>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>jurt</artifactId>
+            <scope>system</scope>
+            <systemPath>${oo_artifacts_path}jurt.jar</systemPath>
+            <version>3.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>ridl</artifactId>
+            <scope>system</scope>
+            <systemPath>${oo_artifacts_path}ridl.jar</systemPath>
+            <version>3.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>unoil</artifactId>
+            <scope>system</scope>
+            <systemPath>${oo_artifacts_path}unoil.jar</systemPath>
+            <version>3.2.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openoffice</groupId>
+            <artifactId>officebean</artifactId>
+            <version>4.0</version>
+            <scope>system</scope>
+            <systemPath>${oo_artifacts_path}officebean.jar</systemPath>
+        </dependency>
+    </dependencies>
 </project>

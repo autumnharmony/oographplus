@@ -131,9 +131,9 @@ public class OptionsDialogHandler extends WeakBase implements XServiceInfo, XCon
     }
 
     private void saveData(com.sun.star.awt.XWindow aWindow) throws com.sun.star.lang.IllegalArgumentException, Exception {
-        String sWindowName = getWindowName(aWindow);
-        if (sWindowName == null)
-            throw new com.sun.star.lang.IllegalArgumentException("This window is not supported by this handler", this, (short) -1);
+//        String sWindowName = getWindowName(aWindow);
+//        if (sWindowName == null)
+//            throw new com.sun.star.lang.IllegalArgumentException("This window is not supported by this handler", this, (short) -1);
 
         XControlContainer xContainer = (XControlContainer) UnoRuntime.queryInterface(XControlContainer.class, aWindow);
         if (xContainer == null)
@@ -167,8 +167,8 @@ public class OptionsDialogHandler extends WeakBase implements XServiceInfo, XCon
 
     private void loadData(com.sun.star.awt.XWindow aWindow) throws Exception {
         String sWindowName = getWindowName(aWindow);
-        if (sWindowName == null)
-            throw new com.sun.star.lang.IllegalArgumentException("The window is not supported by this handler", this, (short) -1);
+//        if (sWindowName == null)
+//            throw new com.sun.star.lang.IllegalArgumentException("The window is not supported by this handler", this, (short) -1);
 
         XControlContainer xContainer = (XControlContainer) UnoRuntime.queryInterface(XControlContainer.class, aWindow);
         if (xContainer == null)
