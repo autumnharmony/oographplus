@@ -56,7 +56,8 @@
 
         <dlg:button dlg:id="linkButton" dlg:tab-index="7" dlg:left="5" dlg:top="110" dlg:width="70" dlg:height="19"
                     dlg:value="LINK">
-
+            <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:linkButtonPerformAction"
+                          script:language="UNO"/>
 
         </dlg:button>
     </dlg:bulletinboard>

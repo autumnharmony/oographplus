@@ -30,52 +30,53 @@ import ru.ssau.graphplus.document.event.handler.DocumentEventsHandler;
 import ru.ssau.graphplus.document.event.handler.impl.DocumentEventsHandlerImpl;
 import ru.ssau.graphplus.gui.*;
 import ru.ssau.graphplus.gui.sidebar.*;
-import ru.ssau.graphplus.xml.XMLGenerator;
 
 import java.io.*;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.logging.*;
 
-/**───────▄███████████▄▄──────────────
- *──────▄██▀──────────▀▀██▄────────────
- *────▄█▀────────────────▀██───────────
- *──▄█▀────────────────────▀█▄─────────
- *─█▀──██──────────────██───▀██────────
- *█▀──────────────────────────██───────
- *█──███████████████████───────█───────
- *█────────────────────────────█───────
- *█▄───────────────────────────█───────
- *▀█▄─────────────────────────██───────
- *─▀█▄───────────────────────██────────
- *──▀█▄────────────────────▄█▀─────────
- *─────▀█▄──────────────▄█▀────────────
- *───────▀█▄▄▄──────▄▄▄███████▄▄───────
- *────────███████████████───▀██████▄───
- *─────▄███▀▀────────▀███▄──────█─███──
- *───▄███▄─────▄▄▄▄────███────▄▄████▀──
- *─▄███▓▓█─────█▓▓█───████████████▀────
- *─▀▀██▀▀▀▀▀▀▀▀▀▀███████████────█──────
- *────█─▄▄▄▄▄▄▄▄█▀█▓▓─────██────█──────
- *────█─█───────█─█─▓▓────██────█──────
- *────█▄█───────█▄█──▓▓▓▓▓███▄▄▄█──────
- *────────────────────────██──────────
- *────────────────────────██───▄███▄───
- *────────────────────────██─▄██▓▓▓██──
- *───────────────▄██████████─█▓▓▓█▓▓██▄
- *─────────────▄██▀───▀▀███──█▓▓▓██▓▓▓█
- *─▄███████▄──███───▄▄████───██▓▓████▓█
- *▄██▀──▀▀█████████████▀▀─────██▓▓▓▓███
- *██▀─────────██──────────────██▓██▓███
- *██──────────███──────────────█████─██
- *██───────────███──────────────█─██──█
- *██────────────██─────────────────█───
- *██─────────────██────────────────────
- *██─────────────███───────────────────
- *██──────────────███▄▄────────────────
- *███──────────────▀▀███───────────────
- *─███─────────────────────────────────
- *──███──────────────────────────────**/
+/**
+ * ───────▄███████████▄▄──────────────
+ * ──────▄██▀──────────▀▀██▄────────────
+ * ────▄█▀────────────────▀██───────────
+ * ──▄█▀────────────────────▀█▄─────────
+ * ─█▀──██──────────────██───▀██────────
+ * █▀──────────────────────────██───────
+ * █──███████████████████───────█───────
+ * █────────────────────────────█───────
+ * █▄───────────────────────────█───────
+ * ▀█▄─────────────────────────██───────
+ * ─▀█▄───────────────────────██────────
+ * ──▀█▄────────────────────▄█▀─────────
+ * ─────▀█▄──────────────▄█▀────────────
+ * ───────▀█▄▄▄──────▄▄▄███████▄▄───────
+ * ────────███████████████───▀██████▄───
+ * ─────▄███▀▀────────▀███▄──────█─███──
+ * ───▄███▄─────▄▄▄▄────███────▄▄████▀──
+ * ─▄███▓▓█─────█▓▓█───████████████▀────
+ * ─▀▀██▀▀▀▀▀▀▀▀▀▀███████████────█──────
+ * ────█─▄▄▄▄▄▄▄▄█▀█▓▓─────██────█──────
+ * ────█─█───────█─█─▓▓────██────█──────
+ * ────█▄█───────█▄█──▓▓▓▓▓███▄▄▄█──────
+ * ────────────────────────██──────────
+ * ────────────────────────██───▄███▄───
+ * ────────────────────────██─▄██▓▓▓██──
+ * ───────────────▄██████████─█▓▓▓█▓▓██▄
+ * ─────────────▄██▀───▀▀███──█▓▓▓██▓▓▓█
+ * ─▄███████▄──███───▄▄████───██▓▓████▓█
+ * ▄██▀──▀▀█████████████▀▀─────██▓▓▓▓███
+ * ██▀─────────██──────────────██▓██▓███
+ * ██──────────███──────────────█████─██
+ * ██───────────███──────────────█─██──█
+ * ██────────────██─────────────────█───
+ * ██─────────────██────────────────────
+ * ██─────────────███───────────────────
+ * ██──────────────███▄▄────────────────
+ * ███──────────────▀▀███───────────────
+ * ─███─────────────────────────────────
+ * ──███──────────────────────────────*
+ */
 public class OOGraph extends ComponentBase implements
         com.sun.star.lang.XInitialization,
         com.sun.star.task.XJob,
@@ -96,6 +97,7 @@ public class OOGraph extends ComponentBase implements
     public static final String DIAGRAM_MODEL = "DiagramModel";
     public static final Logger LOGGER;
     private static final ArrayList<String> m_aSupportedModules = new ArrayList(1);
+
     static {
         m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
         LOGGER = Logger.getLogger("oograph");
@@ -112,6 +114,7 @@ public class OOGraph extends ComponentBase implements
         }
 
     }
+
     final static String msProtocol = "ru.ssau.graphplus";
     final static String msShowCommand = "ShowOptionsDialog";
     private static final String msURLhead = "private:resource/toolpanel/OOGraphPanelFactory";
@@ -136,13 +139,13 @@ public class OOGraph extends ComponentBase implements
     private final XComponentContext m_xContext;
     TableInserter tableInserter = new TableInserterImpl(xMSF);
     private MyDispatch myDispatch;
-//    private XNameAccess accessLeaves;
+    //    private XNameAccess accessLeaves;
     private com.sun.star.frame.XFrame m_xFrame;
     private Map<MyURL, Set<XStatusListener>> statusListeners = new HashMap();
     private String diagramName;
     private String diagramType;
 
-//    public static OOGraph temp(XComponentContext xComponentContext) {
+    //    public static OOGraph temp(XComponentContext xComponentContext) {
 //        return new OOGraphProxy(xComponentContext);
 //    }
     private XEventBroadcaster m_xEventBroadcaster = null;
@@ -179,15 +182,10 @@ public class OOGraph extends ComponentBase implements
     public static XSingleComponentFactory __getComponentFactory(String sImplementationName) {
         XSingleComponentFactory xFactory = null;
 
-        if (sImplementationName.equals(m_implementationName)){
+        if (sImplementationName.equals(m_implementationName)) {
             xFactory = UnoRuntime.queryInterface(XSingleComponentFactory.class, FactoryHelper.createComponentFactory(OOGraph.class, OOGraph.class.getName()));
 
-        }
-
-
-         else
-
-        if ( sImplementationName.equals( OptionsDialogHandler.class.getName() ) )
+        } else if (sImplementationName.equals(OptionsDialogHandler.class.getName()))
             xFactory = Factory.createComponentFactory(OptionsDialogHandler.class, OptionsDialogHandler.getServiceNames());
 
         return xFactory;
@@ -211,7 +209,6 @@ public class OOGraph extends ComponentBase implements
                     xFactory,
                     xKey);
         }
-
 
 
         return xResult;
@@ -309,8 +306,8 @@ public class OOGraph extends ComponentBase implements
                 try {
                     newFrameCreated(xController);
 
-                        this.m_xEventBroadcaster = UnoRuntime.queryInterface(XEventBroadcaster.class, this.m_xFrame.getController().getModel());
-                        addEventListener();
+                    this.m_xEventBroadcaster = UnoRuntime.queryInterface(XEventBroadcaster.class, this.m_xFrame.getController().getModel());
+                    addEventListener();
                 } catch (java.lang.Exception ex) {
                     Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -445,7 +442,8 @@ public class OOGraph extends ComponentBase implements
 
         XModel model;
         String sEnvType;
-        String sEventName;;
+        String sEventName;
+        ;
 
 
         String sModuleIdentifier = null;
@@ -490,7 +488,7 @@ public class OOGraph extends ComponentBase implements
 
         if (sEventName != null) {
 
-            switch (sEventName){
+            switch (sEventName) {
 //                case "RemoveConnectorShapes" : {
 //
 //                    OOGraph.LOGGER.info("RemoveConnectorShapes");
@@ -547,13 +545,12 @@ public class OOGraph extends ComponentBase implements
                     break;
                 }
 
-                case "OnLoadFinished":{
+                case "OnLoadFinished": {
 
 //                    OOGraph.LOGGER.info("OnLoadFinished");
                     try {
                         Global.loaded = Boolean.TRUE;
-                    }
-                    catch (java.lang.Exception e){
+                    } catch (java.lang.Exception e) {
                         OOGraph.LOGGER.log(Level.WARNING, e.getMessage());
                     }
 
@@ -616,8 +613,8 @@ public class OOGraph extends ComponentBase implements
         return null;
     }
 
-    Map<String, Object> getByNames(NamedValue[] namedValues, Set<String> names){
-        Map<String,Object> result = new HashMap<>();
+    Map<String, Object> getByNames(NamedValue[] namedValues, Set<String> names) {
+        Map<String, Object> result = new HashMap<>();
         for (NamedValue namedValue : namedValues) {
             if (names.contains(namedValue.Name)) {
                 result.put(namedValue.Name, namedValue.Value);
@@ -815,34 +812,8 @@ public class OOGraph extends ComponentBase implements
     }
 
     public void save(String path) {
-        try {
-            // add your own code here
-            OOGraph.LOGGER.info("Save");
+        Gui.showErrorMessageBox(null, "Saved", path, xMCF, m_xContext);
 
-            XComponent xDD = null;
-            m_xComponent = (XComponent) UnoRuntime.queryInterface(XComponent.class, m_xFrame.getController().getModel());
-            // add your own code here
-
-
-            com.sun.star.drawing.XDrawPagesSupplier xDPS =
-                    (com.sun.star.drawing.XDrawPagesSupplier) UnoRuntime.queryInterface(
-                            com.sun.star.drawing.XDrawPagesSupplier.class, getDiagramModel().getDrawDoc());
-            com.sun.star.drawing.XDrawPages xDPn = xDPS.getDrawPages();
-            com.sun.star.container.XIndexAccess xDPi =
-                    (com.sun.star.container.XIndexAccess) UnoRuntime.queryInterface(
-                            com.sun.star.container.XIndexAccess.class, xDPn);
-            XDrawPage xDrawPage = (com.sun.star.drawing.XDrawPage) UnoRuntime.queryInterface(
-                    com.sun.star.drawing.XDrawPage.class, xDPi.getByIndex(0));
-
-            XMLGenerator.generateXMLforDocument(getDiagramModel().getDrawDoc(), xDrawPage, path);
-
-            Gui.showErrorMessageBox(null, "Saved", path, xMCF, m_xContext);
-            return;
-        } catch (com.sun.star.lang.IndexOutOfBoundsException ex) {
-            Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (WrappedTargetException ex) {
-            Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     @Override
@@ -961,7 +932,6 @@ public class OOGraph extends ComponentBase implements
             XModel xModel = QI.XModel(myDispatch1.getDiagramModel().getDrawDoc());
 
 
-
             return new UIElement(
                     sResourceURL,
                     aPanel);
@@ -1002,10 +972,10 @@ public class OOGraph extends ComponentBase implements
         InputTwoShapes,
         AddingLink
     }
+
     static {
         m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
     }
-
 
 
     // settings dialog

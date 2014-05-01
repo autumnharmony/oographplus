@@ -16,16 +16,13 @@ import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.events.*;
 import ru.ssau.graphplus.events.EventListener;
-import ru.ssau.graphplus.link.LinkBase;
+import ru.ssau.graphplus.link.LinkTwoConnectorsAndTextBase;
 import ru.ssau.graphplus.link.LinkFactory;
 import ru.ssau.graphplus.link.Validatable;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.node.NodeBase;
 import ru.ssau.graphplus.node.NodeFactory;
-import ru.ssau.graphplus.recognition.DiagramTypeRecognition;
 import ru.ssau.graphplus.recognition.DiagramTypeRecognitionImpl;
-import ru.ssau.graphplus.recognition.LinkTypeRecogniser;
-import ru.ssau.graphplus.recognition.LinkTypeRecogniserImpl;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -202,8 +199,8 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
 
         diagramElements.add(de);
 
-        if (de instanceof LinkBase) {
-            LinkBase link = (LinkBase) de;
+        if (de instanceof LinkTwoConnectorsAndTextBase) {
+            LinkTwoConnectorsAndTextBase link = (LinkTwoConnectorsAndTextBase) de;
             XShape connShape1 = link.getConnShape1();
             shapeToDiagramElementMap.put(connShape1, de);
             XShape connShape2 = link.getConnShape2();
@@ -241,8 +238,8 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     }
 
     public void removeDiagramElement(DiagramElement de) {
-        if (de instanceof LinkBase) {
-            LinkBase link = (LinkBase) de;
+        if (de instanceof LinkTwoConnectorsAndTextBase) {
+            LinkTwoConnectorsAndTextBase link = (LinkTwoConnectorsAndTextBase) de;
             shapeToDiagramElementMap.remove(link.getConnShape1());
             shapeToDiagramElementMap.remove(link.getConnShape2());
             shapeToDiagramElementMap.remove(link.getTextShape());
@@ -310,81 +307,6 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     }
 
 
-    /**
-     * remapping of this DiagramModel to new document
-     *
-     * @param xDrawDoc draw document
-     * @return
-     */
-    public boolean remap(XComponent xDrawDoc) {
-        this.xDrawDoc = xDrawDoc;
-        boolean mapped = false;
-        if (idToShape == null) {
-            idToShape = new HashMap();
-        }
-
-        XDrawPages xDrawPages = getDrawPages(xDrawDoc);
-
-
-        for (int j = 0; j < xDrawPages.getCount(); j++) {
-            try {
-
-                Object byIndex1 = xDrawPages.getByIndex(j);
-                XDrawPage xDrawPage = UnoRuntime.queryInterface(XDrawPage.class, byIndex1);
-
-                if (xDrawPage != null) {
-                    mapped = true;
-                    for (int i = 0; i < xDrawPage.getCount(); i++) {
-
-
-                        try {
-
-                            Object byIndex = null;
-                            byIndex = xDrawPage.getByIndex(i);
-                            XShape xShape = QI.XShape(byIndex);
-
-                            // TODO there null !!!
-                            String id = getId(xShape);
-                            if (id != null) {
-                                idToShape.put(id, xShape);
-                            }
-                        } catch (com.sun.star.lang.IndexOutOfBoundsException e) {
-                            e.printStackTrace();
-                        } catch (WrappedTargetException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-
-                    if (shapeToDiagramElementMap == null) {
-                        shapeToDiagramElementMap = new HashMap<>();
-                    }
-
-                    for (DiagramElement diagramElement : diagramElements) {
-                        if (diagramElement instanceof LinkBase) {
-                            LinkBase link = (LinkBase) diagramElement;
-                            XShape connShape1 = idToShape.get(link.getId() + "/conn1");
-                            XShape connShape2 = idToShape.get(link.getId() + "/conn2");
-                            XShape textShape = idToShape.get(link.getId() + "/text");
-                            link.setProps(connShape1, connShape2, textShape);
-                        }
-                        if (diagramElement instanceof NodeBase) {
-                            NodeBase node = (NodeBase) diagramElement;
-                            XShape xShape = idToShape.get(node.getId());
-                            node.setProps(xShape);
-                            shapeToDiagramElementMap.put(xShape, node);
-                        }
-                    }
-                }
-            } catch (com.sun.star.lang.IndexOutOfBoundsException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            } catch (WrappedTargetException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-        return mapped;
-    }
-
     // override this in test
     String getId(XShape xShape) {
         return MiscHelper.getId(xShape);
@@ -397,8 +319,8 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
 
     void refreshLinksShapesId() {
         for (DiagramElement diagramElement : diagramElements) {
-            if (diagramElement instanceof LinkBase) {
-                LinkBase link = (LinkBase) diagramElement;
+            if (diagramElement instanceof LinkTwoConnectorsAndTextBase) {
+                LinkTwoConnectorsAndTextBase link = (LinkTwoConnectorsAndTextBase) diagramElement;
                 refreshLinkShapeId(link.getConnShape1(), link);
                 refreshLinkShapeId(link.getConnShape2(), link);
                 refreshLinkShapeId(link.getTextShape(), link);

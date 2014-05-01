@@ -7,8 +7,6 @@ public class LinkShapes {
     public XShape connShape1;
     public XShape connShape2;
 
-
-
     public LinkShapes() {
     }
 }

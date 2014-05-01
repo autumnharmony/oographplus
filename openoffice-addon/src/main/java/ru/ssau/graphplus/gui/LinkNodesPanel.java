@@ -394,6 +394,7 @@ public class LinkNodesPanel extends PanelBase {
                 .put(event("linkButtonPerformAction"), new MyDialogHandler.EventHandler() {
                     @Override
                     public boolean handle(XDialog xDialog, Object o, String s) {
+                        System.out.println("linkButtonPerformAction");
                         DiagramService diagramService = dispatch.getDiagramService();
 
                         Link link = diagramService.createLink("", Link.LinkType.valueOf(linkListBox.getSelectedItem()));

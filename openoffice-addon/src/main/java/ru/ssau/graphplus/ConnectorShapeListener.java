@@ -33,7 +33,7 @@ import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.events.*;
 import ru.ssau.graphplus.api.Link;
-import ru.ssau.graphplus.link.LinkBase;
+import ru.ssau.graphplus.link.LinkTwoConnectorsAndTextBase;
 
 import java.util.*;
 
@@ -189,7 +189,7 @@ public class ConnectorShapeListener {
                                     OOGraph.LOGGER.info("removed text shape");
 //                            setPassNextShapeRemovedEvents(3);
                                     DiagramElement diagramElement = diagramController.getDiagramModel().getShapeToDiagramElementMap().get(xShape);
-                                    LinkBase link = (LinkBase) diagramElement;
+                                    LinkTwoConnectorsAndTextBase link = (LinkTwoConnectorsAndTextBase) diagramElement;
 //                            fireEvent(new ShapeRemovedEvent(link.getTextShape()));
                                     fireEvent(new ShapeRemovedEvent(link.getTextShape()));
 //                            fireEvent(new ShapeRemovedEvent(link.getConnShape2()));

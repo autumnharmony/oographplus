@@ -178,43 +178,43 @@ public class InputTwoShapesMode implements InputMode {
                         if (!connectorShape) {
                             secondShape = xShape;
                             // 2 shapes
-                            if (diagramController.getLinker() != null) {
-                                diagramController.getLinker().link(firstShape, secondShape);
-                                DiagramElement diagramElement = diagramController.getDiagramModel().getDiagramElementByShape(firstShape);
-                                DiagramElement diagramElement1 = diagramController.getDiagramModel().getDiagramElementByShape(secondShape);
-
-                                if (!(diagramElement instanceof NodeBase) || !(diagramElement1 instanceof NodeBase)) {
-
-                                    firstShape = null;
-                                    secondShape = null;
-                                    state = INPUT_TWO_SHAPES;
-                                } else {
-                                    NodeBase node1 = (NodeBase) diagramElement;
-                                    NodeBase node2 = (NodeBase) diagramElement1;
-
-
-                                    //TODO awful
-//                                    LinkBase link = (LinkBase) diagramController.getLinker();
-                                    LinkBase link = (LinkBase) getLink();
-
-
-                                    link.setStartNode(node1);
-                                    link.setEndNode(node2);
-
-                                    // TODO DI
-                                    diagramController.getDiagramModel().getConnectedShapes().put(QI.XConnectorShape(link.getConnShape1()), new ConnectedShapes(QI.XConnectorShape(link.getConnShape1()), new UnoRuntimeWrapperImpl(), new ShapeHelperWrapperImpl()));
-                                    diagramController.getDiagramModel().getConnectedShapes().put(QI.XConnectorShape(link.getConnShape2()), new ConnectedShapes(QI.XConnectorShape(link.getConnShape2()), new UnoRuntimeWrapperImpl(), new ShapeHelperWrapperImpl()));
-
-                                    setState(NOTHING);
-//                        LinkAdjuster.adjustLink((LinkBase)linker);
-                                    diagramController.setSelectedShape(diagramController.getLinker().getTextShape());
-                                    // TODO remove next
-                                    diagramController.resetInputMode();
-                                    //QI.XPropertySet(linker1.getConnShape1()).addPropertyChangeListener();
-                                }
-
-                                diagramController.statusChangedEnable(DiagramController.getLastURL());
-                            }
+//                            if (diagramController.getLinker() != null) {
+////                                diagramController.getLinker().link(firstShape, secondShape);
+//                                DiagramElement diagramElement = diagramController.getDiagramModel().getDiagramElementByShape(firstShape);
+//                                DiagramElement diagramElement1 = diagramController.getDiagramModel().getDiagramElementByShape(secondShape);
+//
+//                                if (!(diagramElement instanceof NodeBase) || !(diagramElement1 instanceof NodeBase)) {
+//
+//                                    firstShape = null;
+//                                    secondShape = null;
+//                                    state = INPUT_TWO_SHAPES;
+//                                } else {
+//                                    NodeBase node1 = (NodeBase) diagramElement;
+//                                    NodeBase node2 = (NodeBase) diagramElement1;
+//
+//
+//                                    //TODO awful
+////                                    LinkBase link = (LinkBase) diagramController.getLinker();
+//                                    LinkTwoConnectorsAndTextBase link = (LinkTwoConnectorsAndTextBase) getLink();
+//
+//
+//                                    link.setStartNode(node1);
+//                                    link.setEndNode(node2);
+//
+//                                    // TODO DI
+//                                    diagramController.getDiagramModel().getConnectedShapes().put(QI.XConnectorShape(link.getConnShape1()), new ConnectedShapes(QI.XConnectorShape(link.getConnShape1()), new UnoRuntimeWrapperImpl(), new ShapeHelperWrapperImpl()));
+//                                    diagramController.getDiagramModel().getConnectedShapes().put(QI.XConnectorShape(link.getConnShape2()), new ConnectedShapes(QI.XConnectorShape(link.getConnShape2()), new UnoRuntimeWrapperImpl(), new ShapeHelperWrapperImpl()));
+//
+//                                    setState(NOTHING);
+////                        LinkAdjuster.adjustLink((LinkBase)linker);
+//                                    diagramController.setSelectedShape(diagramController.getLinker().getTextShape());
+//                                    // TODO remove next
+//                                    diagramController.resetInputMode();
+//                                    //QI.XPropertySet(linker1.getConnShape1()).addPropertyChangeListener();
+//                                }
+//
+//                                diagramController.statusChangedEnable(DiagramController.getLastURL());
+//                            }
                         }
 
                     } else {

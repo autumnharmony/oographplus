@@ -13,6 +13,7 @@ import com.sun.star.awt.XDialogEventHandler;
 import com.sun.star.awt.XWindow;
 import com.sun.star.lang.WrappedTargetException;
 import com.sun.star.uno.*;
+import com.sun.star.uno.RuntimeException;
 
 import java.lang.Exception;
 import java.util.HashMap;
@@ -75,7 +76,8 @@ public class MyDialogHandler implements XDialogEventHandler, XContainerWindowEve
             EventHandler eventHandler = eventHandlerMap.get(event);
             return eventHandler.handle(xDialog, o, s);
         } catch (Exception ex) {
-            throw new com.sun.star.uno.RuntimeException("error", ex);
+            throw new java.lang.RuntimeException(ex);
+//            throw new com.sun.star.uno.RuntimeException("error", ex);
             // TODO !!!
 //            return false;
         }

@@ -14,7 +14,10 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MixedLink extends LinkBase implements Linker, Serializable {
+/*
+ Mixed link can be only with two connectors
+ */
+public class MixedLink extends LinkTwoConnectorsAndTextBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -76,26 +79,7 @@ public class MixedLink extends LinkBase implements Linker, Serializable {
     }
 
 
-    public void link(XShape sh1, XShape sh2) {
-        try {
-            textShape.setPosition(new Point((sh1.getPosition().X + sh2.getPosition().X) / 2, (sh1.getPosition().Y + sh2.getPosition().Y) / 2));
 
-            this.startShape = sh1;
-            this.endShape = sh2;
-            xPS1.setPropertyValue("StartShape", sh1);
-            xPS2.setPropertyValue("EndShape", sh2);
-
-            super.link(sh1, sh2);
-        } catch (UnknownPropertyException ex) {
-            Logger.getLogger(ControlLink.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(ControlLink.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (com.sun.star.lang.IllegalArgumentException ex) {
-            Logger.getLogger(ControlLink.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (WrappedTargetException ex) {
-            Logger.getLogger(ControlLink.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
 
 }

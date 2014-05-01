@@ -15,6 +15,10 @@ public interface Link extends
 
     boolean isConnected();
 
+    void setProps();
+
+    void link(Node node1, Node node2);
+
 
     public enum LinkType {
         DataFlow,

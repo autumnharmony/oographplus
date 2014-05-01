@@ -20,7 +20,7 @@
         <module>code-generator-api</module>
         <module>code-generator-diagram-impl</module>
         <module>commons</module>
-        <module>logging</module>
+        <!--<module>logging</module>-->
         <module>validation-api</module>
         <module>validation-impl</module>
     </modules>
@@ -79,17 +79,7 @@
 
 
 
-            <!-- AOP dependencies. -->
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjrt</artifactId>
-                <version>${aspectj.runtime.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjtools</artifactId>
-                <version>${aspectj.runtime.version}</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <build>

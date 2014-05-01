@@ -4,6 +4,7 @@
 
 package ru.ssau.graphplus;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
@@ -21,9 +22,13 @@ import ru.ssau.graphplus.gui.BetweenNodesLayout;
 import ru.ssau.graphplus.gui.DiagramElementObj;
 import ru.ssau.graphplus.gui.Layout;
 import ru.ssau.graphplus.link.LinkBase;
+import ru.ssau.graphplus.link.LinkTwoConnectorsAndTextBase;
 import ru.ssau.graphplus.link.LinkFactory;
+import ru.ssau.graphplus.link.ShapesProvider;
 import ru.ssau.graphplus.node.NodeBase;
 import ru.ssau.graphplus.node.NodeFactory;
+
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -74,7 +79,7 @@ public class DiagramServiceImpl implements DiagramService {
 
     @Override
     public Link createLink(String name, Link.LinkType linkType) {
-        return linkFactory.create(linkType);
+        return linkFactory.create(linkType, (Map)ImmutableMap.builder().put("type",Settings.getSettings().isAddTextToShapeToLink() ? "twoConnectors":"oneConnector").build());
     }
 
     @Override
@@ -88,43 +93,30 @@ public class DiagramServiceImpl implements DiagramService {
 
     @Override
     public void insertLink(Link link) {
-        LinkBase linkBase = (LinkBase) link;
+        System.out.println("insertLink");
+        ShapesProvider shapesProvider = (ShapesProvider) link;
         XDrawPage currentDrawPage = DrawHelper.getCurrentDrawPage(xDrawDoc);
 
-        for (XShape xShape : linkBase.getShapes()) {
-
+        for (XShape xShape : shapesProvider.getShapes()) {
+            System.out.println("insertShape");
             ShapeHelper.insertShape(xShape, currentDrawPage);
         }
 
-        ((LinkBase) link).setProps();
+        link.setProps();
         diagramController.insertLink(link);
         layout.layout(new DiagramElementObj(link));
+        System.out.println("insertLink end");
 
     }
 
     @Override
     public void linkNodes(Node node1, Node node2, Link link) {
 
-        LinkBase linkBase = (LinkBase) link;
-        new BetweenNodesLayout(stage, new DiagramElementObj(node1), new DiagramElementObj(node2)).layout(new DiagramElementObj(link));
-        XPropertySet connector1 = QI.XPropertySet(linkBase.getConnShape1());
-        XPropertySet connector2 = QI.XPropertySet(linkBase.getConnShape2());
-        try {
-            NodeBase node11 = (NodeBase) node1;
-            XShape shape = node11.getShape();
-            connector1.setPropertyValue("StartShape", shape);
-            NodeBase node21 = (NodeBase) node2;
-            XShape shape1 = node21.getShape();
-            connector2.setPropertyValue("EndShape", shape1);
-        } catch (UnknownPropertyException | PropertyVetoException | com.sun.star.lang.IllegalArgumentException | WrappedTargetException | ClassCastException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
 
-
-
-
-
+        System.out.println("linkNodes");
+        System.out.println(node1.getId());
+        System.out.println(node2.getId());
+        link.link(node1, node2);
 
     }
 }

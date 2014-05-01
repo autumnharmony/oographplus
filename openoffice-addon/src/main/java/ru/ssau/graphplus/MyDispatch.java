@@ -466,7 +466,7 @@ public class MyDispatch implements XDispatch {
             }
 
 
-            LinkBase link = null;
+            Link link = null;
             NodeBase node = null;
 
             if (url.Path.compareTo(PROCESS_NODE) == 0) {
@@ -629,7 +629,7 @@ public class MyDispatch implements XDispatch {
                 if (link != null) {
                     link.setProps();
 
-                    getDiagramController().setLinker(link);
+//                    getDiagramController().setLinker(link);
 
                     if (Settings.getSettings().mouseLinkingMode() && diagramModel.getNodes().size() >= 2) {
                         getDiagramController().setInputMode(new InputTwoShapesMode(getDiagramController(), link));

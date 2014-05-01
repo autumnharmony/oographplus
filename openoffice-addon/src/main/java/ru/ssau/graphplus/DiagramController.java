@@ -26,7 +26,6 @@ import ru.ssau.graphplus.commons.OOoUtils;
 import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.commons.ShapeHelper;
 import ru.ssau.graphplus.events.*;
-import ru.ssau.graphplus.gui.dialogs.ChooseLinkTypeDialog;
 import ru.ssau.graphplus.gui.dialogs.ChooseNodeTypeDialog;
 import ru.ssau.graphplus.link.*;
 import ru.ssau.graphplus.api.Node;
@@ -71,7 +70,7 @@ public class DiagramController implements
     DiagramEventHandler diagramEventHandler;
     XDrawPage xDP = null;
 
-    private Linker linker;
+
 
 
     private InputMode inputMode;
@@ -339,13 +338,13 @@ public class DiagramController implements
     public void disposing(EventObject arg0) {
     }
 
-    public Linker getLinker() {
-        return linker;
-    }
-
-    public void setLinker(Linker linker) {
-        this.linker = linker;
-    }
+//    public Linker getLinker() {
+//        return linker;
+//    }
+//
+//    public void setLinker(Linker linker) {
+//        this.linker = linker;
+//    }
 
     public XShapes getSelectedShapes() {
         try {
@@ -417,22 +416,10 @@ public class DiagramController implements
     }
 
     //
-    public void chooseLinkType(XShape xShape) {
-        new ChooseLinkTypeDialog(xMCF, m_xContext, xMCF, xShape, linkFactory, m_xComponent).chooseLinkType();
-    }
-
-
-    public void linkNodes(NodeBase node, NodeBase node1, Link.LinkType type) {
-        Link link = linkFactory.create(type);
-
-        if (link instanceof Linker) {
-            ((Linker) link).link(node.getShape(), node1.getShape());
-        }
-    }
 
     private void insertLinkShapes(Link link) {
 
-        LinkBase link_ = (LinkBase) link;
+        LinkTwoConnectorsAndTextBase link_ = (LinkTwoConnectorsAndTextBase) link;
 
         for (XShape shape : link_.getShapes()) {
             DrawHelper.insertShapeOnCurrentPage(shape, getDiagramModel().getDrawDoc());
@@ -446,7 +433,7 @@ public class DiagramController implements
             if (diagramElementByShape instanceof Link) {
 
 
-                LinkBase linkBase = (LinkBase) diagramElementByShape;
+                LinkTwoConnectorsAndTextBase linkBase = (LinkTwoConnectorsAndTextBase) diagramElementByShape;
                 if (linkBase.isRemoved()) {
                     return;
                 }

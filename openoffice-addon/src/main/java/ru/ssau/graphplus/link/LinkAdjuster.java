@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class LinkAdjuster {
 
-    public static void adjustLink(LinkBase link) {
+    public static void adjustLink(LinkTwoConnectorsAndTextBase link) {
         XShape start = link.startShape;
         XShape end = link.endShape;
         XShape conn1 = link.getConnShape1();
@@ -80,7 +80,7 @@ public class LinkAdjuster {
 
     }
 
-    public static void placeText(LinkBase link) {
+    public static void placeText(LinkTwoConnectorsAndTextBase link) {
 
         Point pos1 = link.getConnShape1().getPosition();
         Point pos2 = link.getConnShape2().getPosition();
