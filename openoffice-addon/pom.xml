@@ -63,15 +63,6 @@
         <!-- / openoffice depends -->
 
 
-
-
-        <dependency>
-            <groupId>ru.ssau.graphplus</groupId>
-            <artifactId>api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
@@ -138,9 +129,20 @@
         <dependency>
             <groupId>ru.ssau.graphplus</groupId>
             <artifactId>code-generator-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-
         </dependency>
+
+
+        <dependency>
+            <groupId>ru.ssau.graphplus</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>ru.ssau.graphplus</groupId>
+            <artifactId>validation-impl</artifactId>
+        </dependency>
+
 
 
         <dependency>

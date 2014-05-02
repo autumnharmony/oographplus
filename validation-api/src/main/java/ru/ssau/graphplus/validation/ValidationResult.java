@@ -4,6 +4,8 @@
 
 package ru.ssau.graphplus.validation;
 
+import ru.ssau.graphplus.api.DiagramElement;
+
 import java.util.Collection;
 
 public interface ValidationResult {
@@ -15,6 +17,8 @@ public interface ValidationResult {
         String getShortDescription();
 
         String getFullDescription();
+
+        DiagramElement getDiagramElement();
 
     }
 }

@@ -7,6 +7,7 @@ package ru.ssau.graphplus.commons;
 import com.google.inject.Inject;
 import com.sun.star.awt.Point;
 import com.sun.star.beans.UnknownPropertyException;
+import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.*;
 import ru.ssau.graphplus.api.Node;
@@ -20,7 +21,7 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
     }
 
     public ShapeHelperWrapperImpl() {
-       miscHelper = new MiscHelperWrapperImpl();
+        miscHelper = new MiscHelperWrapperImpl();
     }
 
     @Inject
@@ -69,8 +70,19 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
 
     }
 
-    public String getText(XShape xShape){
+    public String getText(XShape xShape) {
         return ShapeHelper.getText(xShape);
+    }
+
+    @Override
+    public boolean isConnected(XConnectorShape connectorShape) {
+        try {
+            Object startShape = QI.XPropertySet(connectorShape).getPropertyValue("StartShape");
+            Object endShape = QI.XPropertySet(connectorShape).getPropertyValue("EndShape");
+            return startShape != null && endShape != null;
+        } catch (UnknownPropertyException | WrappedTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -81,7 +93,7 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
             nodeType = miscHelper.getNodeType(shape);
             return Node.NodeType.valueOf(nodeType);
         } catch (Exception ex) {
-          // so sad
+            // so sad
         }
 
         String shapeType = shape.getShapeType();

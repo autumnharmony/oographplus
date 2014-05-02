@@ -1,6 +1,7 @@
 
 package ru.ssau.graphplus;
 
+import com.google.common.collect.Iterables;
 import com.sun.star.awt.*;
 import com.sun.star.beans.*;
 import com.sun.star.deployment.XPackageInformationProvider;
@@ -69,8 +70,6 @@ public class DiagramController implements
     Map<State, DiagramEventHandler> diagramEventHandlerMap = new HashMap<State, DiagramEventHandler>();
     DiagramEventHandler diagramEventHandler;
     XDrawPage xDP = null;
-
-
 
 
     private InputMode inputMode;
@@ -463,6 +462,29 @@ public class DiagramController implements
         void nodeSelected(Node node);
 
         void addNodeSelectionListener(NodeSelectionListener nodeSelectionListener);
+    }
+
+    public void select(DiagramElement diagramElement) {
+        if (diagramElement instanceof NodeBase) {
+            try {
+                getXSelectionSupplier().select(((NodeBase)diagramElement).getShape());
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+
+        if (diagramElement instanceof LinkBase){
+            LinkBase linkBase = (LinkBase) diagramElement;
+
+            ShapesProvider shapesProvider = linkBase;
+            Iterable<XShape> shapes = shapesProvider.getShapes();
+            Object[] objects = Iterables.toArray(shapes, Object.class);
+            try {
+                getXSelectionSupplier().select(objects);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
     }
 
     class NodeSelectionControllerImpl implements NodeSelectionController {

@@ -4,6 +4,7 @@
 
 package ru.ssau.graphplus.commons;
 
+import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
 import ru.ssau.graphplus.api.Node;
 
@@ -16,4 +17,5 @@ public interface ShapeHelperWrapper {
 
     String getText(XShape xShape);
 
+    boolean isConnected(XConnectorShape connectorShape);
 }

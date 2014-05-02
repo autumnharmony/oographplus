@@ -53,6 +53,28 @@
                 <version>${project.version}</version>
             </dependency>
 
+
+            <dependency>
+                <groupId>ru.ssau.graphplus</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>ru.ssau.graphplus</groupId>
+                <artifactId>validation-impl</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>ru.ssau.graphplus</groupId>
+                <artifactId>code-generator-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
             <dependency>
                 <groupId>com.google.inject</groupId>
                 <artifactId>guice</artifactId>

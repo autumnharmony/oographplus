@@ -22,6 +22,7 @@ import ru.ssau.graphplus.commons.ConnectedShapes;
 import ru.ssau.graphplus.commons.MiscHelper;
 import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.node.NodeBase;
+import ru.ssau.graphplus.validation.Validatable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

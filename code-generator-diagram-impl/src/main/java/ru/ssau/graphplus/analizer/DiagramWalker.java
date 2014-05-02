@@ -86,11 +86,15 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
             if (shapeHelperWrapper.isConnectorShape(shape)) {
 
                 XConnectorShape connectorShape = QI.XConnectorShape(shape);
+                if (!shapeHelperWrapper.isConnected(connectorShape)) continue;
                 ConnectedShapes connectedShapes = new ConnectedShapes(connectorShape, unoRuntimeWrapper, shapeHelperWrapper);
 
                 XShape start_ = connectedShapes.getStart();
                 XShape end_ = connectedShapes.getEnd();
 
+                if (start_==null || end_ == null){
+                    continue;
+                }
                 if (!shapeHelperWrapper.isTextShape(start_) && shapeHelperWrapper.isTextShape(end_)) {
 
                     // shape -> text

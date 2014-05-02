@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public interface DataLink extends Link,Serializable,ShapesProvider  {
 
 
-    class DataLinkTwoConnectors extends LinkTwoConnectorsAndTextBase implements  Serializable {
+    class DataLinkTwoConnectors extends LinkTwoConnectorsAndTextBase implements DataLink{
 
         private static final long serialVersionUID = 1L;
 
@@ -93,7 +93,7 @@ public interface DataLink extends Link,Serializable,ShapesProvider  {
 
 
     }
-    class DataLinkOneConnector extends LinkOneConnectorBase implements Serializable {
+    class DataLinkOneConnector extends LinkOneConnectorBase implements DataLink{
         private static final long serialVersionUID = 1L;
 
 

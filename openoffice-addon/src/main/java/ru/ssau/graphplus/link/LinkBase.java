@@ -11,7 +11,7 @@ import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.node.NodeBase;
 
 
-public class LinkBase {
+public abstract class LinkBase implements ShapesProvider {
 
     protected NodeBase node1, node2;
 

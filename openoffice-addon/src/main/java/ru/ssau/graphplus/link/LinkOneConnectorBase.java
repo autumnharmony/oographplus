@@ -19,6 +19,7 @@ import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.commons.ConnectedShapes;
 import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.node.NodeBase;
+import ru.ssau.graphplus.validation.Validatable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -175,6 +176,7 @@ public abstract class LinkOneConnectorBase extends LinkBase implements Link,
 
     @Override
     public String getName() {
+
         return QI.XText(connShape1).getString();
     }
 

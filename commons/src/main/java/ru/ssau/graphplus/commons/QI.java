@@ -21,6 +21,8 @@ package ru.ssau.graphplus.commons;
 //---------------------------------------------------------------------- 
 
 import com.sun.star.awt.*;
+import com.sun.star.awt.tree.XMutableTreeDataModel;
+import com.sun.star.awt.tree.XTreeControl;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.bridge.XUnoUrlResolver;
 import com.sun.star.chart.XChartDocument;
@@ -319,5 +321,13 @@ public class QI {
 
     public static XCheckBox XCheckBox(Object o) {
         return _unoRuntimeWrapper.queryInterface(XCheckBox.class, o);
+    }
+
+    public static XTreeControl XTreeControl(Object o) {
+        return _unoRuntimeWrapper.queryInterface(XTreeControl.class, o);
+    }
+
+    public static XMutableTreeDataModel XMutableTreeDataModel(Object o) {
+        return _unoRuntimeWrapper.queryInterface(XMutableTreeDataModel.class ,o );
     }
 }

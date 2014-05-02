@@ -119,4 +119,9 @@ public class DiagramServiceImpl implements DiagramService {
         link.link(node1, node2);
 
     }
+
+    @Override
+    public void select(DiagramElement diagramElement) {
+        diagramController.select(diagramElement);
+    }
 }

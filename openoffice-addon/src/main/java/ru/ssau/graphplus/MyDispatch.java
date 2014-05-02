@@ -9,6 +9,7 @@ import com.google.common.collect.Sets;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.sun.star.awt.*;
+import com.sun.star.awt.tree.XMutableTreeDataModel;
 import com.sun.star.beans.*;
 import com.sun.star.container.XNameContainer;
 import com.sun.star.deployment.XPackageInformationProvider;
@@ -40,12 +41,16 @@ import ru.ssau.graphplus.document.event.handler.impl.DocumentEventsHandlerImpl;
 import ru.ssau.graphplus.gui.*;
 import ru.ssau.graphplus.gui.dialogs.CreateNodeDialog;
 import ru.ssau.graphplus.gui.dialogs.GetCodeDialog;
+import ru.ssau.graphplus.gui.dialogs.ValidationDialog;
 import ru.ssau.graphplus.link.*;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.node.*;
 import ru.ssau.graphplus.recognition.DiagramTypeRecognition;
 import ru.ssau.graphplus.recognition.DiagramTypeRecognitionImpl;
+import ru.ssau.graphplus.validation.ValidationResult;
+import ru.ssau.graphplus.validation.Validator;
+import ru.ssau.graphplus.validation.ValidatorImpl;
 
 import static ru.ssau.graphplus.Constants.*;
 
@@ -708,10 +713,24 @@ public class MyDispatch implements XDispatch {
 
                     CodeGenerator codeGenerator = new DiagramCodeGenerator();
                     diagramModel.setConnectedShapesComplexes(collectedConnectedShapes);
+
+                    Validator validator = new ValidatorImpl();
+                    ValidationResult validate = validator.validate(diagramModel);
+                    if (validate.getItems().size() > 0) {
+                        ValidationDialog validationDialog = new ValidationDialog();
+                        XWindow dialog = createWindow(ValidationDialog.VALIDATION_DIALOG_XDL, xModel, m_xFrame, validationDialog.getDialogHandler(), false);
+                        Object instance = xMCF.createInstanceWithContext("com.sun.star.awt.tree.MutableTreeDataModel", m_xContext);
+
+                        XMutableTreeDataModel treeDataModel = QI.XMutableTreeDataModel(instance);
+                        validationDialog.init(dialog, validate, treeDataModel, diagramService);
+                        dialog.setVisible(true);
+                    }
+
                     String code = codeGenerator.generateCode(new DiagramCodeSource(diagramModel, collectedConnectedShapes, diagramType));
 
 
                     GetCodeDialog myDialog = new GetCodeDialog(code, oClipboard);
+
 
                     XDialog dialog = createDialog(GetCodeDialog.GET_CODE_DIALOG_XDL, xModel, m_xFrame, myDialog, false);
                     myDialog.init(dialog);
@@ -788,6 +807,37 @@ public class MyDispatch implements XDispatch {
         }
         return xDialog;
 
+    }
+
+    public XWindow createWindow(String xdlUrl, XModel xModel, XFrame xFrame, MyDialogHandler handler, boolean execute) throws Exception {
+
+        XWindow xWindow;
+        XMultiComponentFactory xMCF = m_xContext.getServiceManager();
+        Object obj;
+
+        // If valid we must pass the XModel when creating a DialogProvider object
+        if (xModel != null) {
+            Object[] args = new Object[1];
+            args[0] = xModel;
+
+            obj = xMCF.createInstanceWithArgumentsAndContext(
+                    "com.sun.star.awt.ContainerWindowProvider", args, m_xContext);
+        } else {
+            obj = xMCF.createInstanceWithContext(
+                    "com.sun.star.awt.ContainerWindowProvider", m_xContext);
+        }
+
+        XContainerWindowProvider xDialxContainerWindowProvidergProvider = UnoRuntime.queryInterface(XContainerWindowProvider.class, obj);
+
+        XWindow containerWindow = xFrame.getContainerWindow();
+        XWindowPeer xParentPeer = UnoRuntime.queryInterface(XWindowPeer.class, containerWindow);
+
+
+        xWindow = xDialxContainerWindowProvidergProvider.createContainerWindow(xdlUrl, "Validation", xParentPeer,
+                handler);
+
+
+        return xWindow;
     }
 
 

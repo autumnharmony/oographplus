@@ -44,13 +44,13 @@ public class ConnectedShapes {
             xStart = unoRuntimeWrapper.queryInterface(XShape.class, QI.XPropertySet(connectorShape).getPropertyValue(ConnectedShapes.START_SHAPE));
             xEnd = unoRuntimeWrapper.queryInterface(XShape.class, QI.XPropertySet(connectorShape).getPropertyValue(ConnectedShapes.END_SHAPE));
 
-            if (shapeHelperWrapper.isTextShape(xEnd)) {
-
-            }
-
-            if (shapeHelperWrapper.isTextShape(xStart)) {
-
-            }
+//            if (shapeHelperWrapper.isTextShape(xEnd)) {
+//
+//            }
+//
+//            if (shapeHelperWrapper.isTextShape(xStart)) {
+//
+//            }
 
         } catch (UnknownPropertyException ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, ex);
