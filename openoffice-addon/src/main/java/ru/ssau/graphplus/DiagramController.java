@@ -1,6 +1,7 @@
 
 package ru.ssau.graphplus;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.sun.star.awt.*;
 import com.sun.star.beans.*;
@@ -194,32 +195,6 @@ public class DiagramController implements
 //        }
 //
 //    }
-
-    boolean isStartEndShapeChanged(XShape xShape, DiagramModel.StartEnd startEnd) {
-        try {
-
-
-            if (diagramModel.getConnShapeToShapeLink(xShape, startEnd).equals(QI.XShape(OOoUtils.getProperty(xShape, startEnd.toString()))))
-                return true;
-            return false;
-
-
-        } catch (UnknownPropertyException e) {
-            e.printStackTrace();
-        } catch (WrappedTargetException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    boolean isStartShapeChanged(XShape xShape) {
-        return isStartEndShapeChanged(xShape, DiagramModel.StartEnd.StartShape);
-
-    }
-
-    boolean isEndShapeChanged(XShape xShape) {
-        return isStartEndShapeChanged(xShape, DiagramModel.StartEnd.EndShape);
-    }
 
     public void setStatusIndicator(XStatusIndicator statusIndicator) {
         this.statusIndicator = statusIndicator;
@@ -432,11 +407,8 @@ public class DiagramController implements
             if (diagramElementByShape instanceof Link) {
 
 
-                LinkTwoConnectorsAndTextBase linkBase = (LinkTwoConnectorsAndTextBase) diagramElementByShape;
-                if (linkBase.isRemoved()) {
-                    return;
-                }
-                linkBase.setRemoved(true);
+                LinkBase linkBase = (LinkTwoConnectorsAndTextBase) diagramElementByShape;
+
                 diagramModel.removeDiagramElement(diagramElementByShape);
 
                 for (XShape linkShape : linkBase.getShapes()) {
@@ -444,6 +416,10 @@ public class DiagramController implements
                         ShapeHelper.removeShape(linkShape, DrawHelper.getCurrentDrawPage(xDrawDoc));
                     }
                 }
+            }
+
+            if (diagramElementByShape instanceof Node){
+                diagramModel.removeDiagramElement(diagramElementByShape);
             }
 
         }
@@ -467,23 +443,36 @@ public class DiagramController implements
     public void select(DiagramElement diagramElement) {
         if (diagramElement instanceof NodeBase) {
             try {
-                getXSelectionSupplier().select(((NodeBase)diagramElement).getShape());
+                getXSelectionSupplier().select(((NodeBase) diagramElement).getShape());
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
 
-        if (diagramElement instanceof LinkBase){
+        if (diagramElement instanceof LinkBase) {
             LinkBase linkBase = (LinkBase) diagramElement;
 
             ShapesProvider shapesProvider = linkBase;
-            Iterable<XShape> shapes = shapesProvider.getShapes();
-            Object[] objects = Iterables.toArray(shapes, Object.class);
+
             try {
-                getXSelectionSupplier().select(objects);
-            } catch (IllegalArgumentException e) {
+                //            com.sun.star.drawing.ShapeCollection
+                Object shapesCollection = null;
+
+                shapesCollection = xMCF.createInstanceWithContext("com.sun.star.drawing.ShapeCollection", m_xContext);
+                XShapes xShapes = QI.XShapes(shapesCollection);
+                Iterable<XShape> shapes = shapesProvider.getShapes();
+                for (XShape xShape:shapes){
+                    xShapes.add(xShape);
+                }
+                try {
+                    getXSelectionSupplier().select(xShapes);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            } catch (Exception e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
+
         }
     }
 

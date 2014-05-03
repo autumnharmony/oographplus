@@ -1,6 +1,7 @@
 
 package ru.ssau.graphplus.link;
 
+import com.google.common.base.Strings;
 import com.sun.star.awt.Point;
 import com.sun.star.awt.Rectangle;
 import com.sun.star.beans.PropertyVetoException;
@@ -39,16 +40,10 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
         StringSerializable,
         ShapesProvider {
 
-    boolean removed;
+
     protected boolean withTextShape;
 
-    public void setRemoved(boolean removed) {
-        this.removed = removed;
-    }
 
-    public boolean isRemoved() {
-        return removed;
-    }
 
     @Override
     public boolean isConnected() {
@@ -164,9 +159,19 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
 
     }
 
+    private String name;
+
     @Override
     public String getName() {
-        return QI.XText(textShape).getString();
+        String string = QI.XText(textShape).getString();
+        if (Strings.isNullOrEmpty(string)){
+            return name;
+        }
+        else {
+            name =  string;
+        }
+
+        return name;
     }
 
     private Point[] getPoints(XPropertySet xPS1) {
@@ -221,23 +226,20 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
         LinkShapes linkShapes = new LinkShapes();
 
 
-            try {
+        try {
 
-                Object text = xMSF.createInstance("com.sun.star.drawing.TextShape");
-                XShape xTextSh = QI.XShape(text);
+            Object text = xMSF.createInstance("com.sun.star.drawing.TextShape");
+            XShape xTextSh = QI.XShape(text);
 
-                linkShapes.textShape = xTextSh;
-                textShape = xTextSh;
-                xPStext = QI.XPropertySet(text);
+            linkShapes.textShape = xTextSh;
+            textShape = xTextSh;
+            xPStext = QI.XPropertySet(text);
 
-            } catch (Exception ex) {
-                Logger.getLogger(LinkTwoConnectorsAndTextBase.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (Exception ex) {
+            Logger.getLogger(LinkTwoConnectorsAndTextBase.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return linkShapes;
     }
-
-
-
 
 
     class LinkApplyerImpl implements LinkApplyer {
@@ -315,15 +317,12 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     public void setProps() {
 
 
-
-
-            try {
-                xPS1.setPropertyValue("EndShape", getTextShape());
-                xPS2.setPropertyValue("StartShape", getTextShape());
-            } catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException | WrappedTargetException e) {
-                throw new RuntimeException(e);
-            }
-
+        try {
+            xPS1.setPropertyValue("EndShape", getTextShape());
+            xPS2.setPropertyValue("StartShape", getTextShape());
+        } catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException | WrappedTargetException e) {
+            throw new RuntimeException(e);
+        }
 
 
         try {
@@ -382,8 +381,6 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     public Iterable<XShape> getShapes() {
         return shapes;
     }
-
-
 
 
     public Node getStartNode() {
@@ -557,6 +554,17 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
 
     private XShape connShape2EndShape() {
         return getEndShape(getConnShape2());
+    }
+
+    @Override
+    public void setName(String name) {
+        if (this.name==null || !this.name.equals(name)){
+            this.name = name;
+        }
+
+        if (!QI.XText(textShape).getString().equals(name)){
+            QI.XText(textShape).setString(name);
+        }
     }
 
     @Override

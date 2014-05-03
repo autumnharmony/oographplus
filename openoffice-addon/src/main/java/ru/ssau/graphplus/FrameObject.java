@@ -18,6 +18,8 @@ public class FrameObject {
 
     private final MyDispatch dispatch;
 
+
+
     public FrameObject(XFrame xFrame, DiagramController diagramController, DiagramModel diagramModel, MyDispatch myDispatch) {
         this.xFrame = xFrame;
         this.diagramController = diagramController;

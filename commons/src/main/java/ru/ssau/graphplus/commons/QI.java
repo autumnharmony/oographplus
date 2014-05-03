@@ -23,6 +23,7 @@ package ru.ssau.graphplus.commons;
 import com.sun.star.awt.*;
 import com.sun.star.awt.tree.XMutableTreeDataModel;
 import com.sun.star.awt.tree.XTreeControl;
+import com.sun.star.beans.XMultiPropertySet;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.bridge.XUnoUrlResolver;
 import com.sun.star.chart.XChartDocument;
@@ -329,5 +330,21 @@ public class QI {
 
     public static XMutableTreeDataModel XMutableTreeDataModel(Object o) {
         return _unoRuntimeWrapper.queryInterface(XMutableTreeDataModel.class ,o );
+    }
+
+    public static XControlContainer XControlContainer(Object o) {
+        return _unoRuntimeWrapper.queryInterface(XControlContainer.class, o);
+    }
+
+    public static XFixedHyperlink XFixedHyperlink(Object o) {
+        return _unoRuntimeWrapper.queryInterface(XFixedHyperlink.class, o);
+    }
+
+    public static XControlModel XControlModel(Object o) {
+        return _unoRuntimeWrapper.queryInterface(XControlModel.class, o);
+    }
+
+    public static XMultiPropertySet XMultiPropertySet(Object o) {
+        return _unoRuntimeWrapper.queryInterface(XMultiPropertySet.class,o);
     }
 }

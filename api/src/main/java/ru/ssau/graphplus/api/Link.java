@@ -19,6 +19,9 @@ public interface Link extends
 
     void link(Node node1, Node node2);
 
+    String getName();
+
+    void setName(String name);
 
     public enum LinkType {
         DataFlow,

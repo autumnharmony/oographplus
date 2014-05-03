@@ -182,5 +182,24 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
         public void postCreate(XShape shape) {
             MiscHelper.tagShapeAsNode(shape);
         }
+
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NodeBase)) return false;
+
+        NodeBase nodeBase = (NodeBase) o;
+
+        if (!xShape.equals(nodeBase.xShape)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return xShape.hashCode();
     }
 }

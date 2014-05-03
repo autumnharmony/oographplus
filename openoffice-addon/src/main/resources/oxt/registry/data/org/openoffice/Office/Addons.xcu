@@ -41,7 +41,6 @@
                     </node>
 
 
-
                     <node oor:name="m1" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>ru.ssau.graphplus:ProcessNode</value>
@@ -117,7 +116,6 @@
                             <value>private:separator</value>
                         </prop>
                     </node>
-
 
 
                     <node oor:name="m5" oor:op="replace">
@@ -224,7 +222,6 @@
                     </node>
 
 
-
                 </node>
             </node>
         </node>
@@ -233,7 +230,7 @@
         <node oor:name="OfficeToolBar">
             <node oor:name="ru.ssau.graphplus.toolbar" oor:op="replace">
                 <prop oor:name="Title" oor:type="xs:string">
-                    <value xml:lang="en-US">Toolbar Title</value>
+                    <value xml:lang="en-US">Templet Toolbar</value>
                 </prop>
                 <node oor:name="ToolBarItems">
                     <node oor:name="m1" oor:op="replace">
@@ -248,7 +245,7 @@
                             <value>com.sun.star.drawing.DrawingDocument</value>
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
-                            <value xml:lang="en">ServerNode</value>
+                            <value xml:lang="en">Server Vertex</value>
                         </prop>
                     </node>
                     <node oor:name="m2" oor:op="replace">
@@ -264,7 +261,7 @@
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
 
-                            <value xml:lang="en">ClientNode</value>
+                            <value xml:lang="en">Client Vertex</value>
                         </prop>
                     </node>
                     <node oor:name="m3" oor:op="replace">
@@ -280,7 +277,7 @@
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
 
-                            <value xml:lang="en">ProcessNode</value>
+                            <value xml:lang="en">Entry Vertex</value>
                         </prop>
                     </node>
                     <node oor:name="m4" oor:op="replace">
@@ -295,7 +292,7 @@
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
 
-                            <value xml:lang="en">ProcedureNode</value>
+                            <value xml:lang="en">Method Vertex</value>
                         </prop>
                     </node>
                     <node oor:name="m5" oor:op="replace">
@@ -310,7 +307,7 @@
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
 
-                            <value xml:lang="en">MessageLink</value>
+                            <value xml:lang="en">Data Edge</value>
                         </prop>
                     </node>
                     <node oor:name="m6" oor:op="replace">
@@ -325,7 +322,7 @@
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
 
-                            <value xml:lang="en">ControlLink</value>
+                            <value xml:lang="en">Control Edge</value>
                         </prop>
                     </node>
                     <node oor:name="m7" oor:op="replace">
@@ -340,65 +337,9 @@
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
 
-                            <value xml:lang="en">LinkLink</value>
+                            <value xml:lang="en">Mixed Edge</value>
                         </prop>
                     </node>
-
-
-                    <node oor:name="m8" oor:op="replace">
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>ru.ssau.graphplus:Omg</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.drawing.DrawingDocument</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-
-                            <value xml:lang="en">Omg</value>
-                        </prop>
-                    </node>
-
-
-                    <!--<node oor:name="m9" oor:op="replace">-->
-                        <!--<prop oor:name="URL" oor:type="xs:string">-->
-                            <!--<value>ru.ssau.graphplus:DropdownCmd</value>-->
-                        <!--</prop>-->
-                        <!--<prop oor:name="Title" oor:type="xs:string">-->
-                            <!--<value xml:lang="en-US">Dropdownbox</value>-->
-                        <!--</prop>-->
-                        <!--<prop oor:name="Target" oor:type="xs:string">-->
-                            <!--<value>_self</value>-->
-                        <!--</prop>-->
-                        <!--<prop oor:name="Context" oor:type="xs:string">-->
-                            <!--<value>com.sun.star.drawing.DrawingDocument</value>-->
-                        <!--</prop>-->
-                        <!--<prop oor:name="ControlType" oor:type="xs:string">-->
-                            <!--<value>Dropdownbox</value>-->
-                        <!--</prop>-->
-                        <!--<prop oor:name="Width" oor:type="xs:long">-->
-                            <!--<value>80</value>-->
-                        <!--</prop>-->
-                    <!--</node>-->
-
-                    <node oor:name="m10" oor:op="replace">
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>ru.ssau.graphplus:LinkNodesToolbar</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value xml:lang="en-US">LinkNodes</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.drawing.DrawingDocument</value>
-                        </prop>
-                    </node>
-
-
                 </node>
             </node>
         </node>
@@ -521,7 +462,7 @@
             </node>
             <node oor:name="ru.ssau.graphplus.linklink.images" oor:op="replace">
                 <prop oor:name="URL" oor:type="xs:string">
-                    <value>ru.ssau.graphplus:LinkLink</value>
+                    <value>ru.ssau.graphplus:MixedLink</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">

@@ -10,9 +10,11 @@ import ru.ssau.graphplus.Settings;
 import ru.ssau.graphplus.commons.ConnectedShapesComplex;
 import ru.ssau.graphplus.commons.MiscHelper;
 import ru.ssau.graphplus.api.Link;
+import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.recognition.LinkTypeRecogniser;
 import ru.ssau.graphplus.recognition.LinkTypeRecogniserImpl;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -133,7 +135,18 @@ public class LinkFactory extends AbstractDiagramElementFactory {
     public Link create(ConnectedShapesComplex connectedShapesComplex) {
         LinkTypeRecogniser linkTypeRecogniser = new LinkTypeRecogniserImpl();
         Link.LinkType type = linkTypeRecogniser.getType(connectedShapesComplex.connector1 != null ? connectedShapesComplex.connector1 : connectedShapesComplex.connector, connectedShapesComplex.textShape, connectedShapesComplex.connector2);
-        return create(type, (Map<String, Object>) ImmutableMap.builder().put("type", Settings.getSettings().isAddTextToShapeToLink() ? "twoConnectors" : "oneConnector"));
+        HashMap map = new HashMap();
+        map.put("type", Settings.getSettings().isAddTextToShapeToLink() ? "twoConnectors" : "oneConnector");
+
+        Link link = create(type, map);
+
+        if (connectedShapesComplex.connector != null) {
+            link.setName(QI.XText(connectedShapesComplex.connector).getString());
+        } else {
+            link.setName(QI.XText(connectedShapesComplex.textShape).getString());
+        }
+
+        return link;
     }
 
 

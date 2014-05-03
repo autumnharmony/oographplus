@@ -22,7 +22,7 @@ import java.util.Set;
  */
 public class ValidatorImpl implements Validator {
 
-    Set<NodeRule> nodesRules = Sets.<NodeRule>newHashSet(new NodeNameRule());
+    Set<NodeRule> nodesRules;
     Set<LinkRule> linksRules = Sets.<LinkRule>newHashSet(new LinkNameRule());
 
     @Override
@@ -55,5 +55,12 @@ public class ValidatorImpl implements Validator {
 
 
         return new ValidationResultImpl(results);
+    }
+
+    private DiagramModel diagramModel;
+
+    public ValidatorImpl(DiagramModel diagramModel) {
+        this.diagramModel = diagramModel;
+        nodesRules = Sets.<NodeRule>newHashSet(new NodeNameRule(), new NodeConnectedRule(diagramModel));
     }
 }

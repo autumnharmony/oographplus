@@ -1,5 +1,6 @@
 package ru.ssau.graphplus.link;
 
+import com.google.common.base.Strings;
 import com.sun.star.awt.Point;
 import com.sun.star.awt.Rectangle;
 import com.sun.star.beans.PropertyVetoException;
@@ -26,13 +27,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 5/1/14
- * Time: 7:14 PM
- * To change this template use File | Settings | File Templates.
- */
 public abstract class LinkOneConnectorBase extends LinkBase implements Link,
 //        Linker,
         Validatable,
@@ -177,7 +171,29 @@ public abstract class LinkOneConnectorBase extends LinkBase implements Link,
     @Override
     public String getName() {
 
-        return QI.XText(connShape1).getString();
+        String string = QI.XText(connShape1).getString();
+        if (Strings.isNullOrEmpty(string)){
+            return name;
+        }
+        else {
+            name =  string;
+        }
+
+        return name;
+
+    }
+
+    private String name;
+
+    @Override
+    public void setName(String name) {
+        if (this.name==null || !this.name.equals(name)){
+            this.name = name;
+        }
+
+        if (!QI.XText(connShape1).getString().equals(name)){
+            QI.XText(connShape1).setString(name);
+        }
     }
 
     private Point[] getPoints(XPropertySet xPS1) {
@@ -333,9 +349,6 @@ public abstract class LinkOneConnectorBase extends LinkBase implements Link,
     public Iterable<XShape> getShapes() {
         return shapes;
     }
-
-
-    NodeBase node1, node2;
 
     public Node getStartNode() {
         return node1;

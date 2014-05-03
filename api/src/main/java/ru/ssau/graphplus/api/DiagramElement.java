@@ -12,6 +12,7 @@ public interface DiagramElement  {
      * @return
      */
     String getName();
+    void setName(String name);
 
 
     /**

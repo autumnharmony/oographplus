@@ -7,11 +7,12 @@ import com.sun.star.drawing.TextHorizontalAdjust;
 import com.sun.star.drawing.TextVerticalAdjust;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.WrappedTargetException;
+import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.node.NodeBase;
 
 
-public abstract class LinkBase implements ShapesProvider {
+public abstract class LinkBase implements ShapesProvider, Link {
 
     protected NodeBase node1, node2;
 
@@ -53,4 +54,23 @@ public abstract class LinkBase implements ShapesProvider {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LinkBase)) return false;
+
+        LinkBase linkBase = (LinkBase) o;
+
+        if (node1 != null ? !node1.equals(linkBase.node1) : linkBase.node1 != null) return false;
+        if (node2 != null ? !node2.equals(linkBase.node2) : linkBase.node2 != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = node1 != null ? node1.hashCode() : 0;
+        result = 31 * result + (node2 != null ? node2.hashCode() : 0);
+        return result;
+    }
 }

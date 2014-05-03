@@ -15,6 +15,8 @@ import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.events.*;
 import ru.ssau.graphplus.events.EventListener;
+import ru.ssau.graphplus.link.LinkBase;
+import ru.ssau.graphplus.link.LinkOneConnectorBase;
 import ru.ssau.graphplus.link.LinkTwoConnectorsAndTextBase;
 import ru.ssau.graphplus.link.LinkFactory;
 import ru.ssau.graphplus.api.Node;
@@ -33,17 +35,13 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     private static final long serialVersionUID = 1L;
     private transient static List<WeakReference<DiagramModel>> instances = new ArrayList<>();
     private Set<DiagramElement> diagramElements;
-    private Map<String, String> info;
-    private Map<String, String> nameToIdMap;
     private transient Map<XShape, DiagramElement> shapeToDiagramElementMap;
     private transient Map<XConnectorShape, ConnectedShapes> connectedShapes;
     private transient Map<String, XShape> idToShape;
     private DiagramType diagramType;
 
-    //    private BiMap<String,String> idNameBiMap;
     private String name;
-    transient private Map<XShape, Pair<XShape, XShape>> connShapeToShape;
-    private boolean restored;
+
     private transient XComponent xDrawDoc;
     private Map<String, DiagramElement> idToDiagramElement;
     private List<ConnectedShapesComplex> connectedShapesComplexes;
@@ -56,21 +54,15 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         connectedShapes = new HashMap();
         idToShape = new HashMap();
         idToDiagramElement = new HashMap<>();
-        nameToIdMap = new HashMap();
 
-        info = new HashMap();
+
         this.xDrawDoc = xDrawDoc;
-
-
-//        idNameBiMap = HashBiMap.create();
     }
 
     public void init(NodeFactory nodeFactory, LinkFactory linkFactory) {
+
         try {
 
-//            XShapes shapes = QI.XShapes(xDrawDoc);
-
-//            XDrawPage currentDrawPage = DrawHelper.getCurrentDrawPage(xDrawDoc);
             XShapes shapes = QI.XShapes(DrawHelper.getCurrentDrawPage(xDrawDoc));
 
             Set<XShape> set = Sets.newHashSet();
@@ -87,18 +79,18 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
             diagramWalker.setDiagramType(recognise);
             List<ConnectedShapesComplex> walk = diagramWalker.walk(set, null);
 
-
             for (ConnectedShapesComplex connectedShapesComplex : walk) {
                 Collection<Node> nodes = nodeFactory.create(connectedShapesComplex);
                 Link link = linkFactory.create(connectedShapesComplex);
+
                 addDiagramElement(link);
                 for (Node node : nodes) {
-
                     addDiagramElement(node);
                 }
+                Iterator<Node> iterator = nodes.iterator();
+                link.setStartNode(iterator.next());
+                link.setEndNode(iterator.next());
             }
-
-
         } catch (IndexOutOfBoundsException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (WrappedTargetException e) {
@@ -131,11 +123,6 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         this.diagramType = diagramType;
     }
 
-    public void setDiagramType(String diagramType) {
-        OOGraph.LOGGER.info("setDiagramType");
-        this.diagramType = DiagramType.valueOf(diagramType);
-    }
-
     public String getName() {
         return name;
     }
@@ -153,10 +140,6 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         return diagramElements;
     }
 
-    public boolean isRestored() {
-        return restored;
-    }
-
     public DiagramElement getDiagramElementByShape(XShape xS) {
 
         DiagramElement diagramElement = shapeToDiagramElementMap.get(xS);
@@ -170,10 +153,6 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
             }
         }
         return diagramElement;
-    }
-
-    public DiagramElement getDiagramElementById(String id) {
-        return idToDiagramElement.get(id);
     }
 
     public void addEventListener(Class<? extends Event> event, EventListener eventListener) {
@@ -198,27 +177,22 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
 
         diagramElements.add(de);
 
-        if (de instanceof LinkTwoConnectorsAndTextBase) {
-            LinkTwoConnectorsAndTextBase link = (LinkTwoConnectorsAndTextBase) de;
-            XShape connShape1 = link.getConnShape1();
-            shapeToDiagramElementMap.put(connShape1, de);
-            XShape connShape2 = link.getConnShape2();
-            shapeToDiagramElementMap.put(connShape2, de);
-            XShape textShape = link.getTextShape();
-            shapeToDiagramElementMap.put(textShape, de);
+        if (de instanceof LinkBase) {
 
-//            setLinkId(link, connShape1, connShape2, textShape);
+            if (de instanceof LinkTwoConnectorsAndTextBase) {
+                LinkTwoConnectorsAndTextBase link = (LinkTwoConnectorsAndTextBase) de;
+                XShape connShape1 = link.getConnShape1();
+                shapeToDiagramElementMap.put(connShape1, de);
+                XShape connShape2 = link.getConnShape2();
+                shapeToDiagramElementMap.put(connShape2, de);
+                XShape textShape = link.getTextShape();
+                shapeToDiagramElementMap.put(textShape, de);
 
-//            String tsId = getId(textShape);
-//            idToShape.put(tsId, textShape);
-//            String connId = getId(connShape1);
-//            idToShape.put(connId, connShape1);
-//            String conn2Id = getId(connShape2);
-//            idToShape.put(conn2Id, connShape2);
-
-//            idToDiagramElement.put(tsId, link);
-//            idToDiagramElement.put(connId, link);
-//            idToDiagramElement.put(conn2Id, link);
+            } else if (de instanceof LinkOneConnectorBase) {
+                LinkOneConnectorBase link = (LinkOneConnectorBase) de;
+                XShape connShape1 = link.getConnShape();
+                shapeToDiagramElementMap.put(connShape1, de);
+            }
 
         } else if (de instanceof NodeBase) {
             NodeBase node = (NodeBase) de;
@@ -227,13 +201,8 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
             idToShape.put(id, node.getShape());
             idToDiagramElement.put(id, node);
             fireEvent(new NodeAddedEvent(node));
-//            idNameBiMap.put(node.getId(),node.getName());
         }
         return this;
-    }
-
-    void setLinkId(Link link, XShape connShape1, XShape connShape2, XShape textShape) {
-        LinkFactory.setId(link, connShape1, connShape2, textShape);
     }
 
     public void removeDiagramElement(DiagramElement de) {
@@ -267,72 +236,6 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         return getDiagramElementByShape(xShape) != null;
     }
 
-    public void setConnShapeToShapeLink(XShape connShape, StartEnd startEnd, XShape shape) {
-        if (connShapeToShape.containsKey(connShape)) {
-            Pair<XShape, XShape> stringXShapePair = connShapeToShape.get(connShape);
-
-            if (startEnd.equals(StartEnd.StartShape)) {
-                stringXShapePair.first = shape;
-            }
-            if (startEnd.equals(StartEnd.EndShape)) {
-                stringXShapePair.second = shape;
-            }
-
-        } else {
-            if (startEnd.equals(StartEnd.StartShape)) {
-                connShapeToShape.put(connShape, new Pair<XShape, XShape>(shape, null));
-            }
-            if (startEnd.equals(StartEnd.EndShape)) {
-                connShapeToShape.put(connShape, new Pair<XShape, XShape>(null, shape));
-            }
-
-        }
-    }
-
-    public XShape getConnShapeToShapeLink(XShape connShape, StartEnd startEnd) {
-        if (connShapeToShape.containsKey(connShape)) {
-            Pair<XShape, XShape> stringXShapePair = connShapeToShape.get(connShape);
-            if (startEnd.equals(StartEnd.StartShape)) {
-                return stringXShapePair.first;
-            } else if (startEnd.equals(StartEnd.EndShape)) {
-                return stringXShapePair.second;
-            }
-        } else {
-            return null;
-            //connShapeToShape.put(connShape, new Pair<String, XShape>(startOrEnd, shape));
-        }
-
-        return null;
-    }
-
-
-    // override this in test
-    String getId(XShape xShape) {
-        return MiscHelper.getId(xShape);
-    }
-
-    // override this in test
-    XDrawPages getDrawPages(XComponent xDrawDoc) {
-        return DrawHelper.drawDoc_getXDrawPages(xDrawDoc);
-    }
-
-    void refreshLinksShapesId() {
-        for (DiagramElement diagramElement : diagramElements) {
-            if (diagramElement instanceof LinkTwoConnectorsAndTextBase) {
-                LinkTwoConnectorsAndTextBase link = (LinkTwoConnectorsAndTextBase) diagramElement;
-                refreshLinkShapeId(link.getConnShape1(), link);
-                refreshLinkShapeId(link.getConnShape2(), link);
-                refreshLinkShapeId(link.getTextShape(), link);
-            }
-        }
-    }
-
-    void refreshLinkShapeId(XShape xShape, Link link) {
-        String linkName = link.getName();
-
-        String id = getId(xShape);
-        MiscHelper.setId(xShape, linkName + id.substring(id.indexOf('/')));
-    }
 
     @Override
     public boolean isValid() {
@@ -346,62 +249,11 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         return true;
     }
 
-    public List<DiagramElement> getInvalid() {
-        List<DiagramElement> invalid = new ArrayList();
-        for (DiagramElement diagramElement : diagramElements) {
-            if (diagramElement instanceof Validatable) {
-                Validatable validatable = (Validatable) diagramElement;
-                if (!validatable.isValid()) invalid.add(diagramElement);
-            }
-        }
-        return invalid;
-    }
-
-    public void refreshNodesShapeId() {
-
-    }
-
     public void refreshModel() {
         for (DiagramElement diagramElement : diagramElements) {
             if (diagramElement instanceof Refreshable)
                 ((Refreshable) diagramElement).refresh(this);
         }
-    }
-
-    public void refreshModel(XDrawPage xDrawPage) {
-        List<DiagramElement> notActual = new ArrayList();
-        for (DiagramElement diagramElement : diagramElements) {
-            if (!isActual(diagramElement, xDrawPage)) {
-                if (diagramElement instanceof Refreshable) {
-                    Refreshable refreshable = (Refreshable) diagramElement;
-                    refreshable.refresh(this);
-                }
-            } else {
-                notActual.add(diagramElement);
-            }
-        }
-
-        for (DiagramElement diagramElement : notActual) {
-            removeDiagramElement(diagramElement);
-        }
-    }
-
-    public boolean isActual(DiagramElement diagramElement, XDrawPage xDrawPage) {
-
-
-        return true;
-    }
-
-    public Collection<Node> getNodes(Collection<XShape> shapes) {
-        Collection<Node> nodes = new ArrayList();
-        for (XShape xShape : shapes) {
-
-            DiagramElement diagramELementByShape = getDiagramElementByShape(xShape);
-            if (diagramELementByShape instanceof Node) {
-                nodes.add((Node) diagramELementByShape);
-            }
-        }
-        return nodes;
     }
 
     @Override
@@ -440,49 +292,6 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
                     }
                 })
         );
-    }
-
-    public Collection<Link> getLinks(Collection<XShape> shapes) {
-        Collection<Link> links = new ArrayList();
-        for (XShape xShape : shapes) {
-
-            DiagramElement diagramELementByShape = getDiagramElementByShape(xShape);
-            if (diagramELementByShape instanceof Link) {
-                links.add((Link) diagramELementByShape);
-            }
-        }
-        return links;
-    }
-
-    private String getPrefix(String id) {
-        String prefix;
-        prefix = id.substring(0, id.indexOf('/'));
-        return prefix;
-    }
-
-    private String getSuffix(String id) {
-        String prefix;
-        prefix = id.substring(id.indexOf('/'));
-        return prefix;
-    }
-
-    public void buildModel() {
-
-    }
-
-    enum StartEnd {
-        StartShape,
-        EndShape
-    }
-
-    class Pair<F, S> {
-        F first;
-        S second;
-
-        Pair(F first, S second) {
-            this.first = first;
-            this.second = second;
-        }
     }
 
 

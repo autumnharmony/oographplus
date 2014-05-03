@@ -63,8 +63,6 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
         }
 
 
-        List<ConnectedShapesComplex> connectedShapesComplexes = new ArrayList<>();
-
         Queue<XShape> shapeQueue = new LinkedList<>();
         shapeQueue.add(start);
 

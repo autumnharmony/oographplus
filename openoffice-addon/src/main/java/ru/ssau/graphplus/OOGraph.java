@@ -23,9 +23,7 @@ import com.sun.star.uno.*;
 import com.sun.star.uno.Exception;
 import com.sun.star.util.URL;
 import com.sun.star.util.XModifiable;
-import ru.ssau.graphplus.commons.OOoUtils;
 import ru.ssau.graphplus.commons.QI;
-import ru.ssau.graphplus.commons.ShapeHelper;
 import ru.ssau.graphplus.document.event.handler.DocumentEventsHandler;
 import ru.ssau.graphplus.document.event.handler.impl.DocumentEventsHandlerImpl;
 import ru.ssau.graphplus.gui.*;
@@ -96,6 +94,8 @@ public class OOGraph extends ComponentBase implements
     public static final String EVENT_NAME = "EventName";
     public static final String DIAGRAM_MODEL = "DiagramModel";
     public static final Logger LOGGER;
+    final static String msProtocol = "ru.ssau.graphplus";
+    final static String msShowCommand = "ShowOptionsDialog";
     private static final ArrayList<String> m_aSupportedModules = new ArrayList(1);
 
     static {
@@ -115,8 +115,6 @@ public class OOGraph extends ComponentBase implements
 
     }
 
-    final static String msProtocol = "ru.ssau.graphplus";
-    final static String msShowCommand = "ShowOptionsDialog";
     private static final String msURLhead = "private:resource/toolpanel/OOGraphPanelFactory";
     private static final String m_implementationName = OOGraph.class.getName();
     private static final String[] m_serviceNames = {
@@ -125,45 +123,31 @@ public class OOGraph extends ComponentBase implements
             "com.sun.star.task.AsyncJob",
             RU_SSAU_GRAPHPLUS_SIDEBAR_OOGRAPH_PANEL_FACTORY
     };
-
-
     public static StatusBarInterceptionController aController;
     static Map<String, XDispatch> frameToDispatch = new HashMap<>();
-    static Map<String, XFrame> frames = new HashMap<>();
     static Map<XFrame, MyDispatch> dispatchByFrame = new WeakHashMap<>();
-    private static List<WeakReference<OOGraph>> weakReferences = new ArrayList<>();
+    private static List<WeakReference<OOGraph>> instances = new ArrayList<>();
     private static XMultiComponentFactory xMCF = null;
     private static XMultiServiceFactory xMSF = null;
     private static ArrayList<FrameObject> _frameObjectList = null;
     private static XComponent m_xComponent = null;
     private final XComponentContext m_xContext;
-    TableInserter tableInserter = new TableInserterImpl(xMSF);
+    private TableInserter tableInserter = new TableInserterImpl(xMSF);
     private MyDispatch myDispatch;
-    //    private XNameAccess accessLeaves;
     private com.sun.star.frame.XFrame m_xFrame;
     private Map<MyURL, Set<XStatusListener>> statusListeners = new HashMap();
-    private String diagramName;
-    private String diagramType;
-
-    //    public static OOGraph temp(XComponentContext xComponentContext) {
-//        return new OOGraphProxy(xComponentContext);
-//    }
     private XEventBroadcaster m_xEventBroadcaster = null;
     private boolean isAliveDocumentEventListener = false;
     private XModel2 m_xModel;
     private XModuleManager m_xModuleManager;
-    private Map<URL, XStatusListener> maListeners;
-    //TODO remove
     private DocumentEventsHandler documentEventsHandler = new DocumentEventsHandlerImpl();
 
     public OOGraph(XComponentContext context) {
 
         LOGGER.info("OOGraph ctor");
 
-        maListeners = new HashMap<URL, XStatusListener>();
 
-
-        weakReferences.add(new WeakReference(this));
+        instances.add(new WeakReference(this));
         m_xContext = context;
 
         try {
@@ -171,12 +155,6 @@ public class OOGraph extends ComponentBase implements
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-//        this.accessLeaves = ConfigurationAccess.createUpdateAccess(context,
-//                "/ru.ssau.graphplus.OOGraph/Leaves");
-
-//        setupDocumentEventsHandler();
-
     }
 
     public static XSingleComponentFactory __getComponentFactory(String sImplementationName) {
@@ -250,10 +228,6 @@ public class OOGraph extends ComponentBase implements
         //TODO implement
     }
 
-    public String getDiagramType() {
-        return diagramType;
-    }
-
     private void addEventListener() {
         if (!this.isAliveDocumentEventListener) {
             this.m_xEventBroadcaster.addEventListener(this);
@@ -267,6 +241,8 @@ public class OOGraph extends ComponentBase implements
             this.isAliveDocumentEventListener = false;
         }
     }
+
+    private static Map<XFrame, FrameObject> frameObjectMap = new WeakHashMap<>();
 
     // com.sun.star.lang.XInitialization:
     @Override
@@ -304,8 +280,8 @@ public class OOGraph extends ComponentBase implements
             }
             if (isNewFrame) {
                 try {
-                    newFrameCreated(xController);
-
+                    FrameObject frameObject = newFrameCreated(xController);
+                    frameObjectMap.put(m_xFrame, frameObject);
                     this.m_xEventBroadcaster = UnoRuntime.queryInterface(XEventBroadcaster.class, this.m_xFrame.getController().getModel());
                     addEventListener();
                 } catch (java.lang.Exception ex) {
@@ -313,15 +289,17 @@ public class OOGraph extends ComponentBase implements
                 }
 
 
-            } else {
-                OOGraph.LOGGER.info("not new frame");
             }
+//            else {
+//                FrameObject frameObject = frameObjectMap.get(m_xFrame);
+//                 frameObject.getDispatch().setDrawDoc(m_xComponent);
+//            }
 
 
         }
     }
 
-    private MyDispatch newFrameCreated(XController xController) throws UnknownPropertyException, WrappedTargetException, com.sun.star.lang.IndexOutOfBoundsException {
+    private FrameObject newFrameCreated(XController xController) throws UnknownPropertyException, WrappedTargetException, com.sun.star.lang.IndexOutOfBoundsException {
 
         XContextMenuInterception xContMenuInterception =
                 UnoRuntime.queryInterface(XContextMenuInterception.class, xController);
@@ -330,12 +308,10 @@ public class OOGraph extends ComponentBase implements
 
         XComponent xDrawDoc = UnoRuntime.queryInterface(
                 XComponent.class, m_xComponent);
-        myDispatch = new MyDispatch(xDrawDoc, m_xContext, m_xFrame, this, xMCF, xMSF, m_xComponent);
+        myDispatch = new MyDispatch(xDrawDoc, m_xContext, m_xFrame, xMCF, xMSF);
         frameToDispatch.put(m_xFrame.getName(), myDispatch);
         dispatchByFrame.put(m_xFrame, myDispatch);
         XDocumentPropertiesSupplier xDocumentInfoSupplier = UnoRuntime.queryInterface(XDocumentPropertiesSupplier.class, xDrawDoc);
-        XDocumentProperties documentProperties = xDocumentInfoSupplier.getDocumentProperties();
-        //                        documentInfo.setUserFieldName();
 
         DiagramModel diagramModel = myDispatch.getDiagramModel();
         DiagramController diagramController = myDispatch.getDiagramController();//new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel, xDrawDoc, myDispatch);
@@ -344,7 +320,8 @@ public class OOGraph extends ComponentBase implements
         addDocumentEventListener(m_xComponent);
 
         // when the frame is closed we have to remove FrameObject item into the list
-        _frameObjectList.add(new FrameObject(m_xFrame, diagramController, diagramModel, myDispatch));
+        FrameObject e = new FrameObject(m_xFrame, diagramController, diagramModel, myDispatch);
+        _frameObjectList.add(e);
 
 
         this.m_xEventBroadcaster = UnoRuntime.queryInterface(XEventBroadcaster.class, this.m_xFrame.getController().getModel());
@@ -352,7 +329,7 @@ public class OOGraph extends ComponentBase implements
 
         XDispatchProvider xDispatchProvider = QI.XDispatchProvider(m_xFrame);
         XDispatchProviderInterception xDPI = (XDispatchProviderInterception) UnoRuntime.queryInterface(XDispatchProviderInterception.class, m_xFrame);
-        //            xDPI.registerDispatchProviderInterceptor(new MyInterceptor(m_xFrame, xDispatchProvider, null ));
+
 
 
         OOGraph.LOGGER.info("getting Drawpage");
@@ -406,7 +383,7 @@ public class OOGraph extends ComponentBase implements
         XModifiable xMod = UnoRuntime.queryInterface(
                 XModifiable.class, xDrawDoc);
         xMod.addModifyListener(diagramController);
-        return myDispatch;
+        return e;
     }
 
     private void addDocumentEventListener(XComponent m_xComponent) {
@@ -443,7 +420,6 @@ public class OOGraph extends ComponentBase implements
         XModel model;
         String sEnvType;
         String sEventName;
-        ;
 
 
         String sModuleIdentifier = null;
@@ -461,7 +437,7 @@ public class OOGraph extends ComponentBase implements
         sEventName = AnyConverter.toString(byNames.get(EVENT_NAME));
         sEnvType = AnyConverter.toString(byNames.get(ENV_TYPE));
         model = QI.XModel(getByName(aEnvironment, MODEL));
-        this.m_xModel = ((XModel2) UnoRuntime.queryInterface(XModel2.class, model));
+        this.m_xModel = UnoRuntime.queryInterface(XModel2.class, model);
         try {
 
             if ((sEnvType == null)) {
@@ -572,7 +548,6 @@ public class OOGraph extends ComponentBase implements
         XModel xModel = QI.XModel(getByName(value1, "Model"));
         XFrame frame = xModel.getCurrentController().getFrame();
         DiagramModel diagramModel__ = FrameObject.getFrameObjects().get(frame).getDispatch().getDiagramModel();
-//                DiagramModel diagramModel__ = ooGraph.getDiagramModel();
 
         String s = null;
 
@@ -712,94 +687,6 @@ public class OOGraph extends ComponentBase implements
         save();
     }
 
-    public void addStatusListener(XStatusListener xl, URL url) {
-    }
-
-    public void removeStatusListener(XStatusListener xl, URL url) {
-    }
-
-    private void createFrame() {
-        try {
-
-//            OOGraph ooGraph = MyComponentFactory.oographs.get(MyComponentFactory.oographs.size() - 1);
-
-            XComponent drawDoc = getDiagramModel().getDrawDoc();
-
-            Object instanceWithArguments = QI.XMultiServiceFactory(drawDoc).createInstance("com.sun.star.drawing.AppletShape");
-            tableInserter.insertTable(drawDoc);
-            XPropertySet xLayerPropSet;
-            XLayerManager xLayerManager = UnoRuntime.queryInterface(XLayerManager.class, UnoRuntime.queryInterface(XLayerSupplier.class, drawDoc).getLayerManager());
-            XLayer xNotVisibleAndEditable = xLayerManager.insertNewByIndex(0);
-            xLayerPropSet = (XPropertySet) UnoRuntime.queryInterface(
-                    XPropertySet.class, xNotVisibleAndEditable);
-
-            xLayerPropSet.setPropertyValue("Name", "FrameDefenderLayer");
-
-            xLayerPropSet.setPropertyValue("IsVisible", new Boolean(false));
-            xLayerPropSet.setPropertyValue("IsLocked", new Boolean(true));
-            // create a second layer
-            XLayer xNotEditable = xLayerManager.insertNewByIndex(0);
-            xLayerPropSet = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xNotEditable);
-            xLayerPropSet.setPropertyValue("Name", "NotEditable");
-            xLayerPropSet.setPropertyValue("IsVisible", new Boolean(true));
-            xLayerPropSet.setPropertyValue("IsLocked", new Boolean(true));
-            // attach the layer to the rectangles
-
-            //            xLayerManager.attachShapeToLayer(xRect2, xNotEditable);
-
-            XDrawPage xDrawPage = DrawHelper.getCurrentDrawPage(drawDoc);
-            XPropertySet xPropertySet = QI.XPropertySet(xDrawPage);
-
-            Object width = xPropertySet.getPropertyValue("Width");
-            Object heigth = xPropertySet.getPropertyValue("Height");
-            Integer w = (Integer) width;
-            Integer h = (Integer) heigth;
-
-            ArrayList<XShape> xShapes = new ArrayList<XShape>();
-            int FRAME_MARGIN = 1000;
-
-            XShape lineShape = DrawHelper.createLineShape(drawDoc, FRAME_MARGIN, FRAME_MARGIN, 0, h - 2 * FRAME_MARGIN);
-            OOoUtils.setIntProperty(lineShape, "LineWidth", 15);
-
-            xShapes.add(lineShape);
-
-            XShape lineShape1 = DrawHelper.createLineShape(drawDoc, FRAME_MARGIN, h - FRAME_MARGIN, w - 2000, 0);
-            OOoUtils.setIntProperty(lineShape1, "LineWidth", 15);
-            xShapes.add(lineShape1);
-
-            XShape lineShape2 = DrawHelper.createLineShape(drawDoc, w - FRAME_MARGIN, FRAME_MARGIN, 0, h - 2 * FRAME_MARGIN);
-            OOoUtils.setIntProperty(lineShape2, "LineWidth", 15);
-            xShapes.add(lineShape2);
-            XShape lineShape3 = DrawHelper.createLineShape(drawDoc, FRAME_MARGIN, FRAME_MARGIN, w - 2000, 0);
-            OOoUtils.setIntProperty(lineShape3, "LineWidth", 15);
-
-            xShapes.add(lineShape3);
-
-            XShape lineShape4 = DrawHelper.createLineShape(drawDoc, FRAME_MARGIN, 2 * FRAME_MARGIN, w - 2000, 0);
-
-
-            OOoUtils.setIntProperty(lineShape4, "LineWidth", 15);
-            xShapes.add(lineShape4);
-
-
-            XShape textShape = DrawHelper.createTextShape(drawDoc, FRAME_MARGIN, FRAME_MARGIN, w - 2 * FRAME_MARGIN, FRAME_MARGIN);
-
-            xShapes.add(textShape);
-
-            DrawHelper.insertShapesOnCurrentPageAndLayer(xShapes, drawDoc, xLayerManager, xNotEditable);
-            ShapeHelper.addPortion(textShape, diagramName == null ? "Diagram Name" : diagramName, false);
-
-
-            int height = OOoUtils.getIntProperty(drawDoc, "Height");
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
     @Override
     public void disposing(EventObject eventObject) {
         //To change body of implemented methods use File | Settings | File Templates.
@@ -813,7 +700,6 @@ public class OOGraph extends ComponentBase implements
 
     public void save(String path) {
         Gui.showErrorMessageBox(null, "Saved", path, xMCF, m_xContext);
-
     }
 
     @Override
@@ -825,20 +711,6 @@ public class OOGraph extends ComponentBase implements
                 if (this.m_xFrame.equals(frameObj.getFrame()))
                     _frameObjectList.remove(frameObj);
         }
-    }
-
-    void statusChangedDisable(URL url) {
-
-        MyURL myURL = new MyURL(url);
-
-        FeatureStateEvent featureStateEvent = new FeatureStateEvent();
-        featureStateEvent.Source = this;
-        featureStateEvent.IsEnabled = false;
-        featureStateEvent.FeatureDescriptor = "QWE";
-        featureStateEvent.FeatureURL = url;
-
-
-        statusChanged(url, featureStateEvent);
     }
 
     void statusChanged(URL url, FeatureStateEvent featureStateEvent) {
@@ -967,18 +839,8 @@ public class OOGraph extends ComponentBase implements
         return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public enum State {
-        Nothing,
-        InputTwoShapes,
-        AddingLink
-    }
-
     static {
         m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
     }
-
-
-    // settings dialog
-
 
 }

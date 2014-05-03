@@ -47,7 +47,14 @@ public class ValidationDialog implements MyDialog<GetCodeDialog> {
 
     @Override
     public MyDialogHandler getDialogHandler() {
-        return new MyDialogHandler(ImmutableMap.<MyDialogHandler.Event, MyDialogHandler.EventHandler>builder().build());
+        return new MyDialogHandler(ImmutableMap.<MyDialogHandler.Event, MyDialogHandler.EventHandler>builder().put(MyDialogHandler.Event.event("okButton"), new MyDialogHandler.EventHandler() {
+            @Override
+            public boolean handle(XDialog xDialog, Object o, String s) {
+                window.setVisible(false);
+                window.dispose();
+                return true;
+            }
+        }).build());
     }
 
     private Map<XMutableTreeNode, DiagramElement> map = new HashMap<>();
