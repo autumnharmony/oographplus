@@ -1,10 +1,7 @@
 
 package ru.ssau.graphplus;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.sun.star.awt.*;
-import com.sun.star.beans.*;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.document.XUndoManager;
 import com.sun.star.drawing.*;
@@ -24,7 +21,6 @@ import com.sun.star.view.XSelectionChangeListener;
 import com.sun.star.view.XSelectionSupplier;
 import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.Link;
-import ru.ssau.graphplus.commons.OOoUtils;
 import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.commons.ShapeHelper;
 import ru.ssau.graphplus.events.*;
@@ -418,7 +414,7 @@ public class DiagramController implements
                 }
             }
 
-            if (diagramElementByShape instanceof Node){
+            if (diagramElementByShape instanceof Node) {
                 diagramModel.removeDiagramElement(diagramElementByShape);
             }
 
@@ -461,7 +457,30 @@ public class DiagramController implements
                 shapesCollection = xMCF.createInstanceWithContext("com.sun.star.drawing.ShapeCollection", m_xContext);
                 XShapes xShapes = QI.XShapes(shapesCollection);
                 Iterable<XShape> shapes = shapesProvider.getShapes();
-                for (XShape xShape:shapes){
+                for (XShape xShape : shapes) {
+                    xShapes.add(xShape);
+                }
+                try {
+                    getXSelectionSupplier().select(xShapes);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            } catch (Exception e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+        } else {
+
+
+            try {
+                ShapesProvider shapesProvider = (ShapesProvider) diagramElement;
+                //            com.sun.star.drawing.ShapeCollection
+                Object shapesCollection = null;
+
+                shapesCollection = xMCF.createInstanceWithContext("com.sun.star.drawing.ShapeCollection", m_xContext);
+                XShapes xShapes = QI.XShapes(shapesCollection);
+                Iterable<XShape> shapes = shapesProvider.getShapes();
+                for (XShape xShape : shapes) {
                     xShapes.add(xShape);
                 }
                 try {

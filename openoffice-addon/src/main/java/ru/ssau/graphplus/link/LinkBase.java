@@ -7,6 +7,7 @@ import com.sun.star.drawing.TextHorizontalAdjust;
 import com.sun.star.drawing.TextVerticalAdjust;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.WrappedTargetException;
+import ru.ssau.graphplus.ShapesProvider;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.node.NodeBase;

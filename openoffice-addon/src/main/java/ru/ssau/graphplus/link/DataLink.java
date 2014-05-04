@@ -1,7 +1,6 @@
 
 package ru.ssau.graphplus.link;
 
-import com.sun.star.awt.Point;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.XPropertySet;
@@ -10,6 +9,7 @@ import com.sun.star.drawing.LineStyle;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.*;
 import com.sun.star.lang.IllegalArgumentException;
+import ru.ssau.graphplus.ShapesProvider;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.commons.QI;
 
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 /**
  * @author anton
  */
-public interface DataLink extends Link,Serializable,ShapesProvider  {
+public interface DataLink extends Link,Serializable,ShapesProvider {
 
 
     class DataLinkTwoConnectors extends LinkTwoConnectorsAndTextBase implements DataLink{

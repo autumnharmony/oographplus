@@ -20,6 +20,6 @@ public class ResultOk implements RuleResult {
 
     @Override
     public String getDescription() {
-        return "";
+        return "Ok";
     }
 }

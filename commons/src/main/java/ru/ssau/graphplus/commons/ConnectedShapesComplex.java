@@ -4,14 +4,19 @@
 
 package ru.ssau.graphplus.commons;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
+import ru.ssau.graphplus.ShapesProvider;
 import ru.ssau.graphplus.api.Link;
+
+import java.util.HashSet;
 
 /**
  * Data object for storing two shapes connected by link three shapes (which consists of three shapes  1. ConnectorShape, 2. TextShape, 3. ConnectorShape
  */
-public class ConnectedShapesComplex {
+public class ConnectedShapesComplex implements ShapesProvider {
 
     public XShape fromShape;
     public XShape toShape;
@@ -52,15 +57,38 @@ public class ConnectedShapesComplex {
         this.toShape = toShape;
     }
 
-    public String getConnectorText(){
+    public String getConnectorText() {
         try {
-        return textShape != null ? QI.XText(textShape).getString() : QI.XText(connector).getString();
-        }
-        catch (Exception e){
+            return textShape != null ? QI.XText(textShape).getString() : QI.XText(connector).getString();
+        } catch (Exception e) {
             return null;
         }
     }
 
 
+    @Override
+    public Iterable<XShape> getShapes() {
+        HashSet<XShape> xShapes = Sets.newHashSet(fromShape, toShape);
+        if (connector != null) {
+            xShapes.add(connector);
+        }
 
+        if (connector1 != null) {
+            xShapes.add(connector1);
+        }
+
+        if (connector2 != null) {
+            xShapes.add(connector2);
+        }
+
+        if (textShape != null) {
+            xShapes.add(textShape);
+        }
+
+        xShapes.add(fromShape);
+        xShapes.add(toShape);
+
+
+        return xShapes;
+    }
 }

@@ -6,9 +6,6 @@ package ru.ssau.graphplus;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
-import com.sun.star.beans.PropertyVetoException;
-import com.sun.star.beans.UnknownPropertyException;
-import com.sun.star.beans.XPropertySet;
 import com.sun.star.drawing.XDrawPage;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.*;
@@ -16,15 +13,10 @@ import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.DiagramService;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
-import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.commons.ShapeHelper;
-import ru.ssau.graphplus.gui.BetweenNodesLayout;
 import ru.ssau.graphplus.gui.DiagramElementObj;
 import ru.ssau.graphplus.gui.Layout;
-import ru.ssau.graphplus.link.LinkBase;
-import ru.ssau.graphplus.link.LinkTwoConnectorsAndTextBase;
 import ru.ssau.graphplus.link.LinkFactory;
-import ru.ssau.graphplus.link.ShapesProvider;
 import ru.ssau.graphplus.node.NodeBase;
 import ru.ssau.graphplus.node.NodeFactory;
 

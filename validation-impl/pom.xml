@@ -27,7 +27,12 @@
         <dependency>
             <groupId>ru.ssau.graphplus</groupId>
             <artifactId>validation-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>ru.ssau.graphplus</groupId>
+            <artifactId>commons</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

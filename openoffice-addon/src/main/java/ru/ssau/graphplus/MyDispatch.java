@@ -5,6 +5,8 @@
 package ru.ssau.graphplus;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -549,11 +551,6 @@ public class MyDispatch implements XDispatch {
                     return;
                 }
 
-                if (url.Path.compareTo("LinkNodesToolbar") == 0) {
-//                XModel xModel = QI.XModel(xDrawDoc);
-//                XWindow linkNodesDialog = createLinkNodesDialog(xModel, m_xFrame);
-
-                }
 
                 if (url.Path.compareTo("GetCode") == 0) {
                     XModel xModel = QI.XModel(xDrawDoc);
@@ -568,37 +565,56 @@ public class MyDispatch implements XDispatch {
                         XShapes xShapes;// = QI.XShapes(xDrawDoc);
                         XDrawPage currentDrawPage = DrawHelper.getCurrentDrawPage(xDrawDoc);
                         xShapes = QI.XShapes(currentDrawPage);
-                        Set<XShape> shapes = Sets.newHashSet();
+                        Set<XShape> allShapes = Sets.newHashSet();
 
                         for (int i = 0; i < xShapes.getCount(); i++) {
-                            shapes.add(QI.XShape(xShapes.getByIndex(i)));
+                            allShapes.add(QI.XShape(xShapes.getByIndex(i)));
                         }
 
 
                         DiagramTypeRecognition diagramTypeRecognition = new DiagramTypeRecognitionImpl();
-                        DiagramType diagramType = diagramTypeRecognition.recognise(shapes);
+                        DiagramType diagramType = diagramTypeRecognition.recognise(allShapes);
 
                         //TODO DI
 
                         diagramWalker.setDiagramType(diagramType);
-                        List<ConnectedShapesComplex> collectedConnectedShapes = diagramWalker.walk(shapes, null);
+                        List<ConnectedShapesComplex> collectedConnectedShapes = diagramWalker.walk(allShapes, null);
 
                         CodeGenerator codeGenerator = new DiagramCodeGenerator();
                         diagramModel.setConnectedShapesComplexes(collectedConnectedShapes);
 
-                        Validator validator = new ValidatorImpl(diagramModel);
+
+
+
+                        Set<XShape> usedShapes = new HashSet<>();
+                        for (ConnectedShapesComplex connectedShapesComplex : collectedConnectedShapes){
+                            usedShapes.addAll(Lists.newArrayList(connectedShapesComplex.getShapes()));
+                        }
+
+
+                        Set<XShape> unusedShapes = new HashSet<>(allShapes);
+                        unusedShapes.removeAll(usedShapes);
+
+
+                        Validator validator = new ValidatorImpl(diagramModel, unusedShapes);
                         ValidationResult validate = validator.validate(diagramModel);
+
+
                         if (validate.getItems().size() > 0) {
                             ValidationDialog validationDialog = new ValidationDialog();
                             XWindow dialog = createWindow(ValidationDialog.VALIDATION_DIALOG_XDL, xModel, m_xFrame, validationDialog.getDialogHandler(), false);
                             Object instance = xMCF.createInstanceWithContext("com.sun.star.awt.tree.MutableTreeDataModel", m_xContext);
 
                             XMutableTreeDataModel treeDataModel = QI.XMutableTreeDataModel(instance);
+
+
+
                             validationDialog.init(dialog, validate, treeDataModel, diagramService);
                             dialog.setVisible(true);
                         } else {
 
                             String code = codeGenerator.generateCode(new DiagramCodeSource(diagramModel, collectedConnectedShapes, diagramType));
+                            DiagramCodeGenerator generator = (DiagramCodeGenerator) codeGenerator;
 
 
                             GetCodeDialog myDialog = new GetCodeDialog(code, oClipboard);

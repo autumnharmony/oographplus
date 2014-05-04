@@ -53,6 +53,7 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
 
     public List<ConnectedShapesComplex> walk(Set<XShape> all, XShape start) {
 
+        System.out.println("DiagramWalker walk");
         visited = Sets.newHashSet();
 
         Iterator<XShape> iterator = all.iterator();
@@ -167,6 +168,9 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
 
             visited.add(current);
         }
+
+        System.out.println("Found "+fromTo.values().size()+" link which connects "+fromTo.values().size()*2 + " nodes");
+        System.out.println("Overall count of shapes processed: "+ all.size());
 
         return Lists.newArrayList(fromTo.values());
     }

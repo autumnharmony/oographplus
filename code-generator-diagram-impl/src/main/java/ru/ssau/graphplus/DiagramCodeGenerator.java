@@ -5,6 +5,7 @@
 package ru.ssau.graphplus;
 
 
+import com.sun.star.drawing.XShapes;
 import ru.ssau.graphplus.analizer.matches.Match;
 import ru.ssau.graphplus.analizer.matches.MatchFactoryImpl;
 import ru.ssau.graphplus.api.DiagramType;
@@ -27,8 +28,10 @@ public class DiagramCodeGenerator implements CodeGenerator {
 
         // TODO DI
         matchFactory = new MatchFactoryImpl(new ShapeHelperWrapperImpl(new MiscHelperWrapperImpl()), new LinkTypeRecogniserImpl());
-
     }
+
+
+    private Set<XShapes> usedShapes = new HashSet<>();
 
     @Override
     public String generateCode(CodeSource codeSource) {
@@ -43,11 +46,12 @@ public class DiagramCodeGenerator implements CodeGenerator {
 
         List<ConnectedShapesComplex> connectedShapesComplexes = diagramCodeSource.getConnectedShapesComplexes();
 
-        ru.ssau.graphplus.api.DiagramModel diagramModel = diagramCodeSource.getDiagramModel();
-
         StringBuffer buffer = new StringBuffer();
 
+
+
         for (ConnectedShapesComplex connectedShapesComplex : connectedShapesComplexes) {
+
             for (Match match : codeProviderMap.keySet()) {
                 if (match.matches(connectedShapesComplex)) {
 
