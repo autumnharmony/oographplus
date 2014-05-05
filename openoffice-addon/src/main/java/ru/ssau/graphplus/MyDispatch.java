@@ -403,11 +403,8 @@ public class MyDispatch implements XDispatch {
 
                         NodeBase processNode = nodeFactory.create(Node.NodeType.StartMethodOfProcess);
                         node = processNode;
-
                         DrawHelper.insertShapeOnCurrentPage(node.getShape(), getDiagramModel().getDrawDoc());
-
                         MiscHelper.addUserDefinedAttributes(node.getShape(), xMSF);
-
                         MiscHelper.tagShapeAsNode(node.getShape());
                         MiscHelper.setNodeType(node.getShape(), Node.NodeType.StartMethodOfProcess);
                         DrawHelper.setShapeSize(node.getShape(), 1800, 1500);
@@ -473,6 +470,8 @@ public class MyDispatch implements XDispatch {
 
                         node.setProps();
                         DrawHelper.setShapeSize(serverNode.getShape(), 1500, 1500);
+
+
                     } catch (PropertyVetoException ex) {
                         Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (Exception ex) {

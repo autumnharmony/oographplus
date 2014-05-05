@@ -70,6 +70,7 @@ public class ValidatorImpl implements Validator {
 
     public ValidatorImpl(DiagramModel diagramModel, Collection<XShape> unusedShapes) {
         this.diagramModel = diagramModel;
+
         this.unusedShapes = unusedShapes;
         nodesRules = Sets.<NodeRule>newHashSet(new NodeNameRule(), new NodeConnectedRule(diagramModel));
     }

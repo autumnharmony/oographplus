@@ -325,7 +325,7 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
         try {
             xPS1.setPropertyValue("StartPosition", new Point(0, 200));
             textShape.setPosition(new Point(700, 200));
-            QI.XText(textShape).setString(getClass().getSimpleName());
+            QI.XText(textShape).setString(getType().toString());
             xPS2.setPropertyValue("EndPosition", new Point(1400, 200));
         } catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException | WrappedTargetException e) {
             throw new RuntimeException(e);

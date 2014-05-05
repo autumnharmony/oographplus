@@ -6,6 +6,7 @@ package ru.ssau.graphplus;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
+import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.drawing.XDrawPage;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.*;
@@ -35,7 +36,7 @@ public class DiagramServiceImpl implements DiagramService {
     private final Layout.Stage stage;
 
     @Inject
-    public DiagramServiceImpl(NodeFactory nodeFactory, LinkFactory linkFactory, DiagramModel diagramModel, DiagramController diagramController, XComponent xDrawDoc,Layout.Stage stage, Layout layout) {
+    public DiagramServiceImpl(NodeFactory nodeFactory, LinkFactory linkFactory, DiagramModel diagramModel, DiagramController diagramController, XComponent xDrawDoc, Layout.Stage stage, Layout layout) {
         this.nodeFactory = nodeFactory;
         this.linkFactory = linkFactory;
         this.diagramModel = diagramModel;
@@ -71,15 +72,18 @@ public class DiagramServiceImpl implements DiagramService {
 
     @Override
     public Link createLink(String name, Link.LinkType linkType) {
-        return linkFactory.create(linkType, (Map)ImmutableMap.builder().put("type",Settings.getSettings().isAddTextToShapeToLink() ? "twoConnectors":"oneConnector").build());
+        return linkFactory.create(linkType, Settings.getSettings().isAddTextToShapeToLink() ? LinkFactory.LinkConnectors.TwoConnectorsShape : LinkFactory.LinkConnectors.OneConnectorShape);
     }
 
     @Override
     public void insertNode(Node node) {
         NodeBase nodeBase = (NodeBase) node;
         ShapeHelper.insertShape(nodeBase.getShape(), DrawHelper.getCurrentDrawPage(xDrawDoc));
-
-
+        try {
+            DrawHelper.setShapeSize(((NodeBase)node).getShape(), 1800, 1500);
+        } catch (PropertyVetoException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
         layout.layout(new DiagramElementObj(node));
     }
 

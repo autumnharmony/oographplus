@@ -4,6 +4,7 @@
 
 package ru.ssau.graphplus.gui;
 
+import com.google.inject.Inject;
 import com.sun.star.accessibility.XAccessible;
 import com.sun.star.awt.*;
 import com.sun.star.beans.PropertyVetoException;
@@ -17,6 +18,7 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.ui.LayoutSize;
 import com.sun.star.uno.*;
 import ru.ssau.graphplus.DrawHelper;
+import ru.ssau.graphplus.api.DiagramService;
 import ru.ssau.graphplus.commons.MiscHelper;
 import ru.ssau.graphplus.MyDispatch;
 import ru.ssau.graphplus.commons.QI;
@@ -27,13 +29,6 @@ import ru.ssau.graphplus.node.NodeFactory;
 
 import java.lang.Exception;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 2/15/14
- * Time: 12:04 AM
- * To change this template use File | Settings | File Templates.
- */
 public class InsertNodePanel extends PanelBase {
 
     private static final String DIALOG_PATH = "vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/InsertNodeDialog.xdl";
@@ -42,20 +37,23 @@ public class InsertNodePanel extends PanelBase {
     private final MyDispatch myDispatch;
     private final XComponent m_xComponent;
     private final XComponentContext xContext;
+    private final DiagramService diagramService;
     private InsertNodeDialog dialog;
 
 
-    public InsertNodePanel(XFrame xFrame, XWindow xParentWindow, XComponentContext xContext, MyDispatch myDispatch1, XComponent m_xComponent) {
+    public InsertNodePanel(XFrame xFrame, XWindow xParentWindow, XComponentContext xContext, MyDispatch myDispatch1, XComponent m_xComponent, DiagramService diagramService) {
         mxController = xFrame.getController();
         mxModel = mxController.getModel();
         myDispatch = myDispatch1;
+        this.diagramService = diagramService;
         this.m_xComponent = m_xComponent;
         this.xContext = xContext;
-        XWindowPeer xParentPeer = (XWindowPeer) UnoRuntime.queryInterface(XWindowPeer.class, xParentWindow);
+        XWindowPeer xParentPeer = UnoRuntime.queryInterface(XWindowPeer.class, xParentWindow);
         if (xParentPeer == null) {
 
             return;
         }
+
 
         // Create the dialog window.
         XContainerWindowProvider xProvider = ContainerWindowProvider.create(xContext);
@@ -139,29 +137,12 @@ public class InsertNodePanel extends PanelBase {
 
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            NodeBase node = nodeFactory.create(type);
-            DrawHelper.insertShapeOnCurrentPage(node.getShape(), myDispatch.getDiagramModel().getDrawDoc());
-
-            MiscHelper.addUserDefinedAttributes(node.getShape(), myDispatch.getxMSF());
-            MiscHelper.tagShapeAsNode(node.getShape());
-            MiscHelper.setNodeType(node.getShape(), type);
-            node.setProps();
-            try {
-                DrawHelper.setShapePositionAndSize(node.getShape(), 100, 100, 1500, 1500);
-            } catch (PropertyVetoException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-//            try {
-////                Gui.createDialogForShape2(node.getShape(), xContext, new HashMap<String, XShape>());
-//            } catch (com.sun.star.uno.Exception e) {
-//                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//            }
-            myDispatch.getDiagramModel().addDiagramElement(node);
+            diagramService.insertNode(diagramService.createNode("", type));
         }
 
         @Override
         public void disposing(EventObject eventObject) {
-            //To change body of implemented methods use File | Settings | File Templates.
+
         }
     }
 
@@ -193,16 +174,14 @@ public class InsertNodePanel extends PanelBase {
 
     @Override
     public XAccessible createAccessible(XAccessible arg0) {
-        return (XAccessible)UnoRuntime.queryInterface(XAccessible.class, getWindow());
+        return (XAccessible) UnoRuntime.queryInterface(XAccessible.class, getWindow());
 
 
     }
 
     @Override
-    public XWindow getWindow()
-    {
-        if (mxWindow == null)
-        {
+    public XWindow getWindow() {
+        if (mxWindow == null) {
             throw new DisposedException("DemoPanel disposed", this);
         }
 

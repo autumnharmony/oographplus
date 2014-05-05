@@ -814,7 +814,7 @@ public class OOGraph extends ComponentBase implements
             MyDispatch myDispatch1 = dispatchByFrame.get(xFrame);
 
             InsertNodePanel insertNodePanel = new InsertNodePanel(
-                    xFrame, xParentWindow, m_xContext, myDispatch1, m_xComponent);
+                    xFrame, xParentWindow, m_xContext, myDispatch1, m_xComponent, myDispatch1.getDiagramService());
 
             InsertNodeDialog insertNodeDialog = new InsertNodeDialog(myDispatch1);
 

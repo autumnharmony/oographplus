@@ -117,15 +117,17 @@ public abstract class LinkOneConnectorBase extends LinkBase implements Link,
 
     @Override
     public Link.LinkType getType() {
-//        if (linkType == null) {
+        if (linkType == null) {
 //            if (this instanceof MixedLink) {
 //                linkType = Link.LinkType.MixedFlow;
-//            } else if (this instanceof ControlLink) {
-//                linkType = Link.LinkType.ControlFlow;
-//            } else if (this instanceof DataLink) {
-//                linkType = Link.LinkType.DataFlow;
-//            }
-//        }
+//            } else
+
+            if (this instanceof ControlLink) {
+                linkType = Link.LinkType.ControlFlow;
+            } else if (this instanceof DataLink) {
+                linkType = Link.LinkType.DataFlow;
+            }
+        }
         return linkType;
     }
 
@@ -307,7 +309,7 @@ public abstract class LinkOneConnectorBase extends LinkBase implements Link,
         try {
 
 
-            QI.XText(xPS).setString(getClass().getSimpleName());
+            QI.XText(xPS).setString(getType().toString());
 
             xPS.setPropertyValue("StartPosition", new Point(0, 200));
             xPS.setPropertyValue("EndPosition", new Point(1400, 500));

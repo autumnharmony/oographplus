@@ -32,11 +32,15 @@ public class LinkFactory extends AbstractDiagramElementFactory {
 
     }
 
-    public Link create(Link.LinkType type, Map<String, Object> map) {
-        Link link = null;
-        String o = (String) map.get("type");
+    public enum LinkConnectors {
+        OneConnectorShape,
+        TwoConnectorsShape
+    }
 
-        if (o.equals("oneConnector")) {
+    public Link create(Link.LinkType type, LinkConnectors linkConnectors) {
+        Link link = null;
+
+        if (linkConnectors.equals(LinkConnectors.OneConnectorShape)) {
             switch (type) {
                 case ControlFlow:
 
@@ -50,7 +54,7 @@ public class LinkFactory extends AbstractDiagramElementFactory {
                     link = new DataLink.DataLinkOneConnector(xmsf, LINK_PREFIX + getCount());
                     break;
             }
-        } else if (o.equals("twoConnectors")) {
+        } else if (linkConnectors.equals(LinkConnectors.TwoConnectorsShape)) {
 
             switch (type) {
                 case ControlFlow:
@@ -136,9 +140,9 @@ public class LinkFactory extends AbstractDiagramElementFactory {
         LinkTypeRecogniser linkTypeRecogniser = new LinkTypeRecogniserImpl();
         Link.LinkType type = linkTypeRecogniser.getType(connectedShapesComplex.connector1 != null ? connectedShapesComplex.connector1 : connectedShapesComplex.connector, connectedShapesComplex.textShape, connectedShapesComplex.connector2);
         HashMap map = new HashMap();
-        map.put("type", Settings.getSettings().isAddTextToShapeToLink() ? "twoConnectors" : "oneConnector");
+        LinkConnectors linkConnectors =Settings.getSettings().isAddTextToShapeToLink() ? LinkConnectors.TwoConnectorsShape : LinkConnectors.OneConnectorShape;
 
-        Link link = create(type, map);
+        Link link = create(type, linkConnectors);
 
         if (connectedShapesComplex.connector != null) {
             link.setName(QI.XText(connectedShapesComplex.connector).getString());
