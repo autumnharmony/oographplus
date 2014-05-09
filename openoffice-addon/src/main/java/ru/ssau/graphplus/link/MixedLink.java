@@ -4,6 +4,7 @@ import com.sun.star.awt.Point;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.XPropertySet;
+import com.sun.star.drawing.ConnectorType;
 import com.sun.star.drawing.LineStyle;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.*;
@@ -43,7 +44,9 @@ public class MixedLink extends LinkTwoConnectorsAndTextBase implements Serializa
             @Override
             public void applyStyleForHalf2(XPropertySet xPS2) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
                 xPS2.setPropertyValue("LineStyle", LineStyle.DASH);
+                xPS2.setPropertyValue("LineDashName", "Fine Dashed");
                 xPS2.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
+//                xPS2.setPropertyValue("EdgeKind", ConnectorType.LINE);
 //                xPS2.setPropertyValue("LineEndName", "Circle");
                 xPS2.setPropertyValue("LineColor", new Integer(0x000000));
 

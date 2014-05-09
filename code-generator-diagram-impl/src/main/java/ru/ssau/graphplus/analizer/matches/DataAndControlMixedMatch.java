@@ -22,7 +22,7 @@ public class DataAndControlMixedMatch extends MatchBase {
 
     @Override
     public boolean matches(ConnectedShapesComplex connectedShapesComplex) {
-        return getLinkType(connectedShapesComplex).equals(Link.LinkType.MixedFlow);
+        return super.matches(connectedShapesComplex) && getLinkType(connectedShapesComplex).equals(Link.LinkType.MixedFlow);
     }
 
 

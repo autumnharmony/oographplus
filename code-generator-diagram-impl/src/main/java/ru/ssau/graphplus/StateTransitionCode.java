@@ -23,7 +23,7 @@ public class StateTransitionCode extends LinkCodeBase {
         buffer.append(type(from()).equals(Node.NodeType.ClientPort) ? "?" : "");
         buffer.append(type(from()).equals(Node.NodeType.ServerPort) ? "!" : "");
         buffer.append(type(from()).equals(Node.NodeType.StartMethodOfProcess) ? "!" : "");
-        buffer.append(text(text()));
+        buffer.append(text(textShape()));
         buffer.append(" -> ");
         buffer.append(text(to()));
         return buffer.toString();

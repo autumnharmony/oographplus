@@ -6,10 +6,11 @@ package ru.ssau.graphplus;
 
 import com.google.common.base.Strings;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class Settings {
@@ -17,9 +18,11 @@ public class Settings {
     public static final String ADD_TEXT_SHAPE_TO_LINK = "addTextShapeToLink";
     public static final String PROMPT_FOR_NODE_NAME = "promptForNodeName";
     public static final String LINKING_INPUT_MODE = "linkingInputMode";
+    private static final String GRAPHPLUS_PROPERTIES = "Graphplus Properties";
     protected static Settings singleton;
     private File file;
     private Properties config;
+
 
     public Settings(File _file) {
         config = new Properties();
@@ -33,13 +36,20 @@ public class Settings {
             setAddTextToShapeToLink(Boolean.parseBoolean(config.getProperty(ADD_TEXT_SHAPE_TO_LINK)));
             String linkingInputModeString = config.getProperty(LINKING_INPUT_MODE);
             linkingInputMode = Strings.isNullOrEmpty(linkingInputModeString) || linkingInputModeString.equals("null") ? LinkingInputMode.Silent : LinkingInputMode.valueOf(linkingInputModeString);
-        }
-        catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             // first time run
             // ignore
-        }
-        catch (Exception ex) {
-            throw new RuntimeException("Could not load properties",ex);
+
+            try {
+                FileOutputStream out = null;
+                out = new FileOutputStream(file);
+                config.store(out, GRAPHPLUS_PROPERTIES);
+            } catch (IOException e1) {
+                throw new RuntimeException(e1);
+            }
+
+        } catch (Exception ex) {
+            throw new RuntimeException("Could not load properties", ex);
         }
     }
 
@@ -50,7 +60,7 @@ public class Settings {
             config.setProperty(ADD_TEXT_SHAPE_TO_LINK, String.valueOf(addTextToShapeToLink));
 
             FileOutputStream out = new FileOutputStream(file);
-            config.save(out, "Graphplus Properties");
+            config.store(out, GRAPHPLUS_PROPERTIES);
             out.flush();
         } catch (Exception ex) {
             throw new RuntimeException("Could not save properties\nLocation:" + file + "\n" + ex.getMessage());
@@ -72,8 +82,27 @@ public class Settings {
 
     public synchronized static Settings getSettings() {
         if (singleton == null) {
-            singleton = new Settings(new File(System.getProperty("user.home"), ".graphplus"));
-            singleton.load();
+
+
+            String home = System.getProperty("user.home");
+//            Path path = Paths.get(home+File.separator+".graphplus");
+
+            Path settings = Paths.get(home + File.separator + ".graphplus" + File.separator + "settings.properties");
+
+
+            try {
+                Files.createDirectories(settings.getParent());
+                File file1 = Files.createFile(settings).toFile();
+                singleton = new Settings(file1);
+                singleton.load();
+            } catch (FileAlreadyExistsException e) {
+                singleton = new Settings(settings.toFile());
+                singleton.load();
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+
         }
         return singleton;
 
@@ -126,8 +155,7 @@ public class Settings {
     }
 
 
-
-    private void fireChangeEvent(String name, String value){
+    private void fireChangeEvent(String name, String value) {
 
     }
 }

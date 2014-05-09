@@ -55,7 +55,7 @@ public final class StatusBarInterceptor extends ComponentBase
 
         weakReference.add(new WeakReference(this));
 
-        OOGraph.LOGGER.info("StatusBarInterceptor ctor");
+//        OOGraph.LOGGER.info("StatusBarInterceptor ctor");
 
         this.m_xContext = context;
         this.m_xFrame = xFrame;

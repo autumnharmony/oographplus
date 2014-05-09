@@ -168,11 +168,10 @@ public class MiscHelper {
             }
 
         } catch (UnknownPropertyException ex) {
-            ex.printStackTrace();
-            return null;
+
+            throw new RuntimeException(ex);
         } catch (WrappedTargetException ex) {
-            ex.printStackTrace();
-            return null;
+            throw new RuntimeException(ex);
         }
     }
 
@@ -266,18 +265,6 @@ public class MiscHelper {
     }
 
     public static String getNodeType(XShape xShape) {
-        return getUserDefinedAttributeValue(xShape, NODE_TYPE_ATTR_NAME);
-    }
-
-    public static String getLinkType(XShape xShape) {
-        return getUserDefinedAttributeValue(xShape, LINK_TYPE_ATTR_NAME);
-    }
-
-    public static void setLinkType(XShape xShape, Link.LinkType type) {
-        setUserDefinedAttributeValue(xShape, LINK_TYPE_ATTR_NAME, type.toString());
-    }
-
-    public static String toString(XShape xShape) {
         return getUserDefinedAttributeValue(xShape, NODE_TYPE_ATTR_NAME);
     }
 

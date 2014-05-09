@@ -98,7 +98,7 @@ public class ChooseNodeTypeDialog {
 
                     @Override
                     public void disposing(com.sun.star.lang.EventObject eventObject) {
-                        //To change body of implemented methods use File | Settings | File Templates.
+                        // empty body TODO
                     }
                 });
 

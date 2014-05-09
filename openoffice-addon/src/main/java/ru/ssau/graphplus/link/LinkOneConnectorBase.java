@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 public abstract class LinkOneConnectorBase extends LinkBase implements Link,
-//        Linker,
         Validatable,
         DiagramElement,
         Refreshable<ru.ssau.graphplus.api.DiagramModel>,

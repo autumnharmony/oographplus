@@ -108,7 +108,7 @@ public class DiagramController implements
     }
 
     public DiagramController(XComponentContext xContext, XFrame xFrame, XMultiServiceFactory xMSF_, XMultiComponentFactory xMCF_, final DiagramModel diagramModel, XComponent xDoc, MyDispatch myDispatch, XUndoManager undoManager) {
-        OOGraph.LOGGER.info("DiagramController ctor");
+//        OOGraph.LOGGER.info("DiagramController ctor");
         this.undoManager = undoManager;
         dispatch = myDispatch;
 
@@ -139,7 +139,7 @@ public class DiagramController implements
         positions = new HashMap();
         addSelectionListener();
 
-        OOGraph.LOGGER.info("adding shape event listeners");
+//        OOGraph.LOGGER.info("adding shape event listeners");
 
 
     }
@@ -228,7 +228,7 @@ public class DiagramController implements
 
                         @Override
                         public void onEvent(Event event) {
-                            //To change body of implemented methods use File | Settings | File Templates.
+                            // empty body TODO
                         }
                     });
                     break;
@@ -441,7 +441,7 @@ public class DiagramController implements
             try {
                 getXSelectionSupplier().select(((NodeBase) diagramElement).getShape());
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         }
 
@@ -463,10 +463,10 @@ public class DiagramController implements
                 try {
                     getXSelectionSupplier().select(xShapes);
                 } catch (IllegalArgumentException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace();
                 }
             } catch (Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
 
         } else {
@@ -486,10 +486,10 @@ public class DiagramController implements
                 try {
                     getXSelectionSupplier().select(xShapes);
                 } catch (IllegalArgumentException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace();
                 }
             } catch (Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
 
         }
@@ -541,9 +541,9 @@ public class DiagramController implements
                     }
 
                 } catch (IndexOutOfBoundsException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace();
                 } catch (WrappedTargetException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace();
                 }
             }
         }

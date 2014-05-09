@@ -31,6 +31,7 @@ import ru.ssau.graphplus.gui.sidebar.*;
 
 import java.io.*;
 import java.lang.ref.WeakReference;
+import java.nio.file.*;
 import java.util.*;
 import java.util.logging.*;
 
@@ -93,25 +94,14 @@ public class OOGraph extends ComponentBase implements
     public static final String MODEL = "Model";
     public static final String EVENT_NAME = "EventName";
     public static final String DIAGRAM_MODEL = "DiagramModel";
-    public static final Logger LOGGER;
     final static String msProtocol = "ru.ssau.graphplus";
     final static String msShowCommand = "ShowOptionsDialog";
     private static final ArrayList<String> m_aSupportedModules = new ArrayList(1);
 
     static {
         m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
-        LOGGER = Logger.getLogger("oograph");
-        Handler consoleHandler = new ConsoleHandler();
-        consoleHandler.setFormatter(new SimpleFormatter());
-        LOGGER.addHandler(consoleHandler);
 
-        Handler fileHandler = null;
-        try {
-            fileHandler = new FileHandler("oograph.log");
-            LOGGER.addHandler(fileHandler);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
     }
 
@@ -142,12 +132,13 @@ public class OOGraph extends ComponentBase implements
     private XModuleManager m_xModuleManager;
     private DocumentEventsHandler documentEventsHandler = new DocumentEventsHandlerImpl();
 
+
     public OOGraph(XComponentContext context) {
 
-        LOGGER.info("OOGraph ctor");
-
-
         instances.add(new WeakReference(this));
+
+
+
         m_xContext = context;
 
         try {
@@ -167,11 +158,6 @@ public class OOGraph extends ComponentBase implements
             xFactory = Factory.createComponentFactory(OptionsDialogHandler.class, OptionsDialogHandler.getServiceNames());
 
         return xFactory;
-
-//        if (sImplementationName.equals(msImplementationName))
-//            return Factory.createComponentFactory(PanelBase.class, maServiceNames);
-//        else
-//            return null;
     }
 
     public static XSingleServiceFactory __getServiceFactory(
@@ -205,17 +191,9 @@ public class OOGraph extends ComponentBase implements
         return bResult;
     }
 
-    public static void printInfo(Object obj) {
-
-    }
-
-    static MyDispatch getDispatchByFrame(XFrame frame) {
-        return dispatchByFrame.get(frame);
-    }
-
     @Override
     public void dispose() {
-        LOGGER.info("dispose");
+//        LOGGER.info("dispose");
     }
 
     @Override
@@ -247,8 +225,6 @@ public class OOGraph extends ComponentBase implements
     // com.sun.star.lang.XInitialization:
     @Override
     public void initialize(Object[] object) throws com.sun.star.uno.Exception {
-
-        LOGGER.info("OOGraph initialize");
 
         XComponent xDrawDoc;
 
@@ -287,15 +263,7 @@ public class OOGraph extends ComponentBase implements
                 } catch (java.lang.Exception ex) {
                     Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
-
             }
-//            else {
-//                FrameObject frameObject = frameObjectMap.get(m_xFrame);
-//                 frameObject.getDispatch().setDrawDoc(m_xComponent);
-//            }
-
-
         }
     }
 
@@ -311,7 +279,6 @@ public class OOGraph extends ComponentBase implements
         myDispatch = new MyDispatch(xDrawDoc, m_xContext, m_xFrame, xMCF, xMSF);
         frameToDispatch.put(m_xFrame.getName(), myDispatch);
         dispatchByFrame.put(m_xFrame, myDispatch);
-        XDocumentPropertiesSupplier xDocumentInfoSupplier = UnoRuntime.queryInterface(XDocumentPropertiesSupplier.class, xDrawDoc);
 
         DiagramModel diagramModel = myDispatch.getDiagramModel();
         DiagramController diagramController = myDispatch.getDiagramController();//new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel, xDrawDoc, myDispatch);
@@ -327,59 +294,38 @@ public class OOGraph extends ComponentBase implements
         this.m_xEventBroadcaster = UnoRuntime.queryInterface(XEventBroadcaster.class, this.m_xFrame.getController().getModel());
         addEventListener();
 
-        XDispatchProvider xDispatchProvider = QI.XDispatchProvider(m_xFrame);
-        XDispatchProviderInterception xDPI = (XDispatchProviderInterception) UnoRuntime.queryInterface(XDispatchProviderInterception.class, m_xFrame);
-
-
-
-        OOGraph.LOGGER.info("getting Drawpage");
-        XDrawPagesSupplier xDPS = UnoRuntime.queryInterface(
-                XDrawPagesSupplier.class, m_xComponent);
-
 
         QI.XPropertySet(QI.XModel(diagramModel.getDrawDoc()).getCurrentController()).addPropertyChangeListener("CurrentPage", new XPropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-                OOGraph.LOGGER.info("propertyChange");
-
             }
 
             @Override
             public void disposing(EventObject eventObject) {
-                //TODO implement
             }
         });
 
         UnoRuntime.queryInterface(XModel.class, m_xComponent).getCurrentController().addEventListener(new XEventListener() {
             @Override
             public void notifyEvent(com.sun.star.document.EventObject eventObject) {
-                //TODO implement
-                OOGraph.LOGGER.info("notify");
             }
 
             @Override
             public void disposing(EventObject eventObject) {
-                //TODO implement
             }
         });
 
         UnoRuntime.queryInterface(XModel.class, m_xComponent).getCurrentController().getModel().addEventListener(new XEventListener() {
             @Override
             public void notifyEvent(com.sun.star.document.EventObject eventObject) {
-                OOGraph.LOGGER.info("notify");
             }
 
             @Override
             public void disposing(EventObject eventObject) {
-                //TODO implement
             }
         });
 
 
-        XDrawPages xDPn = xDPS.getDrawPages();
-        com.sun.star.container.XIndexAccess xDPi = UnoRuntime.queryInterface(com.sun.star.container.XIndexAccess.class, xDPn);
-        final XDrawPage xDP = UnoRuntime.queryInterface(
-                XDrawPage.class, xDPi.getByIndex(0));
         XModifiable xMod = UnoRuntime.queryInterface(
                 XModifiable.class, xDrawDoc);
         xMod.addModifyListener(diagramController);
@@ -450,7 +396,7 @@ public class OOGraph extends ComponentBase implements
             }
 
             sModuleIdentifier = this.m_xModuleManager.identify(this.m_xModel);
-            LOGGER.info(String.format("css.frame.XJob.execute: Event: \"%s\" - Module : %s\n", new Object[]{sEventName, sModuleIdentifier}));
+//            LOGGER.info(String.format("css.frame.XJob.execute: Event: \"%s\" - Module : %s\n", new Object[]{sEventName, sModuleIdentifier}));
 
 
             if (!m_aSupportedModules.contains(sModuleIdentifier)) {
@@ -458,7 +404,7 @@ public class OOGraph extends ComponentBase implements
             }
 
         } catch (java.lang.Exception e) {
-            OOGraph.LOGGER.info(e.getMessage());
+//            OOGraph.LOGGER.info(e.getMessage());
         }
 
 
@@ -501,7 +447,7 @@ public class OOGraph extends ComponentBase implements
                         }
 
                         sModuleIdentifier = this.m_xModuleManager.identify(this.m_xModel);
-                        LOGGER.info(String.format("css.frame.XJob.execute: Event: \"%s\" - Module : %s\n", new Object[]{sEventName, sModuleIdentifier}));
+//                        LOGGER.info(String.format("css.frame.XJob.execute: Event: \"%s\" - Module : %s\n", new Object[]{sEventName, sModuleIdentifier}));
 
                         aController = new StatusBarInterceptionController(this.m_xContext, this.m_xModel, sModuleIdentifier);
 
@@ -516,7 +462,7 @@ public class OOGraph extends ComponentBase implements
                 }
 
                 case "OnLoad": {
-                    OOGraph.LOGGER.info("OnLoad");
+//                    OOGraph.LOGGER.info("OnLoad");
 
                     break;
                 }
@@ -527,7 +473,7 @@ public class OOGraph extends ComponentBase implements
                     try {
                         Global.loaded = Boolean.TRUE;
                     } catch (java.lang.Exception e) {
-                        OOGraph.LOGGER.log(Level.WARNING, e.getMessage());
+//                        OOGraph.LOGGER.log(Level.WARNING, e.getMessage());
                     }
 
                     documentEventsHandler.documentEventOccured(sEventName);
@@ -554,7 +500,7 @@ public class OOGraph extends ComponentBase implements
         try {
             s = StringSerializer.toString(diagramModel__);
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         setDiagramModelString(model, s);
@@ -683,13 +629,13 @@ public class OOGraph extends ComponentBase implements
     // com.sun.star.task.XAsyncJob:
     public void executeAsync(com.sun.star.beans.NamedValue[] Arguments, com.sun.star.task.XJobListener Listener) throws com.sun.star.lang.IllegalArgumentException {
 
-        OOGraph.LOGGER.info("executeAsync");
+//        OOGraph.LOGGER.info("executeAsync");
         save();
     }
 
     @Override
     public void disposing(EventObject eventObject) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // empty body TODO
     }
 
     public void save() {
@@ -831,12 +777,12 @@ public class OOGraph extends ComponentBase implements
 
     @Override
     public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
-        return true;  //To change body of implemented methods use File | Settings | File Templates.
+        return true;  // empty body TODO
     }
 
     @Override
     public String[] getSupportedMethodNames() {
-        return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new String[0];  // empty body TODO
     }
 
     static {

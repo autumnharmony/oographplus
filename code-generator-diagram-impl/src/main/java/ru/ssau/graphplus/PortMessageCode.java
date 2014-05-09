@@ -35,7 +35,8 @@ public class PortMessageCode extends LinkCodeBase {
         buffer.append(methodIsFrom ? text(to()) : text(from()));
         buffer.append(methodIsFrom ? "!" : "");
         buffer.append(methodIsTo ? "?" : "");
-        buffer.append(text(text()));
+
+        buffer.append(linkText());
         buffer.append(")");
 
         return buffer.toString();

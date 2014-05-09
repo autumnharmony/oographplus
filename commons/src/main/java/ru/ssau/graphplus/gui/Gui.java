@@ -53,40 +53,6 @@ public class Gui {
         xComponent.dispose();
     }
 
-    public static void createDialogForShape(Object objShape, XComponentContext _xComponentContext, Map<String, XShape> elements) throws com.sun.star.uno.Exception {
-        XShape xShape = (XShape) UnoRuntime.queryInterface(
-                XShape.class, objShape);
-        XNamed xNamed = (XNamed) UnoRuntime.queryInterface(
-                XNamed.class, objShape);
-
-        Object[] objs = onlyCreateDialog(xNamed, xShape, _xComponentContext, elements);
-        Object dialog = objs[0];
-        Object dialogModel = objs[1];
-//        XController xContr = UnoRuntime.queryInterface(XController.class, dialog);
-//        XModel xModel = xContr.getModel();
-        XDialog xDialog = (XDialog) UnoRuntime.queryInterface(XDialog.class, dialog);
-
-        XNameContainer xNameCont = (XNameContainer) UnoRuntime.queryInterface(
-                XNameContainer.class, dialogModel);
-        Object tb1 = xNameCont.getByName(_textfieldName);
-
-        XPropertySet xPS = (XPropertySet) UnoRuntime.queryInterface(
-                XPropertySet.class, tb1);
-        xPS.setPropertyValue("Text", xNamed.getName());
-//        xPS
-        Object tb2 = xNameCont.getByName(_textfieldName2);
-        xPS = (XPropertySet) UnoRuntime.queryInterface(
-                XPropertySet.class, tb2);
-
-        xPS.setPropertyValue("Text", MiscHelper.getUserDefinedAttributeValue(xShape, "AnotherField"));
-        xDialog.execute();
-        XComponent xComponent = (XComponent) UnoRuntime.queryInterface(
-                XComponent.class, xDialog);
-
-        xComponent.dispose();
-
-    }
-
     public static Object[] onlyCreateDialog(final XNamed xNmd, XShape xShp, XComponentContext _xComponentContext, Map<String, XShape> elements) throws com.sun.star.uno.Exception {
         XMultiComponentFactory xMultiComponentFactory = _xComponentContext.getServiceManager();
         Object[] objs;

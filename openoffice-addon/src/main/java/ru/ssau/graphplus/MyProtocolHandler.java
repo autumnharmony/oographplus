@@ -19,6 +19,6 @@ public class MyProtocolHandler extends ComponentBase
 
     @Override
     public void initialize(Object[] objects) throws com.sun.star.uno.Exception {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // empty body TODO
     }
 }

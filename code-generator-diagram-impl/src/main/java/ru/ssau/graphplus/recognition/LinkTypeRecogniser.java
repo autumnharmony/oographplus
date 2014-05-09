@@ -18,5 +18,6 @@ import ru.ssau.graphplus.api.Link;
 public interface LinkTypeRecogniser {
 
     Link.LinkType getType(XConnectorShape connectorShape1, XShape text, XConnectorShape connectorShape2);
+//    Link.LinkType getType(XConnectorShape connectorShape1);
 
 }

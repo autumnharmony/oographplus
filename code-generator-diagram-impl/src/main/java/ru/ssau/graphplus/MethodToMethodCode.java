@@ -24,7 +24,7 @@ public class MethodToMethodCode extends LinkCodeBase {
             buffer.append("+");
         }
 
-        buffer.append(text(from())).append("()").append(" -> ").append(text(text()).equals("-") ? "|" : "").append(text(to()));
+        buffer.append(text(from())).append("()").append(" -> ").append(text(textShape()).equals("-") ? "|" : "").append(text(to()));
         return  buffer.toString();
     }
 }

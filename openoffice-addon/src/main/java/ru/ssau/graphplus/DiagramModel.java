@@ -92,9 +92,9 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
                 link.setEndNode(iterator.next());
             }
         } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         } catch (WrappedTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
     }

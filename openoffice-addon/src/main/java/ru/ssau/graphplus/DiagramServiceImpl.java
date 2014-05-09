@@ -82,7 +82,7 @@ public class DiagramServiceImpl implements DiagramService {
         try {
             DrawHelper.setShapeSize(((NodeBase)node).getShape(), 1800, 1500);
         } catch (PropertyVetoException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         layout.layout(new DiagramElementObj(node));
     }

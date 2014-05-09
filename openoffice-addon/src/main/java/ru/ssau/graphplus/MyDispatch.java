@@ -57,9 +57,12 @@ import ru.ssau.graphplus.validation.Validator;
 import ru.ssau.graphplus.validation.ValidatorImpl;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,7 +74,6 @@ import static ru.ssau.graphplus.Constants.*;
 public class MyDispatch implements XDispatch {
 
     private final XFrame m_xFrame;
-    private final Logger anonymousLogger;
     private final TableInserterImpl tableInserter;
     private final XMultiServiceFactory xMSF;
     private final NodeFactory nodeFactory;
@@ -82,7 +84,7 @@ public class MyDispatch implements XDispatch {
     private final XUndoManager undoManager;
     private final DiagramWalker diagramWalker;
     private XComponent xDrawDoc;
-    private final Logger logger;
+    private Logger logger = Logger.getLogger("omg");
     private final Map<MyURL, Set<XStatusListener>> statusListeners = new HashMap();
     private DiagramModel diagramModel;
     private DiagramController diagramController;
@@ -90,6 +92,7 @@ public class MyDispatch implements XDispatch {
     private XDocumentEventBroadcaster m_xNewBroadcaster;
     private XEventBroadcaster m_xOldBroadcaster;
     private Layout layout;
+    private final DiagramTypeRecognition diagramTypeRecognition;
 
 
     public MyDispatch(XComponent xDrawDoc, XComponentContext m_xContext, XFrame m_xFrame, XMultiComponentFactory xMCF, XMultiServiceFactory xMSF) {
@@ -100,8 +103,8 @@ public class MyDispatch implements XDispatch {
 
         this.m_xContext = m_xContext;
         this.m_xFrame = m_xFrame;
-        anonymousLogger = Logger.getAnonymousLogger();
-        logger = anonymousLogger;
+//        anonymousLogger = Logger.getAnonymousLogger();
+//        logger = anonymousLogger;
 
         this.xMCF = xMCF;
         this.xMSF = xMSF;
@@ -124,6 +127,7 @@ public class MyDispatch implements XDispatch {
             diagramService = injector.getInstance(DiagramService.class);
 
             diagramWalker = injector.getInstance(DiagramWalker.class);
+            diagramTypeRecognition = new DiagramTypeRecognitionImpl();
         } catch (java.lang.Exception e) {
             e.printStackTrace();
 
@@ -225,7 +229,7 @@ public class MyDispatch implements XDispatch {
 
     private void setupDocumentEventsHandler() {
 
-        OOGraph.LOGGER.info("setupDocumentEventsHandler");
+        logger.info("setupDocumentEventsHandler");
 
         documentEventsHandler.registerHandler(ImmutableList.of("OnLoad", "OnLoadFinished"), new DocumentEventHandler() {
             @Override
@@ -385,9 +389,9 @@ public class MyDispatch implements XDispatch {
 
     @Override
     public void dispatch(URL url, PropertyValue[] propertyValues) {
-        //To change body of implemented methods use File | Settings | File Templates.  Logger anonymousLogger = Logger.getAnonymousLogger();
-        OOGraph.LOGGER.info("dispatch");
-        OOGraph.LOGGER.info(url.toString());
+
+        logger.info("dispatch");
+        logger.info(url.toString());
 
 
         try {
@@ -571,7 +575,7 @@ public class MyDispatch implements XDispatch {
                         }
 
 
-                        DiagramTypeRecognition diagramTypeRecognition = new DiagramTypeRecognitionImpl();
+
                         DiagramType diagramType = diagramTypeRecognition.recognise(allShapes);
 
                         //TODO DI
@@ -788,5 +792,13 @@ public class MyDispatch implements XDispatch {
         Object valueByName = m_xContext.getValueByName("/singletons/com.sun.star.deployment.PackageInformationProvider");
         XPackageInformationProvider xPackageInformationProvider = UnoRuntime.queryInterface(XPackageInformationProvider.class, valueByName);
         return xPackageInformationProvider.getPackageLocation("ru.ssau.graphplus.oograph");
+    }
+
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 }

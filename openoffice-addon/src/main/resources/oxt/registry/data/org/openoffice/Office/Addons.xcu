@@ -17,7 +17,7 @@
                 </prop>
                 <node oor:name="Submenu">
 
-                    <node oor:name="m0" oor:op="replace">
+                    <node oor:name="m1" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>ru.ssau.graphplus:GetCode</value>
                         </prop>
@@ -34,14 +34,14 @@
                         </prop>
                     </node>
 
-                    <node oor:name="s0" oor:op="replace">
+                    <node oor:name="m2" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>private:separator</value>
                         </prop>
                     </node>
 
 
-                    <node oor:name="m1" oor:op="replace">
+                    <node oor:name="m3" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>ru.ssau.graphplus:ProcessNode</value>
                         </prop>
@@ -58,7 +58,7 @@
                         </prop>
                     </node>
 
-                    <node oor:name="m2" oor:op="replace">
+                    <node oor:name="m4" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>ru.ssau.graphplus:ClientNode</value>
                         </prop>
@@ -74,7 +74,7 @@
                             <value xml:lang="en">Client Vertex</value>
                         </prop>
                     </node>
-                    <node oor:name="m3" oor:op="replace">
+                    <node oor:name="m5" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>ru.ssau.graphplus:ServerNode</value>
                         </prop>
@@ -92,7 +92,7 @@
                             <value xml:lang="en">Server Vertex</value>
                         </prop>
                     </node>
-                    <node oor:name="m4" oor:op="replace">
+                    <node oor:name="m6" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>ru.ssau.graphplus:ProcedureNode</value>
                         </prop>
@@ -111,14 +111,29 @@
                         </prop>
                     </node>
 
-                    <node oor:name="s1" oor:op="replace">
+                    <node oor:name="m7" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>private:separator</value>
+                        </prop>
+
+                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                            <value/>
+                        </prop>
+                        <prop oor:name="Title" oor:type="xs:string">
+                            <value/>
+                            <value xml:lang="en-US"></value>
+                        </prop>
+                        <prop oor:name="Target" oor:type="xs:string">
+                            <value>_self</value>
+                        </prop>
+
+                        <prop oor:name="Context" oor:type="xs:string">
+                            <value>com.sun.star.drawing.DrawingDocument</value>
                         </prop>
                     </node>
 
 
-                    <node oor:name="m5" oor:op="replace">
+                    <node oor:name="m8" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>ru.ssau.graphplus:ControlLink</value>
                         </prop>
@@ -137,7 +152,7 @@
                         </prop>
                     </node>
 
-                    <node oor:name="m6" oor:op="replace">
+                    <node oor:name="m9" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>ru.ssau.graphplus:DataLink</value>
                         </prop>
@@ -156,7 +171,7 @@
                         </prop>
                     </node>
 
-                    <node oor:name="m7" oor:op="replace">
+                    <node oor:name="mA" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>ru.ssau.graphplus:MixedLink</value>
                         </prop>
@@ -176,19 +191,9 @@
                     </node>
 
 
-                    <node oor:name="s2" oor:op="replace">
+                    <node oor:name="mB" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>private:separator</value>
-                        </prop>
-                    </node>
-
-
-                    <node oor:name="m8" oor:op="replace">
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>ru.ssau.graphplus:Help</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value/>
                         </prop>
                         <prop oor:name="Target" oor:type="xs:string">
                             <value>_self</value>
@@ -196,13 +201,10 @@
                         <prop oor:name="Context" oor:type="xs:string">
                             <value>com.sun.star.drawing.DrawingDocument</value>
                         </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value/>
-                            <value xml:lang="en">Help</value>
-                        </prop>
                     </node>
 
-                    <node oor:name="m9" oor:op="replace">
+
+                    <node oor:name="mC" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
                             <value>ru.ssau.graphplus:About</value>
                         </prop>
@@ -297,7 +299,7 @@
                     </node>
                     <node oor:name="m5" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
-                            <value>ru.ssau.graphplus:MessageLink</value>
+                            <value>ru.ssau.graphplus:DataLink</value>
                         </prop>
                         <prop oor:name="Target" oor:type="xs:string">
                             <value>_self</value>
@@ -327,7 +329,7 @@
                     </node>
                     <node oor:name="m7" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
-                            <value>ru.ssau.graphplus:LinkLink</value>
+                            <value>ru.ssau.graphplus:MixedLink</value>
                         </prop>
                         <prop oor:name="Target" oor:type="xs:string">
                             <value>_self</value>
@@ -422,41 +424,44 @@
                     </prop>
                 </node>
             </node>
+
             <node oor:name="ru.ssau.graphplus.messagelink.images" oor:op="replace">
                 <prop oor:name="URL" oor:type="xs:string">
-                    <value>ru.ssau.graphplus:MessageLink</value>
+                    <value>ru.ssau.graphplus:DataLink</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
-                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/message.png</value>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/data1.png</value>
                     </prop>
                     <prop oor:name="ImageBigURL">
-                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/message.png</value>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/data1.png</value>
                     </prop>
                     <prop oor:name="ImageSmallHCURL">
-                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/message.png</value>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/data1.png</value>
                     </prop>
                     <prop oor:name="ImageBigHCURL">
-                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/message.png</value>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/data1.png</value>
                     </prop>
                 </node>
             </node>
+
+
             <node oor:name="ru.ssau.graphplus.controllink.images" oor:op="replace">
                 <prop oor:name="URL" oor:type="xs:string">
                     <value>ru.ssau.graphplus:ControlLink</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
-                        <value>%origin%/images/control.png</value>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/control.png</value>
                     </prop>
                     <prop oor:name="ImageBigURL">
-                        <value/>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/control.png</value>
                     </prop>
                     <prop oor:name="ImageSmallHCURL">
-                        <value/>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/control.png</value>
                     </prop>
                     <prop oor:name="ImageBigHCURL">
-                        <value/>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/control.png</value>
                     </prop>
                 </node>
             </node>
@@ -466,16 +471,16 @@
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
-                        <value>%origin%/../../../../../images/link.png</value>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/mixed.png</value>
                     </prop>
                     <prop oor:name="ImageBigURL">
-                        <value/>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/mixed.png</value>
                     </prop>
                     <prop oor:name="ImageSmallHCURL">
-                        <value/>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/mixed.png</value>
                     </prop>
                     <prop oor:name="ImageBigHCURL">
-                        <value/>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/mixed.png</value>
                     </prop>
                 </node>
             </node>

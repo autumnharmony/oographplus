@@ -17,6 +17,8 @@ import ru.ssau.graphplus.gui.Layout;
 import ru.ssau.graphplus.gui.StageSheetImpl;
 import ru.ssau.graphplus.link.LinkFactory;
 import ru.ssau.graphplus.node.NodeFactory;
+import ru.ssau.graphplus.recognition.DiagramTypeRecognition;
+import ru.ssau.graphplus.recognition.DiagramTypeRecognitionImpl;
 
 
 public class AddonModule extends AbstractModule {
@@ -49,5 +51,6 @@ public class AddonModule extends AbstractModule {
         bind(LinkFactory.class);
 
         bind(DiagramService.class).to(DiagramServiceImpl.class);
+//        bind(DiagramTypeRecognition.class).to(DiagramTypeRecognitionImpl.class);
     }
 }

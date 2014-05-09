@@ -84,7 +84,7 @@ public class MatchFactoryImpl implements MatchFactory {
             constructor = aClass.getConstructor(ShapeHelperWrapper.class, LinkTypeRecogniser.class);
             return constructor.newInstance(shapeHelper, linkTypeRecogniser);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

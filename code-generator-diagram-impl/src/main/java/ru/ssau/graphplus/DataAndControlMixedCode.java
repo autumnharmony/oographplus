@@ -24,11 +24,11 @@ public class DataAndControlMixedCode extends LinkCodeBase {
         buffer
                 .append(text(from()))
                 .append(getPortChar(from()))
-                .append(text(text()))
+                .append(text(textShape()))
                 .append(" -> ")
                 .append(text(to()))
                 .append("; ")
-                .append(text(to())).append("(").append(text(from())).append("?").append(text(text())).append(");");
+                .append(text(to())).append("(").append(text(from())).append("?").append(text(textShape())).append(");");
         return buffer.toString();
     }
 }

@@ -112,17 +112,17 @@ public class InsertNodePanel extends PanelBase {
 
     @Override
     public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;  // empty body TODO
     }
 
     @Override
     public boolean callHandlerMethod(XWindow xWindow, Object o, String s) throws WrappedTargetException {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;  // empty body TODO
     }
 
     @Override
     public String[] getSupportedMethodNames() {
-        return new String[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new String[0];  // empty body TODO
     }
 
     class NodeButtonActionListener implements XActionListener {
@@ -169,7 +169,7 @@ public class InsertNodePanel extends PanelBase {
 
     @Override
     protected void Layout(Size aWindowSize) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // empty body TODO
     }
 
     @Override

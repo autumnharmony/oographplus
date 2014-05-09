@@ -9,6 +9,7 @@ import com.sun.star.drawing.XShape;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.codegen.LinkCode;
 import ru.ssau.graphplus.commons.ConnectedShapesComplex;
+import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.commons.ShapeHelperWrapper;
 import ru.ssau.graphplus.recognition.LinkTypeRecogniser;
 
@@ -19,34 +20,42 @@ public abstract class LinkCodeBase implements LinkCode {
     protected final ShapeHelperWrapper shapeHelper;
     protected ConnectedShapesComplex connectedShapesComplex;
 
-    protected Node.NodeType fromNodeType(){
+    protected Node.NodeType fromNodeType() {
         return type(from());
     }
 
-    protected Node.NodeType type(XShape shape){
+    protected Node.NodeType type(XShape shape) {
         return shapeHelper.getNodeType(shape);
     }
 
-    protected Node.NodeType toNodeType(){
+    protected Node.NodeType toNodeType() {
         return shapeHelper.getNodeType(connectedShapesComplex.toShape);
     }
 
-    protected XShape from(){
+    protected XShape from() {
         return connectedShapesComplex.fromShape;
     }
 
-    protected XShape to(){
+    protected XShape to() {
         return connectedShapesComplex.toShape;
     }
 
-    protected XShape text(){
+    protected XShape textShape() {
         return connectedShapesComplex.textShape;
     }
 
-    protected String text(XShape shape){
-        return shapeHelper.getText(shape);
+    protected String linkText() {
+        if (textShape() == null) {
+            return text(connectedShapesComplex.connector);
+        } else {
+            return text(textShape());
+        }
     }
 
+
+    protected String text(XShape shape) {
+        return shapeHelper.getText(shape);
+    }
 
 
     protected char getPortChar(XShape shape) {
@@ -60,16 +69,35 @@ public abstract class LinkCodeBase implements LinkCode {
             case ServerPort:
                 c = '?';
                 break;
-            default: c = ' ';
+            default:
+                c = ' ';
         }
         return c;
+    }
+
+    protected String getPortName(XShape shape) {
+        String string = QI.XText(shape).getString();
+        String[] split = string.split(":");
+        if (split.length == 0) {
+            throw new IllegalArgumentException();
+        }
+        return split[0];
+    }
+
+    protected String getPortType(XShape shape) {
+        String string = QI.XText(shape).getString();
+        String[] split = string.split(":");
+        if (split.length < 2) {
+            throw new IllegalArgumentException();
+        }
+        return split[1];
     }
 
     public void setConnectedShapesComplex(ConnectedShapesComplex connectedShapesComplex) {
         this.connectedShapesComplex = connectedShapesComplex;
     }
 
-    public LinkCodeBase(ConnectedShapesComplex connectedShapesComplex, LinkTypeRecogniser linkTypeRecogniser, ShapeHelperWrapper shapeHelper){
+    public LinkCodeBase(ConnectedShapesComplex connectedShapesComplex, LinkTypeRecogniser linkTypeRecogniser, ShapeHelperWrapper shapeHelper) {
         this.connectedShapesComplex = connectedShapesComplex;
         this.linkTypeRecogniser = linkTypeRecogniser;
         this.shapeHelper = shapeHelper;

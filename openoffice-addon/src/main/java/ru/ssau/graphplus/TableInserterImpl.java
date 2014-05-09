@@ -91,7 +91,7 @@ public class TableInserterImpl implements TableInserter {
                 xEventBroadcaster.addEventListener(new XEventListener() {
                     @Override
                     public void notifyEvent(com.sun.star.document.EventObject eventObject) {
-                        OOGraph.LOGGER.info(eventObject.EventName);
+//                        OOGraph.LOGGER.info(eventObject.EventName);
                     }
 
                     @Override

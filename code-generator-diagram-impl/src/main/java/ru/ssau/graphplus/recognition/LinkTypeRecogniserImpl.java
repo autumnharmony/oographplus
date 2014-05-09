@@ -50,9 +50,9 @@ public class LinkTypeRecogniserImpl implements LinkTypeRecogniser {
 
 
             } catch (UnknownPropertyException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             } catch (WrappedTargetException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
 
         } else {
@@ -63,7 +63,7 @@ public class LinkTypeRecogniserImpl implements LinkTypeRecogniser {
                     LineStyle lineStyle = (LineStyle) xPropertySet.getPropertyValue(LINE_STYLE);
                     return lineStyle.equals(LineStyle.SOLID)? Link.LinkType.ControlFlow : Link.LinkType.DataFlow;
                 } catch (UnknownPropertyException | WrappedTargetException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e.printStackTrace();
                 }
 
             }
@@ -71,4 +71,5 @@ public class LinkTypeRecogniserImpl implements LinkTypeRecogniser {
 
         throw new IllegalArgumentException("Strange link, can't determine it's type");
     }
+
 }

@@ -108,11 +108,11 @@ public class LinkNodesPanel extends PanelBase {
         try {
             mxWindow = xProvider.createContainerWindow(DIALOG_PATH, "", xParentPeer, this);
         } catch (Exception aException) {
-            OOGraph.LOGGER.warning(aException.getLocalizedMessage());
+//            OOGraph.LOGGER.warning(aException.getLocalizedMessage());
             mxWindow = null;
         }
         if (mxWindow == null) {
-            OOGraph.LOGGER.warning("LinkNodesPanel: could not create container window");
+//            OOGraph.LOGGER.warning("LinkNodesPanel: could not create container window");
             return;
         }
 
@@ -326,7 +326,7 @@ public class LinkNodesPanel extends PanelBase {
                 .put(event("aNodeComboboxExecute"), new MyDialogHandler.EventHandler() {
                     @Override
                     public boolean handle(XDialog xDialog, Object o, String s) {
-                        return onANodeCBExecute();  //To change body of implemented methods use File | Settings | File Templates.
+                        return onANodeCBExecute();  // empty body TODO
                     }
                 })
                 .put(event("zNodeComboboxExecute"), new MyDialogHandler.EventHandler() {
@@ -404,7 +404,7 @@ public class LinkNodesPanel extends PanelBase {
                             setNodeA(QI.XPropertySet(aModel).getPropertyValue("Text").toString());
                             setNodeZ(QI.XPropertySet(zModel).getPropertyValue("Text").toString());
                         } catch (UnknownPropertyException | WrappedTargetException e) {
-                            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                            e.printStackTrace();
                         }
                         diagramService.linkNodes(getaNode(), getzNode(), link);
                         return true;
@@ -596,7 +596,7 @@ public class LinkNodesPanel extends PanelBase {
 
     @Override
     protected void Layout(Size aWindowSize) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // empty body TODO
     }
 
     @Override

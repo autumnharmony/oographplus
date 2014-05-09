@@ -87,7 +87,7 @@ public class ValidationDialog implements MyDialog<GetCodeDialog> {
 
             @Override
             public void disposing(EventObject eventObject) {
-                //To change body of implemented methods use File | Settings | File Templates.
+                // empty body TODO
             }
         });
 
@@ -97,7 +97,7 @@ public class ValidationDialog implements MyDialog<GetCodeDialog> {
             xPropertySet.setPropertyValue("DataModel", xControlModel);
             xPropertySet.setPropertyValue("SelectionType", SelectionType.SINGLE);
         } catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException | WrappedTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
 
         ;
@@ -106,7 +106,7 @@ public class ValidationDialog implements MyDialog<GetCodeDialog> {
         try {
             mutableTreeDataModel.setRoot(node);
         } catch (com.sun.star.lang.IllegalArgumentException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            e.printStackTrace();
         }
         for (ValidationResult.Item item : validationResult.getItems()) {
             try {
@@ -116,7 +116,7 @@ public class ValidationDialog implements MyDialog<GetCodeDialog> {
 //                node1.
                 node.appendChild(node1);
             } catch (IllegalArgumentException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                e.printStackTrace();
             }
         }
 

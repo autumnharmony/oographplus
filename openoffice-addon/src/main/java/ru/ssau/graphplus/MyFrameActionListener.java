@@ -28,6 +28,6 @@ public class MyFrameActionListener implements XFrameActionListener {
 
     @Override
     public void disposing(EventObject eventObject) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // empty body TODO
     }
 }

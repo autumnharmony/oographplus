@@ -53,7 +53,6 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
 
     public List<ConnectedShapesComplex> walk(Set<XShape> all, XShape start) {
 
-        System.out.println("DiagramWalker walk");
         visited = Sets.newHashSet();
 
         Iterator<XShape> iterator = all.iterator();
@@ -139,6 +138,10 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
                     } else {
                         fromTo.put(start_, end_, new ConnectedShapesComplex(start_, end_, QI.XConnectorShape(connectorShape)));
                     }
+                }
+
+                if (!shapeHelperWrapper.isTextShape(start_) && !shapeHelperWrapper.isTextShape(end_)){
+                    fromTo.put(start_, end_, new ConnectedShapesComplex(start_, end_,connectorShape));
                 }
             }
         }

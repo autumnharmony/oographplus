@@ -25,7 +25,7 @@ public class DocumentEventsHandlerImpl implements DocumentEventsHandler {
 
 
     public DocumentEventsHandlerImpl() {
-        OOGraph.LOGGER.info("DocumentEventsHandlerImpl ctor");
+//        OOGraph.LOGGER.info("DocumentEventsHandlerImpl ctor");
     }
 
     @Override
@@ -101,7 +101,7 @@ public class DocumentEventsHandlerImpl implements DocumentEventsHandler {
 
         @Override
         public void documentEventOccured(String eventName) {
-            OOGraph.LOGGER.info("IMPLEMENT");
+//            OOGraph.LOGGER.info("IMPLEMENT");
         }
 
 

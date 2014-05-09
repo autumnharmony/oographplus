@@ -92,7 +92,7 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
 
     @Override
     public void refresh(DiagramModel diagramModel) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // empty body TODO
     }
 
     public int getX() {

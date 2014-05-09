@@ -19,6 +19,6 @@ public class AbstractDataMatch extends MatchBase {
 
     @Override
     public boolean matches(ConnectedShapesComplex connectedShapesComplex) {
-        return getLinkType(connectedShapesComplex).equals(Link.LinkType.DataFlow);
+        return super.matches(connectedShapesComplex) && getLinkType(connectedShapesComplex).equals(Link.LinkType.DataFlow);
     }
 }
