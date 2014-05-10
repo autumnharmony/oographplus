@@ -77,9 +77,6 @@ public class MyDialogHandler implements XDialogEventHandler, XContainerWindowEve
             return eventHandler.handle(xDialog, o, s);
         } catch (Exception ex) {
             throw new java.lang.RuntimeException(ex);
-//            throw new com.sun.star.uno.RuntimeException("error", ex);
-            // TODO !!!
-//            return false;
         }
     }
 
@@ -91,8 +88,6 @@ public class MyDialogHandler implements XDialogEventHandler, XContainerWindowEve
             return eventHandler.handle(null, o, s);
         } catch (Exception ex) {
             throw new com.sun.star.uno.RuntimeException("error", ex);
-            // TODO !!!
-//            return false;
         }
     }
 

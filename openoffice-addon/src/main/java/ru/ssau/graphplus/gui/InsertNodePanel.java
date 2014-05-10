@@ -138,6 +138,7 @@ public class InsertNodePanel extends PanelBase {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             diagramService.insertNode(diagramService.createNode("", type));
+
         }
 
         @Override

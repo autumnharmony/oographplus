@@ -21,11 +21,12 @@ import java.util.*;
 
 public class DiagramCodeGenerator implements CodeGenerator {
 
+    private final String name;
     private Map<Match, CodeProvider> codeProviderMap;
     private final MatchFactoryImpl matchFactory;
 
-    public DiagramCodeGenerator() {
-
+    public DiagramCodeGenerator(String name) {
+        this.name = name;
         // TODO DI
         matchFactory = new MatchFactoryImpl(new ShapeHelperWrapperImpl(new MiscHelperWrapperImpl()), new LinkTypeRecogniserImpl());
     }
@@ -65,7 +66,7 @@ public class DiagramCodeGenerator implements CodeGenerator {
                 }
             }
         }
-        return buffer.toString();
+        return name+":\n"+buffer.toString();
     }
 
 }

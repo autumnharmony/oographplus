@@ -426,6 +426,10 @@ public class DiagramController implements
         diagramModel.addDiagramElement(link);
     }
 
+    public void insertNode(Node node){
+        diagramModel.addDiagramElement(node);
+    }
+
     public interface NodeSelectionListener {
         void nodeSelected(Node node);
     }

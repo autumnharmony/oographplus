@@ -583,7 +583,9 @@ public class MyDispatch implements XDispatch {
                         diagramWalker.setDiagramType(diagramType);
                         List<ConnectedShapesComplex> collectedConnectedShapes = diagramWalker.walk(allShapes, null);
 
-                        CodeGenerator codeGenerator = new DiagramCodeGenerator();
+
+
+                        CodeGenerator codeGenerator = new DiagramCodeGenerator(DrawHelper.getPageName(currentDrawPage));
                         diagramModel.setConnectedShapesComplexes(collectedConnectedShapes);
 
 

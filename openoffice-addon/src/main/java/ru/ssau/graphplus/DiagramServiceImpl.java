@@ -15,6 +15,7 @@ import ru.ssau.graphplus.api.DiagramService;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.commons.ShapeHelper;
+import ru.ssau.graphplus.gui.BetweenNodesLayout;
 import ru.ssau.graphplus.gui.DiagramElementObj;
 import ru.ssau.graphplus.gui.Layout;
 import ru.ssau.graphplus.link.LinkFactory;
@@ -43,7 +44,9 @@ public class DiagramServiceImpl implements DiagramService {
         this.xDrawDoc = xDrawDoc;
         this.diagramController = diagramController;
         this.layout = layout;
+
         this.stage = stage;
+
 
     }
 
@@ -84,6 +87,9 @@ public class DiagramServiceImpl implements DiagramService {
         } catch (PropertyVetoException e) {
             e.printStackTrace();
         }
+
+        diagramController.insertNode(nodeBase);
+
         layout.layout(new DiagramElementObj(node));
     }
 
@@ -113,7 +119,12 @@ public class DiagramServiceImpl implements DiagramService {
         System.out.println(node1.getId());
         System.out.println(node2.getId());
         link.link(node1, node2);
+        BetweenNodesLayout betweenNodesLayout = new BetweenNodesLayout(stage, wrapForLayout(node1), wrapForLayout(node2));
+        betweenNodesLayout.layout(wrapForLayout(link));
+    }
 
+    private Layout.Obj wrapForLayout(DiagramElement diagramElement){
+        return new DiagramElementObj(diagramElement);
     }
 
     @Override

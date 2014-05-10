@@ -9,12 +9,14 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.sun.star.accessibility.XAccessible;
 import com.sun.star.awt.*;
+import com.sun.star.beans.Pair;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.frame.XController;
 import com.sun.star.frame.XFrame;
 import com.sun.star.lang.*;
 import com.sun.star.lang.IllegalArgumentException;
+import com.sun.star.lang.IndexOutOfBoundsException;
 import com.sun.star.ui.LayoutSize;
 import com.sun.star.uno.*;
 import com.sun.star.uno.RuntimeException;
@@ -23,6 +25,9 @@ import ru.ssau.graphplus.api.DiagramService;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.api.Link;
+import ru.ssau.graphplus.events.Event;
+import ru.ssau.graphplus.events.EventListener;
+import ru.ssau.graphplus.events.NodeRemovedEvent;
 import ru.ssau.graphplus.gui.sidebar.PanelBase;
 
 import java.lang.Exception;
@@ -85,6 +90,7 @@ public class LinkNodesPanel extends PanelBase {
 
     private XControlModel addTextModel;
     private XCheckBox addTextControl;
+    private XControlContainer xControlCont;
 
 
     public LinkNodesPanel(XFrame xFrame, XWindow xParentWindow, XComponentContext xContext, MyDispatch myDispatch) {
@@ -92,7 +98,15 @@ public class LinkNodesPanel extends PanelBase {
         this.diagramController = myDispatch.getDiagramController();
         mxController = xFrame.getController();
         diagramModel = diagramController.getDiagramModel();
-
+        diagramModel.addEventListener(NodeRemovedEvent.class, new EventListener() {
+            @Override
+            public void onEvent(Event event) {
+                NodeRemovedEvent nodeRemovedEvent = (NodeRemovedEvent) event;
+                Node node = nodeRemovedEvent.getNode();
+                String item = node.getName()!=null ? node.getName() : node.getId();
+                removeItemFromComboboxes(item);
+            }
+        });
         dispatch = myDispatch;
         XWindowPeer xParentPeer = (XWindowPeer) UnoRuntime.queryInterface(XWindowPeer.class, xParentWindow);
         if (xParentPeer == null) {
@@ -159,6 +173,26 @@ public class LinkNodesPanel extends PanelBase {
 
     }
 
+
+    private void removeItemFromComboboxes(String item){
+        removeItemFromCombobox(item,aNodeComboBox);
+        removeItemFromCombobox(item,zNodeComboBox);
+    }
+
+    private void removeItemFromCombobox(String item, XComboBox aNodeComboBox) {
+        XItemList xItemList = QI.XItemList(aNodeComboBox);
+        for (int i = 0; i < xItemList.getItemCount(); i++){
+            try {
+                if (xItemList.getItemText(i).equals(item)){
+                    xItemList.removeItem(i);
+                }
+                break;
+            } catch (IndexOutOfBoundsException e) {
+                throw new java.lang.RuntimeException(e);
+            }
+        }
+    }
+
     /**
      * Add an XActionListener each to the search and the replace button.
      */
@@ -182,54 +216,63 @@ public class LinkNodesPanel extends PanelBase {
         return zNode;
     }
 
-    public void setNodeA(Node node) {
-        aNode = node;
-        QI.XTextComponent(aNodeComboBox).setText(node.getName());
-    }
-
-    public void setNodeZ(Node node) {
-        zNode = node;
-        QI.XTextComponent(zNodeComboBox).setText(node.getName());
-    }
-
-    public void resetNodeA() {
+    private boolean resetNodeA() {
+        aNode = null;
         QI.XTextComponent(aNodeComboBox).setText("");
         if (zNode == null) {
             setState(State.NothingEntered);
         } else {
             setState(State.ZNodeEntered);
         }
-
+        return true;
     }
 
-    public void resetNodeZ() {
-
+    private boolean resetNodeZ() {
+        zNode = null;
         QI.XTextComponent(zNodeComboBox).setText("");
         if (aNode == null) {
             setState(State.NothingEntered);
         } else {
             setState(State.ANodeEntered);
         }
-
+        return true;
     }
 
     private void setState(State state) {
+        XControl statusControl = xControlCont.getControl("state");
+        XFixedText xFixedText = UnoRuntime.queryInterface(XFixedText.class, statusControl);
+        xFixedText.setText(state.toString());
 
         try {
             if (state.equals(State.AZEntered)) {
-                setNodeZ();
-                QI.XPropertySet(aModel).setPropertyValue("Enabled", Boolean.TRUE);
-                QI.XPropertySet(zModel).setPropertyValue("Enabled", Boolean.TRUE);
+//                setNodeZ();
+
                 QI.XPropertySet(linkButtonModel).setPropertyValue("Enabled", Boolean.TRUE);
                 QI.XPropertySet(aNodeResetButtonModel).setPropertyValue("Enabled", Boolean.TRUE);
                 QI.XPropertySet(zNodeResetButtonModel).setPropertyValue("Enabled", Boolean.TRUE);
             }
 
             if (state.equals(State.ANodeEntered)) {
+
+                // wait for z
                 setNodeA();
-                QI.XPropertySet(aModel).setPropertyValue("Enabled", Boolean.TRUE);
+//                QI.XPropertySet(aModel).setPropertyValue("Enabled", Boolean.TRUE);
                 QI.XPropertySet(linkButtonModel).setPropertyValue("Enabled", Boolean.FALSE);
                 QI.XPropertySet(aNodeResetButtonModel).setPropertyValue("Enabled", Boolean.TRUE);
+            }
+            if (state.equals(State.ZNodeEntered)) {
+
+                // wait for a
+                setNodeZ();
+                QI.XPropertySet(aModel).setPropertyValue("Enabled", Boolean.TRUE);
+                QI.XPropertySet(linkButtonModel).setPropertyValue("Enabled", Boolean.FALSE);
+                QI.XPropertySet(aNodeResetButtonModel).setPropertyValue("Enabled", Boolean.FALSE);
+            }
+
+            if (state.equals(State.NothingEntered)) {
+
+                QI.XPropertySet(aNodeResetButtonModel).setPropertyValue("Enabled", Boolean.TRUE);
+                QI.XPropertySet(zNodeResetButtonModel).setPropertyValue("Enabled", Boolean.TRUE);
             }
 
 
@@ -240,7 +283,7 @@ public class LinkNodesPanel extends PanelBase {
         }
     }
 
-    public void setNodeA(String nodeName) {
+    private void setNodeA(String nodeName) {
 
         assert nodeName != null;
         aNode = getNodeMap().get(nodeName);
@@ -258,7 +301,7 @@ public class LinkNodesPanel extends PanelBase {
         }
     }
 
-    public void setNodeZ(String nodeName) {
+    private void setNodeZ(String nodeName) {
 
         assert nodeName != null;
         zNode = getNodeMap().get(nodeName);
@@ -310,8 +353,8 @@ public class LinkNodesPanel extends PanelBase {
                 .put(event("aNodeReset"), new MyDialogHandler.EventHandler() {
                     @Override
                     public boolean handle(XDialog xDialog, Object o, String s) {
-                        resetNodeA();
-                        return true;
+                        return resetNodeA();
+//                        return true;
                     }
 
 
@@ -326,7 +369,7 @@ public class LinkNodesPanel extends PanelBase {
                 .put(event("aNodeComboboxExecute"), new MyDialogHandler.EventHandler() {
                     @Override
                     public boolean handle(XDialog xDialog, Object o, String s) {
-                        return onANodeCBExecute();  // empty body TODO
+                        return onANodeCBExecute();
                     }
                 })
                 .put(event("zNodeComboboxExecute"), new MyDialogHandler.EventHandler() {
@@ -404,7 +447,7 @@ public class LinkNodesPanel extends PanelBase {
                             setNodeA(QI.XPropertySet(aModel).getPropertyValue("Text").toString());
                             setNodeZ(QI.XPropertySet(zModel).getPropertyValue("Text").toString());
                         } catch (UnknownPropertyException | WrappedTargetException e) {
-                            e.printStackTrace();
+                            throw new java.lang.RuntimeException(e);
                         }
                         diagramService.linkNodes(getaNode(), getzNode(), link);
                         return true;
@@ -423,42 +466,42 @@ public class LinkNodesPanel extends PanelBase {
     }
 
     private boolean aNodeItemStatusChanged() {
+        setNodeA();
         return true;
     }
 
     private boolean aNodeTextModified() {
+//        setNodeA();
 
         return true;
     }
 
     private boolean zNodeItemStatusChanged() {
-
+        setNodeZ();
         // TODO
         return true;
     }
 
     private boolean zNodeTextModified() {
-
+//        setNodeZ();
         // TODO
         return true;
     }
 
     private boolean onZNodeCBExecute() {
-        //TODO
+//        setNodeZ();
         return true;
     }
 
     private boolean onANodeCBExecute() {
-        //TODO
+//        setNodeA();
         return true;
     }
 
     private boolean setNodeZ() {
-        // TODO
         try {
             Object text = QI.XPropertySet(zModel).getPropertyValue("Text");
-            Node node = getNodeMap().get(text);
-            zNode = node;
+            setNodeZ((String) text);
         } catch (UnknownPropertyException | WrappedTargetException e) {
             e.printStackTrace();
             throw new RuntimeException("error", e);
@@ -470,13 +513,21 @@ public class LinkNodesPanel extends PanelBase {
 
     private boolean setNodeA() {
 
+        try {
+            Object text = QI.XPropertySet(aModel).getPropertyValue("Text");
+            setNodeA((String) text);
+        } catch (UnknownPropertyException | WrappedTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException("error", e);
+        }
+
         return true;
     }
 
     public void init(LinkNodesPanel linkNodesPanel) {
         this.linkNodesPanel = linkNodesPanel;
         XWindow window = linkNodesPanel.getWindow();
-        XControlContainer xControlCont = (XControlContainer) UnoRuntime.queryInterface(
+        xControlCont = UnoRuntime.queryInterface(
                 XControlContainer.class, window);
 
         xControl = UnoRuntime.queryInterface(XControl.class, linkNodesPanel);
@@ -550,10 +601,6 @@ public class LinkNodesPanel extends PanelBase {
         }
     }
 
-    private Link.LinkType getLinkType() {
-        return Link.LinkType.ControlFlow;
-    }
-
     /**
      * Lookup the XControl object in the dialog for the given name.
      */
@@ -617,36 +664,7 @@ public class LinkNodesPanel extends PanelBase {
      * Handle size changes of the dialog window by adapting the size of some of its controls.
      */
     private void ProcessResize() {
-//        final Rectangle aWindowBox = mxWindow.getPosSize();
-////        Log.Instance().printf("new window size is %dx%d\n", aWindowBox.Width, aWindowBox.Height);
-//
-//        // Get access to the search controls.  Try to shorten the text field to the width
-//        // of the dialog (with border a both sides) but don't make it shorter than the button.
-//        final XWindow aSearchButton = GetControlWindow(CONTROL_NAME_BUTTON_SEARCH);
-//        final XWindow aSearchField = GetControlWindow(CONTROL_NAME_FIELD_SEARCH);
-////        Log.Instance().printf("search controls are '%s' and '%s'\n", aSearchButton.toString(), aSearchField.toString());
-//        if (aSearchButton!=null && aSearchField!=null)
-//        {
-//            final Rectangle aButtonBox = aSearchButton.getPosSize();
-//            final Rectangle aFieldBox = aSearchField.getPosSize();
-//            final int nNewWidth = Math.max(
-//                    aButtonBox.Width,
-//                    aWindowBox.Width - 2*aFieldBox.X);
-//            aSearchField.setPosSize(0,0,nNewWidth,0, PosSize.WIDTH);
-//        }
-//
-//        // Do the same for the replacement controls.
-//        final XWindow aReplaceButton = GetControlWindow(CONTROL_NAME_BUTTON_REPLACE);
-//        final XWindow aReplaceField = GetControlWindow(CONTROL_NAME_FIELD_REPLACE);
-//        if (aReplaceButton!=null && aReplaceField!=null)
-//        {
-//            final Rectangle aButtonBox = aReplaceButton.getPosSize();
-//            final Rectangle aFieldBox = aReplaceField.getPosSize();
-//            final int nNewWidth = Math.max(
-//                    aButtonBox.Width,
-//                    aWindowBox.Width - 2*aFieldBox.X);
-//            aReplaceField.setPosSize(0,0,nNewWidth,0, PosSize.WIDTH);
-//        }
+
     }
 
     private void ThrowRuntimeException(final String sMessage) {
