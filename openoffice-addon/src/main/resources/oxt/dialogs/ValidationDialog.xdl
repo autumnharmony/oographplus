@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="ValiationDialog" dlg:left="101" dlg:top="52" dlg:width="158" dlg:height="147" dlg:help-text="&amp;0.ValiationDialog.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;1.ValiationDialog.Title">
+ <dlg:bulletinboard>
+  <dlg:treecontrol dlg:id="treeControl" dlg:tab-index="0" dlg:left="3" dlg:top="7" dlg:width="151" dlg:height="119" dlg:help-text="&amp;2.ValiationDialog.treeControl.HelpText"/>
+  <dlg:button dlg:id="okButton" dlg:tab-index="1" dlg:left="54" dlg:top="130" dlg:width="44" dlg:height="16" dlg:help-text="&amp;6.ValiationDialog.okButton.HelpText" dlg:value="&amp;7.ValiationDialog.okButton.Label">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:okButton" script:language="UNO"/>
+  </dlg:button>
+ </dlg:bulletinboard>
+</dlg:window>
