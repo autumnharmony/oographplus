@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="CreateNodeDialog" dlg:left="101" dlg:top="52" dlg:width="158" dlg:height="147" dlg:help-text="&amp;41.CreateNodeDialog.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;42.CreateNodeDialog.Title">
+ <dlg:bulletinboard>
+  <dlg:checkbox dlg:id="notToPromptNextTime" dlg:tab-index="2" dlg:left="16" dlg:top="102" dlg:width="61" dlg:height="14" dlg:help-text="&amp;55.CreateNodeDialog.notToPromptNextTime.HelpText" dlg:value="&amp;56.CreateNodeDialog.notToPromptNextTime.Label" dlg:checked="false">
+   <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.UNO:notToPromptStatusChanged" script:language="UNO"/>
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:notToPromptExecute" script:language="UNO"/>
+  </dlg:checkbox>
+  <dlg:button dlg:id="okButton" dlg:tab-index="0" dlg:left="59" dlg:top="126" dlg:width="41" dlg:height="14" dlg:help-text="&amp;57.CreateNodeDialog.okButton.HelpText" dlg:value="&amp;58.CreateNodeDialog.okButton.Label">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:okExecute" script:language="UNO"/>
+  </dlg:button>
+  <dlg:button dlg:id="cancelButton" dlg:tab-index="1" dlg:left="106" dlg:top="126" dlg:width="41" dlg:height="14" dlg:help-text="&amp;59.CreateNodeDialog.cancelButton.HelpText" dlg:value="&amp;60.CreateNodeDialog.cancelButton.Label">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:cancelExecute" script:language="UNO"/>
+  </dlg:button>
+  <dlg:textfield dlg:id="nameTextField" dlg:tab-index="3" dlg:left="22" dlg:top="45" dlg:width="118" dlg:height="14" dlg:help-text="&amp;61.CreateNodeDialog.nameTextField.HelpText" dlg:value="&amp;62.CreateNodeDialog.nameTextField.Text">
+   <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.UNO:nameTextModified" script:language="UNO"/>
+  </dlg:textfield>
+  <dlg:text dlg:id="nameLabel" dlg:tab-index="4" dlg:left="23" dlg:top="29" dlg:width="115" dlg:height="12" dlg:help-text="&amp;63.CreateNodeDialog.nameLabel.HelpText" dlg:value="&amp;64.CreateNodeDialog.nameLabel.Label"/>
+ </dlg:bulletinboard>
+</dlg:window>
