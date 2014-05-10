@@ -113,7 +113,7 @@ public class OOGraph extends ComponentBase implements
             "com.sun.star.task.AsyncJob",
             RU_SSAU_GRAPHPLUS_SIDEBAR_OOGRAPH_PANEL_FACTORY
     };
-    public static StatusBarInterceptionController aController;
+//    public static StatusBarInterceptionController aController;
     static Map<String, XDispatch> frameToDispatch = new HashMap<>();
     static Map<XFrame, MyDispatch> dispatchByFrame = new WeakHashMap<>();
     private static List<WeakReference<OOGraph>> instances = new ArrayList<>();
@@ -449,7 +449,7 @@ public class OOGraph extends ComponentBase implements
                         sModuleIdentifier = this.m_xModuleManager.identify(this.m_xModel);
 //                        LOGGER.info(String.format("css.frame.XJob.execute: Event: \"%s\" - Module : %s\n", new Object[]{sEventName, sModuleIdentifier}));
 
-                        aController = new StatusBarInterceptionController(this.m_xContext, this.m_xModel, sModuleIdentifier);
+//                        aController = new StatusBarInterceptionController(this.m_xContext, this.m_xModel, sModuleIdentifier);
 
                         if (!m_aSupportedModules.contains(sModuleIdentifier)) {
                             return new Any(Type.VOID, null);

@@ -89,12 +89,12 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
     public Node.NodeType getNodeType(XShape shape) {
         String nodeType;
 
-        try {
-            nodeType = miscHelper.getNodeType(shape);
-            return Node.NodeType.valueOf(nodeType);
-        } catch (Exception ex) {
-            // so sad
-        }
+//        try {
+//            nodeType = miscHelper.getNodeType(shape);
+//            return Node.NodeType.valueOf(nodeType);
+//        } catch (Exception ex) {
+//            // so sad
+//        }
 
         String shapeType = shape.getShapeType();
         if (shapeType.contains("Rectangle")) {

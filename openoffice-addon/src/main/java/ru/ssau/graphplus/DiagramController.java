@@ -557,7 +557,7 @@ public class DiagramController implements
 
         DiagramElement diagramElementByShape = getDiagramModel().getDiagramElementByShape(getSelectedShape());
 
-        OOGraph.aController.displayMessage(diagramElementByShape.toString());
+//        OOGraph.aController.displayMessage(diagramElementByShape.toString());
     }
 
     public void setInputMode(InputMode inputMode) {
