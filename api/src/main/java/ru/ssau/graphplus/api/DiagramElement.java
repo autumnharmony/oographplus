@@ -29,7 +29,4 @@ public interface DiagramElement  {
     void setPosition(Point position);
 
     Point getPosition();
-
-
-    // no setName 'coz it's no need
 }

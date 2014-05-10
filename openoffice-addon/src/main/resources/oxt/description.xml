@@ -12,6 +12,6 @@
     </publisher>
 
     <dependencies>
-        <OpenOffice.org-maximal-version value="4.0" d:name="OpenOffice.org 4.0" />
+        <OpenOffice.org-minimal-version value="4.0" d:name="OpenOffice.org 4.0" />
     </dependencies>
 </description>
