@@ -4,14 +4,23 @@
     <version value="0.0.1"/>
     <identifier value="ru.ssau.graphplus.oograph"/>
     <display-name>
-        <name lang="en">Graphplus Openoffice Addon</name>
+        <name lang="en">Templet Openoffice Addon</name>
+        <name lang="ru">Templet Openoffice Addon</name>
     </display-name>
 
     <publisher>
-        <name xlink:href="http://graphplus.ssau.ru/" lang="en">Graphplus</name>
+        <name xlink:href="http://templet.ssau.ru/#eng" lang="en">Anton Borisov</name>
+        <name xlink:href="http://templet.ssau.ru/#rus" lang="ru">Anton Borisov</name>
     </publisher>
 
-    <dependencies>
-        <OpenOffice.org-minimal-version value="4.0" d:name="OpenOffice.org 4.0" />
-    </dependencies>
+    <!--<update-information>-->
+        <!--<src xlink:href="http://templet.ssau.ru/templet_update.xml" />-->
+    <!--</update-information>-->
+
+    <!--<dependencies>-->
+        <!--<OpenOffice.org-minimal-version value="4.0" d:name="OpenOffice.org 4.0" />-->
+    <!--</dependencies>-->
+    <icon>
+        <default xlink:href="images/templet-logo.png" />
+    </icon>
 </description>

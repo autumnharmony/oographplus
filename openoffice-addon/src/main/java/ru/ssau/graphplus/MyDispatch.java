@@ -5,7 +5,6 @@
 package ru.ssau.graphplus;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Guice;
@@ -13,7 +12,6 @@ import com.google.inject.Injector;
 import com.sun.star.awt.*;
 import com.sun.star.awt.tree.XMutableTreeDataModel;
 import com.sun.star.beans.*;
-import com.sun.star.container.XNameContainer;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.document.*;
 import com.sun.star.document.XEventListener;
@@ -28,7 +26,9 @@ import com.sun.star.uno.*;
 import com.sun.star.uno.Exception;
 import com.sun.star.uno.RuntimeException;
 import com.sun.star.util.URL;
-import ru.ssau.graphplus.analizer.DiagramWalker;
+import ru.ssau.graphplus.codegen.impl.DiagramCodeGenerator;
+import ru.ssau.graphplus.codegen.impl.DiagramCodeSource;
+import ru.ssau.graphplus.codegen.impl.analizer.DiagramWalker;
 import ru.ssau.graphplus.api.DiagramService;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
@@ -50,19 +50,17 @@ import ru.ssau.graphplus.gui.dialogs.GetCodeDialog;
 import ru.ssau.graphplus.gui.dialogs.ValidationDialog;
 import ru.ssau.graphplus.link.*;
 import ru.ssau.graphplus.node.*;
-import ru.ssau.graphplus.recognition.DiagramTypeRecognition;
-import ru.ssau.graphplus.recognition.DiagramTypeRecognitionImpl;
+import ru.ssau.graphplus.codegen.impl.recognition.CantRecognizeType;
+import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognition;
+import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognitionImpl;
 import ru.ssau.graphplus.validation.ValidationResult;
 import ru.ssau.graphplus.validation.Validator;
-import ru.ssau.graphplus.validation.ValidatorImpl;
+import ru.ssau.graphplus.validation.impl.ValidatorImpl;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -630,7 +628,13 @@ public class MyDispatch implements XDispatch {
                             dialog.execute();
                         }
 
-                    } catch (Exception e) {
+                    }
+                    catch(CantRecognizeType cantRecognizeType){
+
+                        diagramController.setSelectedShape(cantRecognizeType.getShape());
+                        throw new java.lang.RuntimeException(cantRecognizeType);
+                    }
+                    catch (Exception e) {
                         throw new RuntimeException("", e);
                     }
 

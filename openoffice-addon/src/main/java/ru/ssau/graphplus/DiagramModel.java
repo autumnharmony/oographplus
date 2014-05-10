@@ -8,7 +8,7 @@ import com.google.common.collect.Sets;
 import com.sun.star.drawing.*;
 import com.sun.star.lang.*;
 import com.sun.star.lang.IndexOutOfBoundsException;
-import ru.ssau.graphplus.analizer.DiagramWalker;
+import ru.ssau.graphplus.codegen.impl.analizer.DiagramWalker;
 import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
@@ -22,7 +22,7 @@ import ru.ssau.graphplus.link.LinkFactory;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.node.NodeBase;
 import ru.ssau.graphplus.node.NodeFactory;
-import ru.ssau.graphplus.recognition.DiagramTypeRecognitionImpl;
+import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognitionImpl;
 import ru.ssau.graphplus.validation.Validatable;
 
 import java.io.Serializable;
