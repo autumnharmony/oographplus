@@ -12,6 +12,7 @@ import ru.ssau.graphplus.codegen.impl.analizer.DiagramWalker;
 import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
+import ru.ssau.graphplus.codegen.impl.recognition.CantRecognizeType;
 import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.events.*;
 import ru.ssau.graphplus.events.EventListener;
@@ -91,9 +92,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
                 link.setStartNode(iterator.next());
                 link.setEndNode(iterator.next());
             }
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-        } catch (WrappedTargetException e) {
+        } catch (IndexOutOfBoundsException | WrappedTargetException  e) {
             e.printStackTrace();
         }
 

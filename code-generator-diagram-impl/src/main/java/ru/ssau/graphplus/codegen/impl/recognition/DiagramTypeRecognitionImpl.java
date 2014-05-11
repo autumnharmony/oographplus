@@ -23,7 +23,7 @@ public class DiagramTypeRecognitionImpl implements DiagramTypeRecognition {
 
             if (shapeHelperWrapper.isConnectorShape(shape) || shapeHelperWrapper.isTextShape(shape)) continue;
             Node.NodeType nodeType = shapeHelperWrapper.getNodeType(shape);
-            if (nodeType == null ) throw new CantRecognizeType(shape);
+            if (nodeType == null ) continue;// throw new CantRecognizeType(shape);
             if (Node.NodeType.MethodOfProcess.equals(nodeType)){
                 return DiagramType.Process;
             }

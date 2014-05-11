@@ -35,7 +35,6 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>15.0</version>
         </dependency>
 
         <dependency>
@@ -57,11 +56,12 @@
             <version>1.0-SNAPSHOT</version>
 
         </dependency>
-        <dependency>
-            <groupId>com.google.collections</groupId>
-            <artifactId>google-collections</artifactId>
 
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.collections</groupId>-->
+            <!--<artifactId>google-collections</artifactId>-->
+
+        <!--</dependency>-->
         <!--<dependency>-->
             <!--<groupId>ru.ssau.graphplus</groupId>-->
             <!--<artifactId>graphplus-addon</artifactId>-->
@@ -78,5 +78,63 @@
             <artifactId>guice</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjtools</artifactId>
+
+        </dependency>
+
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.6</version>
+                <configuration>
+                    <aspectDirectory>src/main/aspect</aspectDirectory>
+                    <XaddSerialVersionUID>true</XaddSerialVersionUID>
+                    <showWeaveInfo>true</showWeaveInfo>
+                    <complianceLevel>1.7</complianceLevel>
+                    <includes>
+                        <!--<include>**/*.java</include>-->
+                        <include>**/*.aj</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile_with_aspectj</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <!--<execution>-->
+                        <!--<id>test-compile_with_aspectj</id>-->
+                        <!--<goals>-->
+                            <!--<goal>test-compile</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjrt</artifactId>
+                        <version>${aspectj.runtime.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjtools</artifactId>
+                        <version>${aspectj.runtime.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>

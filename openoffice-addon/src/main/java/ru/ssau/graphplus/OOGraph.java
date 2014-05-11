@@ -30,6 +30,7 @@ import ru.ssau.graphplus.gui.*;
 import ru.ssau.graphplus.gui.sidebar.*;
 
 import java.io.*;
+import java.lang.RuntimeException;
 import java.lang.ref.WeakReference;
 import java.nio.file.*;
 import java.util.*;
@@ -261,7 +262,7 @@ public class OOGraph extends ComponentBase implements
                     this.m_xEventBroadcaster = UnoRuntime.queryInterface(XEventBroadcaster.class, this.m_xFrame.getController().getModel());
                     addEventListener();
                 } catch (java.lang.Exception ex) {
-                    Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
+                    throw new RuntimeException(ex);
                 }
             }
         }

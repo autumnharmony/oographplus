@@ -20,7 +20,6 @@
         <module>code-generator-api</module>
         <module>code-generator-diagram-impl</module>
         <module>commons</module>
-        <!--<module>logging</module>-->
         <module>validation-api</module>
         <module>validation-impl</module>
     </modules>
@@ -81,16 +80,17 @@
                 <version>3.0</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.google.collections</groupId>
-                <artifactId>google-collections</artifactId>
-                <version>1.0</version>
-            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>com.google.collections</groupId>-->
+                <!--<artifactId>google-collections</artifactId>-->
+                <!--<version>1.0</version>-->
+            <!--</dependency>-->
 
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>15.0</version>
+
             </dependency>
 
             <dependency>
@@ -99,15 +99,25 @@
                 <version>1.2.17</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+                <scope>compile</scope>
+                <version>${aspectj.runtime.version}</version>
+            </dependency>
 
 
 
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjtools</artifactId>
+                <version>${aspectj.runtime.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
     <build>
         <plugins>
-
-
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -117,18 +127,22 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+                <version>1.5</version>
+                <!--<dependencies>-->
+                <!--<dependency>-->
+                    <!--<groupId>org.aspectj</groupId>-->
+                    <!--<artifactId>aspectjtools</artifactId>-->
+                    <!--<version>${aspectj.version}</version>-->
+                <!--</dependency>-->
+                <!--<dependencies>-->
+            </plugin>
         </plugins>
-
-
-
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <!--<version>15.0</version>-->
-        </dependency>
 
 
         <dependency>
@@ -169,5 +183,16 @@
             <scope>system</scope>
             <systemPath>${oo_artifacts_path}officebean.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
+
     </dependencies>
 </project>
