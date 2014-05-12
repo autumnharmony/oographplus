@@ -276,12 +276,12 @@ public class ShapeHelper {
     public static Node.NodeType getNodeType(XShape shape){
         String nodeType;
 
-        try {
-            nodeType = MiscHelper.getNodeType(shape);
-            return Node.NodeType.valueOf(nodeType);
-        } catch (Exception ex) {
-            // so sad
-        }
+//        try {
+//            nodeType = MiscHelper.getNodeType(shape);
+//            return Node.NodeType.valueOf(nodeType);
+//        } catch (Exception ex) {
+//            // so sad
+//        }
 
         String shapeType = shape.getShapeType();
         if (shapeType.contains("Rectangle")) {

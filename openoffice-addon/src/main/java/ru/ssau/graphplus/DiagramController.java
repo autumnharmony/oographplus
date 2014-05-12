@@ -132,8 +132,6 @@ public class DiagramController implements
         xMCF = xMCF_;
         xMSF = xMSF_;
         xDP = DrawHelper.getCurrentDrawPage(xDrawDoc);
-        nodeFactory = new NodeFactory(xMSF_);
-        linkFactory = new LinkFactory(xMSF_);
         elements = new HashMap();
         whichElementContainsShape = new HashMap();
         positions = new HashMap();
@@ -142,6 +140,14 @@ public class DiagramController implements
 //        OOGraph.LOGGER.info("adding shape event listeners");
 
 
+    }
+
+    public void setNodeFactory(NodeFactory nodeFactory) {
+        this.nodeFactory = nodeFactory;
+    }
+
+    public void setLinkFactory(LinkFactory linkFactory) {
+        this.linkFactory = linkFactory;
     }
 
     public DiagramModel getDiagramModel() {
@@ -557,7 +563,7 @@ public class DiagramController implements
 
         DiagramElement diagramElementByShape = getDiagramModel().getDiagramElementByShape(getSelectedShape());
 
-        OOGraph.aController.displayMessage(diagramElementByShape.toString());
+//        OOGraph.aController.displayMessage(diagramElementByShape.toString());
     }
 
     public void setInputMode(InputMode inputMode) {

@@ -8,10 +8,11 @@ import com.google.common.collect.Sets;
 import com.sun.star.drawing.*;
 import com.sun.star.lang.*;
 import com.sun.star.lang.IndexOutOfBoundsException;
-import ru.ssau.graphplus.analizer.DiagramWalker;
+import ru.ssau.graphplus.codegen.impl.analizer.DiagramWalker;
 import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
+import ru.ssau.graphplus.codegen.impl.recognition.CantRecognizeType;
 import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.events.*;
 import ru.ssau.graphplus.events.EventListener;
@@ -22,7 +23,7 @@ import ru.ssau.graphplus.link.LinkFactory;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.node.NodeBase;
 import ru.ssau.graphplus.node.NodeFactory;
-import ru.ssau.graphplus.recognition.DiagramTypeRecognitionImpl;
+import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognitionImpl;
 import ru.ssau.graphplus.validation.Validatable;
 
 import java.io.Serializable;
@@ -91,9 +92,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
                 link.setStartNode(iterator.next());
                 link.setEndNode(iterator.next());
             }
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-        } catch (WrappedTargetException e) {
+        } catch (IndexOutOfBoundsException | WrappedTargetException  e) {
             e.printStackTrace();
         }
 

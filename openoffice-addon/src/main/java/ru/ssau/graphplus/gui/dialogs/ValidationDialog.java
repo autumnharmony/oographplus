@@ -96,6 +96,7 @@ public class ValidationDialog implements MyDialog<GetCodeDialog> {
             XPropertySet xPropertySet = QI.XPropertySet(model);
             xPropertySet.setPropertyValue("DataModel", xControlModel);
             xPropertySet.setPropertyValue("SelectionType", SelectionType.SINGLE);
+            xPropertySet.setPropertyValue("RootDisplayed", Boolean.FALSE);
         } catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException | WrappedTargetException e) {
             e.printStackTrace();
         }

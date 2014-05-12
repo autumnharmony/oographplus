@@ -30,6 +30,7 @@ import ru.ssau.graphplus.gui.*;
 import ru.ssau.graphplus.gui.sidebar.*;
 
 import java.io.*;
+import java.lang.RuntimeException;
 import java.lang.ref.WeakReference;
 import java.nio.file.*;
 import java.util.*;
@@ -113,7 +114,7 @@ public class OOGraph extends ComponentBase implements
             "com.sun.star.task.AsyncJob",
             RU_SSAU_GRAPHPLUS_SIDEBAR_OOGRAPH_PANEL_FACTORY
     };
-    public static StatusBarInterceptionController aController;
+//    public static StatusBarInterceptionController aController;
     static Map<String, XDispatch> frameToDispatch = new HashMap<>();
     static Map<XFrame, MyDispatch> dispatchByFrame = new WeakHashMap<>();
     private static List<WeakReference<OOGraph>> instances = new ArrayList<>();
@@ -261,7 +262,7 @@ public class OOGraph extends ComponentBase implements
                     this.m_xEventBroadcaster = UnoRuntime.queryInterface(XEventBroadcaster.class, this.m_xFrame.getController().getModel());
                     addEventListener();
                 } catch (java.lang.Exception ex) {
-                    Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
+                    throw new RuntimeException(ex);
                 }
             }
         }
@@ -449,7 +450,7 @@ public class OOGraph extends ComponentBase implements
                         sModuleIdentifier = this.m_xModuleManager.identify(this.m_xModel);
 //                        LOGGER.info(String.format("css.frame.XJob.execute: Event: \"%s\" - Module : %s\n", new Object[]{sEventName, sModuleIdentifier}));
 
-                        aController = new StatusBarInterceptionController(this.m_xContext, this.m_xModel, sModuleIdentifier);
+//                        aController = new StatusBarInterceptionController(this.m_xContext, this.m_xModel, sModuleIdentifier);
 
                         if (!m_aSupportedModules.contains(sModuleIdentifier)) {
                             return new Any(Type.VOID, null);

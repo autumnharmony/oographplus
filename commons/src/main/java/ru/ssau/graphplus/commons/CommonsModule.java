@@ -6,13 +6,6 @@ package ru.ssau.graphplus.commons;
 
 import com.google.inject.AbstractModule;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 4/23/14
- * Time: 1:26 AM
- * To change this template use File | Settings | File Templates.
- */
 public class CommonsModule extends AbstractModule {
     @Override
     protected void configure() {

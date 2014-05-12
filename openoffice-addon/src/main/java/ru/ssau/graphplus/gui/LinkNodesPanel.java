@@ -103,7 +103,7 @@ public class LinkNodesPanel extends PanelBase {
             public void onEvent(Event event) {
                 NodeRemovedEvent nodeRemovedEvent = (NodeRemovedEvent) event;
                 Node node = nodeRemovedEvent.getNode();
-                String item = node.getName()!=null ? node.getName() : node.getId();
+                String item = !Strings.isNullOrEmpty(node.getName().trim()) ? node.getName() : node.getId();
                 removeItemFromComboboxes(item);
             }
         });
@@ -180,7 +180,7 @@ public class LinkNodesPanel extends PanelBase {
     }
 
     private void removeItemFromCombobox(String item, XComboBox aNodeComboBox) {
-        XItemList xItemList = QI.XItemList(aNodeComboBox);
+        XItemList xItemList = QI.XItemList(QI.XControl(aNodeComboBox).getModel());
         for (int i = 0; i < xItemList.getItemCount(); i++){
             try {
                 if (xItemList.getItemText(i).equals(item)){
@@ -188,7 +188,7 @@ public class LinkNodesPanel extends PanelBase {
                 }
                 break;
             } catch (IndexOutOfBoundsException e) {
-                throw new java.lang.RuntimeException(e);
+                throw new RuntimeException("removeItemFromCombobox failed");
             }
         }
     }
@@ -259,20 +259,22 @@ public class LinkNodesPanel extends PanelBase {
 //                QI.XPropertySet(aModel).setPropertyValue("Enabled", Boolean.TRUE);
                 QI.XPropertySet(linkButtonModel).setPropertyValue("Enabled", Boolean.FALSE);
                 QI.XPropertySet(aNodeResetButtonModel).setPropertyValue("Enabled", Boolean.TRUE);
+                QI.XPropertySet(zNodeResetButtonModel).setPropertyValue("Enabled", Boolean.FALSE);
             }
             if (state.equals(State.ZNodeEntered)) {
 
                 // wait for a
                 setNodeZ();
-                QI.XPropertySet(aModel).setPropertyValue("Enabled", Boolean.TRUE);
+//                QI.XPropertySet(aModel).setPropertyValue("Enabled", Boolean.TRUE);
                 QI.XPropertySet(linkButtonModel).setPropertyValue("Enabled", Boolean.FALSE);
+                QI.XPropertySet(zNodeResetButtonModel).setPropertyValue("Enabled", Boolean.TRUE);
                 QI.XPropertySet(aNodeResetButtonModel).setPropertyValue("Enabled", Boolean.FALSE);
             }
 
             if (state.equals(State.NothingEntered)) {
 
-                QI.XPropertySet(aNodeResetButtonModel).setPropertyValue("Enabled", Boolean.TRUE);
-                QI.XPropertySet(zNodeResetButtonModel).setPropertyValue("Enabled", Boolean.TRUE);
+                QI.XPropertySet(aNodeResetButtonModel).setPropertyValue("Enabled", Boolean.FALSE);
+                QI.XPropertySet(zNodeResetButtonModel).setPropertyValue("Enabled", Boolean.FALSE);
             }
 
 

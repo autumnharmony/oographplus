@@ -1,7 +1,6 @@
 
 package ru.ssau.graphplus.link;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XMultiServiceFactory;
@@ -11,11 +10,10 @@ import ru.ssau.graphplus.commons.ConnectedShapesComplex;
 import ru.ssau.graphplus.commons.MiscHelper;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.commons.QI;
-import ru.ssau.graphplus.recognition.LinkTypeRecogniser;
-import ru.ssau.graphplus.recognition.LinkTypeRecogniserImpl;
+import ru.ssau.graphplus.codegen.impl.recognition.LinkTypeRecogniser;
+import ru.ssau.graphplus.codegen.impl.recognition.LinkTypeRecogniserImpl;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author anton

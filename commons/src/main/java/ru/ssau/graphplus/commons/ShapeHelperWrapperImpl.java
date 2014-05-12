@@ -34,41 +34,19 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
         return ShapeHelper.isConnectorShape(shape);
     }
 
-    private Point[] sort(Point[][] points) {
-        Point[] point = points[0];
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
-        Point leftDown;
 
-        Point[] newPoints = new Point[point.length];
 
-        int leftDownIndex = -1;
+    void shift(Point[] points){
 
-        for (int i = 0; i < point.length; i++) {
-            Point _p = point[i];
-            if (_p.X < minX && _p.Y < minY) {
-                minX = _p.X;
-                minY = _p.Y;
-                leftDown = _p;
-                leftDownIndex = i;
-            }
+        Point t2 = points[points.length -1];
+        for (int i = 0; i<points.length; i++){
+            Point t = points[i];
+            points[i] = t2;
+            t2 = t;
         }
-
-        assert leftDownIndex != -1;
-
-        int k = 0;
-        for (int j = leftDownIndex; j < point.length; j++) {
-            newPoints[k++] = point[j];
-        }
-
-        for (int j = 0; j < leftDownIndex; j++) {
-            newPoints[k++] = point[j];
-        }
-
-        return newPoints;
-
-
     }
+
+
 
     public String getText(XShape xShape) {
         return ShapeHelper.getText(xShape);
@@ -124,28 +102,39 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
                 if (points.length > 1) {
                     throw new com.sun.star.uno.RuntimeException("Error", new com.sun.star.lang.IllegalArgumentException("Strange polygon argument, i can't get type"));
                 }
-                Point[] sort = sort(points);
+                Point[] p = points[0];
+                while (!normalized(p)){
+                    shift(points[0]);
+                }
 
-                if (sort[3].X > sort[2].X && sort[3].X > sort[4].X) {
+
+                if (p[2].X > p[1].X && p[2].X > p[3].X && p[2].Y < p[1].Y && p[2].Y > p[3].Y) {
                     // >
                     // client
                     return Node.NodeType.ClientPort;
                 }
 
-                if ((sort[3].X < sort[2].X && sort[3].X < sort[4].X) || (sort[3].X < sort[2].X && sort[3].X < sort[1].X)) {
+                if ((p[2].X < p[1].X && p[2].X < p[3].X) && p[2].Y > p[1].Y && p[2].Y < p[3].Y) {
                     // <
                     // server
                     return Node.NodeType.ServerPort;
                 }
 
 
-            } catch (UnknownPropertyException e) {
-                throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
-            } catch (WrappedTargetException e) {
+            } catch (UnknownPropertyException | WrappedTargetException e) {
                 throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
             }
 
         }
         return null;
+    }
+
+    private boolean normalized(Point[] points) {
+        for (int i = 1; i < points.length; i++){
+            if (points[0].X >  points[i].X || points[0].Y < points[i].Y){
+                return false;
+            }
+        }
+        return true;
     }
 }
