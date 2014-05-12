@@ -7,6 +7,7 @@ package ru.ssau.graphplus.validation.impl;
 import com.google.common.collect.Sets;
 import com.sun.star.drawing.XShape;
 import ru.ssau.graphplus.api.DiagramModel;
+import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.validation.*;
@@ -20,7 +21,9 @@ public class ValidatorImpl implements Validator {
 
     private final Collection<XShape> unusedShapes;
     Set<NodeRule> nodesRules;
-    Set<LinkRule> linksRules = Sets.newHashSet(new LinkNameRule(), new LinkConnectedRule());
+    Set<LinkRule> linksRules = Sets.<LinkRule>newHashSet(
+            //new LinkNameRule(),
+            new LinkConnectedRule());
 
     @Override
     public ValidationResultImpl validate(Validatable validatable) {
@@ -73,5 +76,8 @@ public class ValidatorImpl implements Validator {
 
         this.unusedShapes = unusedShapes;
         nodesRules = Sets.<NodeRule>newHashSet(new NodeNameRule(), new NodeConnectedRule(diagramModel));
+        if (diagramModel.getDiagramType().equals(DiagramType.Process)) {
+            nodesRules.add(new PortNameRule());
+        }
     }
 }

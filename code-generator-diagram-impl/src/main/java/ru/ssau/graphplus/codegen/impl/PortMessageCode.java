@@ -32,12 +32,12 @@ public class PortMessageCode extends LinkCodeBase {
         }
 
         buffer.append("(");
-        buffer.append(methodIsFrom ? text(to()) : text(from()));
+        buffer.append(methodIsFrom ? portName(to()) : text(from()));
         buffer.append(methodIsFrom ? "!" : "");
         buffer.append(methodIsTo ? "?" : "");
 
         buffer.append(linkText());
-        buffer.append(")");
+        buffer.append(");");
 
         return buffer.toString();
     }

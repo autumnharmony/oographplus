@@ -78,6 +78,11 @@
             <artifactId>guice</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-assisted-inject</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>org.aspectj</groupId>

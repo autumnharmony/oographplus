@@ -22,16 +22,14 @@ import static ru.ssau.graphplus.api.Node.NodeType;
  */
 public class NodeFactory extends AbstractDiagramElementFactory {
 
-
-//    private static Set<NodeFactory> nodeFactorySet = Collections.newSetFromMap(new WeakHashMap<NodeFactory, Boolean>());
-
     private static final String NODE_PREFIX = "node";
 
+    private ShapeHelperWrapper shapeHelper;
 
     @Inject
-    public NodeFactory(XMultiServiceFactory xmsf) {
+    public NodeFactory(XMultiServiceFactory xmsf, ShapeHelperWrapper shapeHelperWrapper) {
         super(xmsf);
-//        nodeFactorySet.add(this);
+        shapeHelper = shapeHelperWrapper;
     }
 
 
@@ -103,12 +101,14 @@ public class NodeFactory extends AbstractDiagramElementFactory {
         return null;
     }
 
+
+
     public Collection<Node> create(ConnectedShapesComplex connectedShapesComplex){
         XShape fromShape = connectedShapesComplex.fromShape;
         XShape toShape = connectedShapesComplex.toShape;
 
-        NodeType nodeType =ShapeHelper.getNodeType(fromShape);
-        NodeType nodeType1 = ShapeHelper.getNodeType(toShape);
+        NodeType nodeType =shapeHelper.getNodeType(fromShape);
+        NodeType nodeType1 = shapeHelper.getNodeType(toShape);
         NodeBase nodeBase = create(nodeType, connectedShapesComplex.fromShape);
 
         String text = ShapeHelper.getText(QI.XShape(nodeBase.getShape()));

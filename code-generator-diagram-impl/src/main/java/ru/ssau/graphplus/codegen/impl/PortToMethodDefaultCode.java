@@ -9,7 +9,7 @@ import ru.ssau.graphplus.commons.ConnectedShapesComplex;
 import ru.ssau.graphplus.commons.ShapeHelperWrapper;
 import ru.ssau.graphplus.codegen.impl.recognition.LinkTypeRecogniser;
 
-public class PortToMethodDefaultCode extends LinkCodeBase {
+public class PortToMethodDefaultCode extends LinkCodeBase implements PortToMethodCode{
 
 
     public PortToMethodDefaultCode(ConnectedShapesComplex connectedShapesComplex, LinkTypeRecogniser linkTypeRecogniser, ShapeHelperWrapper shapeHelper) {

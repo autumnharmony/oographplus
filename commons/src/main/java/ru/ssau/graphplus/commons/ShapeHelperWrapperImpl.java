@@ -67,12 +67,12 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
     public Node.NodeType getNodeType(XShape shape) {
         String nodeType;
 
-//        try {
-//            nodeType = miscHelper.getNodeType(shape);
-//            return Node.NodeType.valueOf(nodeType);
-//        } catch (Exception ex) {
-//            // so sad
-//        }
+        try {
+            nodeType = miscHelper.getNodeType(shape);
+            return Node.NodeType.valueOf(nodeType);
+        } catch (Exception ex) {
+            // so sad
+        }
 
         String shapeType = shape.getShapeType();
         if (shapeType.contains("Rectangle")) {
@@ -108,7 +108,7 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
                 }
 
 
-                if (p[2].X > p[1].X && p[2].X > p[3].X && p[2].Y > p[1].Y && p[2].Y < p[3].Y) {
+                if (p[2].X > p[1].X && p[2].X > p[3].X && p[2].Y < p[1].Y && p[2].Y > p[3].Y) {
                     // >
                     // client
                     return Node.NodeType.ClientPort;
@@ -121,9 +121,7 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
                 }
 
 
-            } catch (UnknownPropertyException e) {
-                throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
-            } catch (WrappedTargetException e) {
+            } catch (UnknownPropertyException | WrappedTargetException e) {
                 throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
             }
 
@@ -133,7 +131,7 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
 
     private boolean normalized(Point[] points) {
         for (int i = 1; i < points.length; i++){
-            if (points[0].X >  points[i].X || points[0].Y > points[i].Y){
+            if (points[0].X >  points[i].X || points[0].Y < points[i].Y){
                 return false;
             }
         }

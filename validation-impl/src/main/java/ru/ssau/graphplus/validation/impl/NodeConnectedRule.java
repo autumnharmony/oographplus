@@ -13,13 +13,7 @@ import ru.ssau.graphplus.validation.RuleResult;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 5/2/14
- * Time: 6:19 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class NodeConnectedRule implements NodeRule {
 
     private DiagramModel diagramModel;

@@ -74,7 +74,7 @@ public abstract class LinkCodeBase implements LinkCode {
         return c;
     }
 
-    protected String getPortName(XShape shape) {
+    protected String portName(XShape shape) {
         String string = QI.XText(shape).getString();
         String[] split = string.split(":");
         if (split.length == 0) {

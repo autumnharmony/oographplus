@@ -7,6 +7,7 @@ package ru.ssau.graphplus.di;
 import com.google.inject.AbstractModule;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
+import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognition;
 import ru.ssau.graphplus.commons.CommonsModule;
 import ru.ssau.graphplus.DiagramController;
 import ru.ssau.graphplus.DiagramServiceImpl;
@@ -36,7 +37,7 @@ public class AddonModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new CommonsModule());
+//        install(new CommonsModule());
         bind(DiagramModel.class).toInstance(diagramModel);
         bind(ru.ssau.graphplus.DiagramModel.class).toInstance((ru.ssau.graphplus.DiagramModel) diagramModel);
         bind(DiagramController.class).toInstance(diagramController);
@@ -49,6 +50,5 @@ public class AddonModule extends AbstractModule {
         bind(LinkFactory.class);
 
         bind(DiagramService.class).to(DiagramServiceImpl.class);
-//        bind(DiagramTypeRecognition.class).to(DiagramTypeRecognitionImpl.class);
     }
 }

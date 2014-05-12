@@ -18,4 +18,6 @@ public interface DiagramModel {
     Collection<Link> getLinks();
 
     Collection<Node> getNodes();
+
+    DiagramType getDiagramType();
 }
