@@ -18,7 +18,7 @@ public class CodeGeneratorModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new CommonsModule());
+//        install(new CommonsModule());
 
 //        bind(UnoRuntimeWrapper.class).to(UnoRuntimeWrapperImpl.class);
         bind(MatchFactory.class).to(MatchFactoryImpl.class);

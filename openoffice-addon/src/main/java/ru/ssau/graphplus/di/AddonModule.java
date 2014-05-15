@@ -37,7 +37,7 @@ public class AddonModule extends AbstractModule {
 
     @Override
     protected void configure() {
-//        install(new CommonsModule());
+
         bind(DiagramModel.class).toInstance(diagramModel);
         bind(ru.ssau.graphplus.DiagramModel.class).toInstance((ru.ssau.graphplus.DiagramModel) diagramModel);
         bind(DiagramController.class).toInstance(diagramController);

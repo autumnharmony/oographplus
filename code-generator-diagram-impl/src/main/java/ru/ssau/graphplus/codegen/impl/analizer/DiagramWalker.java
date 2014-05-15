@@ -10,6 +10,7 @@ import com.google.common.collect.*;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.util.Modules;
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
 import ru.ssau.graphplus.api.DiagramType;
@@ -36,7 +37,7 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
         this.shapeHelperWrapper = shapeHelperWrapper;
         this.unoRuntimeWrapper = unoRuntimeWrapper;
 
-        Injector injector = Guice.createInjector(new CodeGeneratorModule());
+        Injector injector = Guice.createInjector(Modules.combine(new CommonsModule(),new CodeGeneratorModule()));
     }
 
     public DiagramType getDiagramType() {
@@ -170,6 +171,10 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
 
         System.out.println("Found "+fromTo.values().size()+" link which connects "+fromTo.values().size()*2 + " nodes");
         System.out.println("Overall count of shapes processed: "+ all.size());
+
+
+        Table<Node,Node,List<Link>> graph = new HashBasedTable<Node, Node, List<Link>>();
+
 
         return Lists.newArrayList(fromTo.values());
     }

@@ -8,6 +8,8 @@ import com.sun.star.lang.WrappedTargetException;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Ignore;
+
 import ru.ssau.graphplus.api.Node;
 
 import static org.mockito.Mockito.mock;
@@ -16,6 +18,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by anton on 11.05.14.
  */
+@Ignore
 public class ShapeHelperWrapperImplTest {
 
     private ShapeHelperWrapperImpl shapeHelperWrapper;

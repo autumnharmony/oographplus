@@ -335,7 +335,7 @@
                  -->
                 <configuration>
                     <ooo>/opt/openoffice4/</ooo>
-                    <sdk>/opt/openoffice_beta4/sdk</sdk>
+                    <sdk>/opt/openoffice4/sdk</sdk>
                     <oxtDir>src/main/resources/oxt</oxtDir>
                 </configuration>
                 <executions>

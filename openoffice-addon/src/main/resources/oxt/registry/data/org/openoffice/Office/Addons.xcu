@@ -484,6 +484,48 @@
                     </prop>
                 </node>
             </node>
+
+            <node oor:name="ru.ssau.graphplus.getcode.images" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                    <value>ru.ssau.graphplus:GetCode</value>
+                </prop>
+                <node oor:name="UserDefinedImages">
+                    <prop oor:name="ImageSmallURL">
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/code.png</value>
+                    </prop>
+                    <prop oor:name="ImageBigURL">
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/code.png</value>
+                    </prop>
+                    <prop oor:name="ImageSmallHCURL">
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/code.png</value>
+                    </prop>
+                    <prop oor:name="ImageBigHCURL">
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/code.png</value>
+                    </prop>
+                </node>
+            </node>
+
+            <node oor:name="ru.ssau.graphplus.about.images" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                    <value>ru.ssau.graphplus:About</value>
+                </prop>
+                <node oor:name="UserDefinedImages">
+                    <prop oor:name="ImageSmallURL">
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/about.png</value>
+                    </prop>
+                    <prop oor:name="ImageBigURL">
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/about.png</value>
+                    </prop>
+                    <prop oor:name="ImageSmallHCURL">
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/about.png</value>
+                    </prop>
+                    <prop oor:name="ImageBigHCURL">
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/about.png</value>
+                    </prop>
+                </node>
+            </node>
+
+
         </node>
     </node>
 </oor:component-data>
