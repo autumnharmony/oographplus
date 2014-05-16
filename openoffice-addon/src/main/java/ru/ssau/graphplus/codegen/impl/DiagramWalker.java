@@ -29,15 +29,20 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
     private /*final*/ DiagramType diagramType;
     Set<XShape> visited;
     ShapeHelperWrapper shapeHelperWrapper;
+    private final LinkFactory linkFactory;
+    private final NodeFactory nodeFactory;
+    private Table<Node,Node,List<Link>> graph;
+    private Table<XShape,XShape,ConnectedShapesComplex> fromTo;
 
 
     @Inject
-    public DiagramWalker(ShapeHelperWrapper shapeHelperWrapper, UnoRuntimeWrapper unoRuntimeWrapper) {
+    public DiagramWalker(ShapeHelperWrapper shapeHelperWrapper, UnoRuntimeWrapper unoRuntimeWrapper, LinkFactory linkFactory, NodeFactory nodeFactory) {
 
         this.shapeHelperWrapper = shapeHelperWrapper;
         this.unoRuntimeWrapper = unoRuntimeWrapper;
-
-        Injector injector = Guice.createInjector(Modules.combine(new CommonsModule(),new CodeGeneratorModule()));
+        this.linkFactory = linkFactory;
+        this.nodeFactory = nodeFactory;
+//        Injector injector = Guice.createInjector(Modules.combine(new CommonsModule(),new CodeGeneratorModule()));
     }
 
     public DiagramType getDiagramType() {
@@ -48,10 +53,10 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
         this.diagramType = diagramType;
     }
 
-    public List<ConnectedShapesComplex> walk(Set<XShape> all, XShape start) {
+    public Graph walk(Set<XShape> all) {
 
         visited = Sets.newHashSet();
-
+        XShape start = null;
         Iterator<XShape> iterator = all.iterator();
         if (start == null || ShapeHelper.isConnectorShape(start)) {
             start = getStart(all);
@@ -74,7 +79,7 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
 
          */
 
-        Table<XShape, XShape, ConnectedShapesComplex> fromTo = HashBasedTable.create();
+        fromTo = HashBasedTable.create();
 
 
         for (XShape shape : all) {
@@ -87,7 +92,7 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
                 XShape start_ = connectedShapes.getStart();
                 XShape end_ = connectedShapes.getEnd();
 
-                if (start_==null || end_ == null){
+                if (start_ == null || end_ == null) {
                     continue;
                 }
                 if (!shapeHelperWrapper.isTextShape(start_) && shapeHelperWrapper.isTextShape(end_)) {
@@ -137,8 +142,8 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
                     }
                 }
 
-                if (!shapeHelperWrapper.isTextShape(start_) && !shapeHelperWrapper.isTextShape(end_)){
-                    fromTo.put(start_, end_, new ConnectedShapesComplex(start_, end_,connectorShape));
+                if (!shapeHelperWrapper.isTextShape(start_) && !shapeHelperWrapper.isTextShape(end_)) {
+                    fromTo.put(start_, end_, new ConnectedShapesComplex(start_, end_, connectorShape));
                 }
             }
         }
@@ -169,15 +174,50 @@ public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex
             visited.add(current);
         }
 
-        System.out.println("Found "+fromTo.values().size()+" link which connects "+fromTo.values().size()*2 + " nodes");
-        System.out.println("Overall count of shapes processed: "+ all.size());
+        System.out.println("Found " + fromTo.values().size() + " link which connects " + fromTo.values().size() * 2 + " nodes");
+        System.out.println("Overall count of shapes processed: " + all.size());
 
 
-        Table<Node,Node,List<Link>> graph = new HashBasedTable<Node, Node, List<Link>>();
+        Set<Node> nodes = new HashSet<>();
+        Set<Link> links = new HashSet<>();
 
 
-        return Lists.newArrayList(fromTo.values());
+        graph = HashBasedTable.create();
+
+        for (ConnectedShapesComplex input : fromTo.values()) {
+            Collection<Node> c = nodeFactory.create(input);
+            nodes.addAll(c);
+            Link link = linkFactory.create(input);
+            links.add(link);
+            Iterator<Node> iterator1 = c.iterator();
+            Node from = iterator1.next();
+            Node to = iterator1.next();
+
+            link.setStartNode(from);
+            link.setEndNode(to);
+
+            if (!graph.contains(from, to)) {
+                graph.put(from, to, new ArrayList<Link>());
+            }
+
+            graph.get(from, to).add(link);
+        }
+        Graph nodeLinkGraph = new Graph(graph, nodes, links);
+        return nodeLinkGraph;
     }
+
+//    private Node createNode(Set<XShape> uniqueNodes, XShape shape, Map<XShape, Node> shapeNodeMap) {
+//        Node node = null;
+//        if (!uniqueNodes.contains(shape)) {
+//
+//            node = nodeFactory.create();
+//        } else {
+//            return
+//        }
+//
+//        uniqueNodes.add(shape);
+//        return node;
+//    }
 
 
     private XShape getStart(Set<XShape> all) {
