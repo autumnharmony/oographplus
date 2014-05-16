@@ -7,5 +7,5 @@ package ru.ssau.graphplus.codegen.impl.analizer;
 import java.util.Set;
 
 public interface Walker<Item,Result> {
-    public Result walk(Set<Item> allItems, Item start);
+    public Result walk(Item toWalk);
 }

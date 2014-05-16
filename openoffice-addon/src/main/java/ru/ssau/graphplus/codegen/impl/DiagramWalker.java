@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Anton Borisov
  */
 
-package ru.ssau.graphplus.codegen.impl.analizer;
+package ru.ssau.graphplus.codegen.impl;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -14,15 +14,20 @@ import com.google.inject.util.Modules;
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
 import ru.ssau.graphplus.api.DiagramType;
+import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.codegen.impl.CodeGeneratorModule;
+import ru.ssau.graphplus.codegen.impl.analizer.Graph;
+import ru.ssau.graphplus.codegen.impl.analizer.Walker;
 import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognitionImpl;
+import ru.ssau.graphplus.link.LinkFactory;
+import ru.ssau.graphplus.node.NodeFactory;
 
 import java.util.*;
 
 
-public class DiagramWalker implements Walker<XShape, List<ConnectedShapesComplex>> {
+public class DiagramWalker implements Walker<Set<XShape>, Graph> {
 
 
     private final UnoRuntimeWrapper unoRuntimeWrapper;

@@ -37,7 +37,8 @@ import ru.ssau.graphplus.codegen.impl.CodeGeneratorFactory;
 import ru.ssau.graphplus.codegen.impl.CodeGeneratorModule;
 import ru.ssau.graphplus.codegen.impl.DiagramCodeGenerator;
 import ru.ssau.graphplus.codegen.impl.DiagramCodeSource;
-import ru.ssau.graphplus.codegen.impl.analizer.DiagramWalker;
+import ru.ssau.graphplus.codegen.impl.DiagramWalker;
+import ru.ssau.graphplus.codegen.impl.analizer.Graph;
 import ru.ssau.graphplus.codegen.impl.recognition.CantRecognizeType;
 import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognition;
 import ru.ssau.graphplus.commons.CommonsModule;
@@ -70,9 +71,6 @@ import java.util.logging.Logger;
 
 import static ru.ssau.graphplus.Constants.*;
 
-/**
- * Dispatch wrapper
- */
 public class MyDispatch implements XDispatch {
 
     private final XFrame m_xFrame;
@@ -84,7 +82,7 @@ public class MyDispatch implements XDispatch {
     private final XComponentContext m_xContext;
     private final DiagramService diagramService;
     private final XUndoManager undoManager;
-    private final DiagramWalker diagramWalker;
+    private final ru.ssau.graphplus.codegen.impl.analizer.DiagramWalker diagramWalker;
     private final CodeGeneratorFactory codeGeneratorFactory;
     private XComponent xDrawDoc;
     private Logger logger = Logger.getLogger("omg");
@@ -122,7 +120,7 @@ public class MyDispatch implements XDispatch {
             Module combine = Modules.combine(new CommonsModule(), new AddonModule(diagramModel, xMSF, xDrawDoc, diagramController), new CodeGeneratorModule());
             try {
                 injector = Guice.createInjector(combine);
-            }catch (Throwable throwable){
+            } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
             nodeFactory = injector.getInstance(NodeFactory.class);
@@ -578,23 +576,28 @@ public class MyDispatch implements XDispatch {
                         }
 
 
-
                         DiagramType diagramType = diagramTypeRecognition.recognise(allShapes);
                         diagramModel.setDiagramType(diagramType);
                         //TODO DI
 
                         diagramWalker.setDiagramType(diagramType);
-                        List<ConnectedShapesComplex> collectedConnectedShapes = diagramWalker.walk(allShapes, null);
-
-
+                        Graph walk = diagramWalker.walk(allShapes);
 
 
                         CodeGenerator codeGenerator = codeGeneratorFactory.create(DrawHelper.getPageName(currentDrawPage), diagramType);
-                        diagramModel.setConnectedShapesComplexes(collectedConnectedShapes);
+                        diagramModel.setGraph(walk);
 
                         Set<XShape> usedShapes = new HashSet<>();
-                        for (ConnectedShapesComplex connectedShapesComplex : collectedConnectedShapes){
-                            usedShapes.addAll(Lists.newArrayList(connectedShapesComplex.getShapes()));
+                        for (Link link_ : walk.getLinks()) {
+                            Node startNode = link_.getStartNode();
+                            NodeBase nodeBaseStart = (NodeBase) startNode;
+                            XShape shape = nodeBaseStart.getShape();
+                            usedShapes.add(shape);
+
+                            Node endNode = link_.getEndNode();
+                            NodeBase nodeBaseEnd = (NodeBase) endNode;
+                            shape = nodeBaseEnd.getShape();
+                            usedShapes.add(shape);
                         }
 
 
@@ -614,12 +617,15 @@ public class MyDispatch implements XDispatch {
                             XMutableTreeDataModel treeDataModel = QI.XMutableTreeDataModel(instance);
 
 
-
                             validationDialog.init(dialog, validate, treeDataModel, diagramService);
                             dialog.setVisible(true);
                         } else {
 
-                            String code = codeGenerator.generateCode(new DiagramCodeSource(diagramModel, collectedConnectedShapes, diagramType));
+                            ArrayList<ConnectedShapesComplex> connectedShapesComplexes = new ArrayList<>(diagramWalker.getFromTo().values());
+                            ArrayList<ConnectedShapesComplex> inverted = new ArrayList<>();
+
+
+                            String code = codeGenerator.generateCode(new DiagramCodeSource(diagramModel, connectedShapesComplexes, diagramType));
                             DiagramCodeGenerator generator = (DiagramCodeGenerator) codeGenerator;
 
 
@@ -631,13 +637,11 @@ public class MyDispatch implements XDispatch {
                             dialog.execute();
                         }
 
-                    }
-                    catch(CantRecognizeType cantRecognizeType){
+                    } catch (CantRecognizeType cantRecognizeType) {
 
                         diagramController.setSelectedShape(cantRecognizeType.getShape());
                         throw new java.lang.RuntimeException(cantRecognizeType);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         throw new RuntimeException("", e);
                     }
 

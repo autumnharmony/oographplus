@@ -1,4 +1,3 @@
-
 package ru.ssau.graphplus.link;
 
 import com.google.inject.Inject;
@@ -137,7 +136,6 @@ public class LinkFactory extends AbstractDiagramElementFactory {
     public Link create(ConnectedShapesComplex connectedShapesComplex) {
         LinkTypeRecogniser linkTypeRecogniser = new LinkTypeRecogniserImpl();
         Link.LinkType type = linkTypeRecogniser.getType(connectedShapesComplex.connector1 != null ? connectedShapesComplex.connector1 : connectedShapesComplex.connector, connectedShapesComplex.textShape, connectedShapesComplex.connector2);
-        HashMap map = new HashMap();
         LinkConnectors linkConnectors =Settings.getSettings().isAddTextToShapeToLink() ? LinkConnectors.TwoConnectorsShape : LinkConnectors.OneConnectorShape;
 
         Link link = create(type, linkConnectors);

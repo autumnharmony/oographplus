@@ -91,4 +91,13 @@ public class ConnectedShapesComplex implements ShapesProvider {
 
         return xShapes;
     }
+
+    @Override
+    public String toString() {
+        return "ConnectedShapesComplex{" +
+                "\nfromShape=" + QI.XText(fromShape).getString() +
+                "\ntoShape=" + QI.XText(toShape).getString() +
+                "\nconnector=" + getConnectorText() +
+                '}';
+    }
 }

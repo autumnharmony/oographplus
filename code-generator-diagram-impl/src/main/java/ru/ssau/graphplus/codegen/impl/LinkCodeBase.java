@@ -101,4 +101,11 @@ public abstract class LinkCodeBase implements LinkCode {
         this.linkTypeRecogniser = linkTypeRecogniser;
         this.shapeHelper = shapeHelper;
     }
+
+    @Override
+    public String toString() {
+        return "LinkCodeBase{" +
+                "connectedShapesComplex=" + connectedShapesComplex +
+                '}';
+    }
 }

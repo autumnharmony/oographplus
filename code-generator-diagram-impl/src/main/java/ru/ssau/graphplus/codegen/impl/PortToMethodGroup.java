@@ -11,9 +11,9 @@ import ru.ssau.graphplus.commons.ShapeHelperWrapper;
 import java.util.List;
 
 
-public class PortToMethodGroup extends LinkCodeBase implements GroupingCode<PortToMethodCode>, PortToMethodCode {
+public class PortToMethodGroup extends LinkCodeGroupBase<PortToMethodCode> implements GroupingCode<PortToMethodCode>, PortToMethodCode {
 
-    private List<PortToMethodCode> group;
+
 
     public PortToMethodGroup(ConnectedShapesComplex connectedShapesComplex, LinkTypeRecogniser linkTypeRecogniser, ShapeHelperWrapper shapeHelper) {
         super(connectedShapesComplex, linkTypeRecogniser, shapeHelper);
@@ -66,8 +66,5 @@ public class PortToMethodGroup extends LinkCodeBase implements GroupingCode<Port
         return buffer.toString();
     }
 
-    @Override
-    public void setGroup(List<PortToMethodCode> group) {
-        this.group = group;
-    }
+
 }

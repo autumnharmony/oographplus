@@ -46,4 +46,9 @@ public abstract class MatchBase implements Match {
     private void printDescription(){
         System.out.println(describe());
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }

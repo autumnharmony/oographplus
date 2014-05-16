@@ -1,4 +1,3 @@
-
 package ru.ssau.graphplus.node;
 
 
@@ -101,23 +100,25 @@ public class NodeFactory extends AbstractDiagramElementFactory {
         return null;
     }
 
+    private Map<XShape, Node> shapeNodeMap = new HashMap<>();
 
 
-    public Collection<Node> create(ConnectedShapesComplex connectedShapesComplex){
-        XShape fromShape = connectedShapesComplex.fromShape;
-        XShape toShape = connectedShapesComplex.toShape;
+    private Node create(XShape shape) {
+        if (shapeNodeMap.containsKey(shape)) {
+            return shapeNodeMap.get(shape);
+        } else {
+            NodeType nodeType = shapeHelper.getNodeType(shape);
+            NodeBase nodeBase = create(nodeType, shape);
+            nodeBase.setName(ShapeHelper.getText(QI.XShape(shape)));
+            return nodeBase;
+        }
 
-        NodeType nodeType =shapeHelper.getNodeType(fromShape);
-        NodeType nodeType1 = shapeHelper.getNodeType(toShape);
-        NodeBase nodeBase = create(nodeType, connectedShapesComplex.fromShape);
+    }
 
-        String text = ShapeHelper.getText(QI.XShape(nodeBase.getShape()));
-
-        nodeBase.setName(text);
-        NodeBase nodeBase1 = create(nodeType1, connectedShapesComplex.toShape);
-        text = ShapeHelper.getText(QI.XShape(nodeBase1.getShape()));
-        nodeBase1.setName(text);
-        return Arrays.<Node>asList(nodeBase, nodeBase1);
+    public Collection<Node> create(ConnectedShapesComplex connectedShapesComplex) {
+        Node node1 = create(connectedShapesComplex.fromShape);
+        Node node2 = create(connectedShapesComplex.toShape);
+        return Arrays.asList(node1, node2);
     }
 
 

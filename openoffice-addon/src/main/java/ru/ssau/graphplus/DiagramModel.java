@@ -8,11 +8,11 @@ import com.google.common.collect.Sets;
 import com.sun.star.drawing.*;
 import com.sun.star.lang.*;
 import com.sun.star.lang.IndexOutOfBoundsException;
-import ru.ssau.graphplus.codegen.impl.analizer.DiagramWalker;
+import ru.ssau.graphplus.codegen.impl.DiagramWalker;
 import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
-import ru.ssau.graphplus.codegen.impl.recognition.CantRecognizeType;
+import ru.ssau.graphplus.codegen.impl.analizer.Graph;
 import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.events.*;
 import ru.ssau.graphplus.events.EventListener;
@@ -45,7 +45,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
 
     private transient XComponent xDrawDoc;
     private Map<String, DiagramElement> idToDiagramElement;
-    private List<ConnectedShapesComplex> connectedShapesComplexes;
+    private Graph graph;
     private Map<Class<Event>, List<EventListener>> eventListeners = new WeakHashMap<>();
 
     public DiagramModel(XComponent xDrawDoc) {
@@ -75,23 +75,19 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
                 set.add(shape);
             }
 
-            DiagramWalker diagramWalker = new DiagramWalker(new ShapeHelperWrapperImpl(new MiscHelperWrapperImpl()), new UnoRuntimeWrapperImpl());
+            DiagramWalker diagramWalker = new DiagramWalker(new ShapeHelperWrapperImpl(new MiscHelperWrapperImpl()), new UnoRuntimeWrapperImpl(), linkFactory, nodeFactory);
             DiagramType recognise = new DiagramTypeRecognitionImpl().recognise(set);
             diagramWalker.setDiagramType(recognise);
-            List<ConnectedShapesComplex> walk = diagramWalker.walk(set, null);
+            Graph graph1 = diagramWalker.walk(set);
 
-            for (ConnectedShapesComplex connectedShapesComplex : walk) {
-                Collection<Node> nodes = nodeFactory.create(connectedShapesComplex);
-                Link link = linkFactory.create(connectedShapesComplex);
-
-                addDiagramElement(link);
-                for (Node node : nodes) {
-                    addDiagramElement(node);
-                }
-                Iterator<Node> iterator = nodes.iterator();
-                link.setStartNode(iterator.next());
-                link.setEndNode(iterator.next());
+            for (Node node : graph1.getNodes()){
+                addDiagramElement(node);
             }
+
+            for (Link link : graph1.getLinks()){
+                addDiagramElement(link);
+            }
+
         } catch (IndexOutOfBoundsException | WrappedTargetException  e) {
             e.printStackTrace();
         }
@@ -106,12 +102,12 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         return xDrawDoc;
     }
 
-    public List<ConnectedShapesComplex> getConnectedShapesComplexList() {
-        return connectedShapesComplexes;
+    public Graph getGraph() {
+        return graph;
     }
 
-    public void setConnectedShapesComplexes(List<ConnectedShapesComplex> connectedShapesComplexes) {
-        this.connectedShapesComplexes = connectedShapesComplexes;
+    public void setGraph(Graph graph) {
+        this.graph = graph;
     }
 
     public DiagramType getDiagramType() {
