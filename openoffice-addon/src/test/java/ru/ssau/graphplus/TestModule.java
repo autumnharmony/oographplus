@@ -7,8 +7,6 @@ package ru.ssau.graphplus;
 import com.google.inject.AbstractModule;
 import ru.ssau.graphplus.commons.*;
 
-import static org.mockito.Mockito.mock;
-
 public class TestModule extends AbstractModule {
 
     private final ShapeHelperWrapper shapeHelperWrapper;

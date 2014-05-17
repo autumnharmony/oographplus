@@ -6,21 +6,20 @@ package ru.ssau.graphplus.codegen.impl;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
-import com.google.common.collect.*;
-import com.google.inject.Guice;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+import com.google.common.collect.Table;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
-import com.google.inject.util.Modules;
 import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
-import ru.ssau.graphplus.codegen.impl.CodeGeneratorModule;
 import ru.ssau.graphplus.codegen.impl.analizer.Graph;
 import ru.ssau.graphplus.codegen.impl.analizer.Walker;
-import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognitionImpl;
+import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.link.LinkFactory;
 import ru.ssau.graphplus.node.NodeFactory;
 
@@ -38,6 +37,7 @@ public class DiagramWalker implements Walker<Set<XShape>, Graph> {
     private final NodeFactory nodeFactory;
     private Table<Node,Node,List<Link>> graph;
     private Table<XShape,XShape,ConnectedShapesComplex> fromTo;
+    private Collection<ConnectedShapesComplex> connectedShapesComplexes;
 
 
     @Inject
@@ -208,10 +208,15 @@ public class DiagramWalker implements Walker<Set<XShape>, Graph> {
             graph.get(from, to).add(link);
         }
         Graph nodeLinkGraph = new Graph(graph, nodes, links);
+        connectedShapesComplexes = fromTo.values();
         return nodeLinkGraph;
     }
 
-//    private Node createNode(Set<XShape> uniqueNodes, XShape shape, Map<XShape, Node> shapeNodeMap) {
+    public Collection<ConnectedShapesComplex> getConnectedShapesComplexes() {
+        return connectedShapesComplexes;
+    }
+
+    //    private Node createNode(Set<XShape> uniqueNodes, XShape shape, Map<XShape, Node> shapeNodeMap) {
 //        Node node = null;
 //        if (!uniqueNodes.contains(shape)) {
 //

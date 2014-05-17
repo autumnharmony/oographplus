@@ -5,7 +5,6 @@
 package ru.ssau.graphplus;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -33,11 +32,7 @@ import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.codegen.CodeGenerator;
-import ru.ssau.graphplus.codegen.impl.CodeGeneratorFactory;
-import ru.ssau.graphplus.codegen.impl.CodeGeneratorModule;
-import ru.ssau.graphplus.codegen.impl.DiagramCodeGenerator;
-import ru.ssau.graphplus.codegen.impl.DiagramCodeSource;
-import ru.ssau.graphplus.codegen.impl.DiagramWalker;
+import ru.ssau.graphplus.codegen.impl.*;
 import ru.ssau.graphplus.codegen.impl.analizer.Graph;
 import ru.ssau.graphplus.codegen.impl.recognition.CantRecognizeType;
 import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognition;
@@ -82,7 +77,7 @@ public class MyDispatch implements XDispatch {
     private final XComponentContext m_xContext;
     private final DiagramService diagramService;
     private final XUndoManager undoManager;
-    private final ru.ssau.graphplus.codegen.impl.analizer.DiagramWalker diagramWalker;
+    private final DiagramWalker diagramWalker;
     private final CodeGeneratorFactory codeGeneratorFactory;
     private XComponent xDrawDoc;
     private Logger logger = Logger.getLogger("omg");
@@ -621,7 +616,7 @@ public class MyDispatch implements XDispatch {
                             dialog.setVisible(true);
                         } else {
 
-                            ArrayList<ConnectedShapesComplex> connectedShapesComplexes = new ArrayList<>(diagramWalker.getFromTo().values());
+                            ArrayList<ConnectedShapesComplex> connectedShapesComplexes = new ArrayList<>(diagramWalker.getConnectedShapesComplexes());
                             ArrayList<ConnectedShapesComplex> inverted = new ArrayList<>();
 
 
