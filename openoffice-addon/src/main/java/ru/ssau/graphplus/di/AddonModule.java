@@ -5,8 +5,11 @@
 package ru.ssau.graphplus.di;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryProvider;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
+import ru.ssau.graphplus.codegen.impl.CodeGeneratorFactory;
+import ru.ssau.graphplus.codegen.impl.DiagramCodeGenerator;
 import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognition;
 import ru.ssau.graphplus.commons.CommonsModule;
 import ru.ssau.graphplus.DiagramController;
@@ -48,7 +51,7 @@ public class AddonModule extends AbstractModule {
         bind(XMultiServiceFactory.class).toInstance(xMSF);
         bind(NodeFactory.class);
         bind(LinkFactory.class);
-
+        bind(CodeGeneratorFactory.class).toProvider(FactoryProvider.newFactory(CodeGeneratorFactory.class, DiagramCodeGenerator.class));
         bind(DiagramService.class).to(DiagramServiceImpl.class);
     }
 }

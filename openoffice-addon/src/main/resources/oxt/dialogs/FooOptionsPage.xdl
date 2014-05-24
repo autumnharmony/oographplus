@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="FooOptionsDialog" dlg:left="101" dlg:top="52" dlg:width="158" dlg:height="147" dlg:help-text="&amp;25.FooOptionsDialog.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;26.FooOptionsDialog.Title" dlg:withtitlebar="false">
- <dlg:bulletinboard>
-  <dlg:checkbox dlg:id="promptForNodeName" dlg:tab-index="0" dlg:left="10" dlg:top="25" dlg:width="63" dlg:height="12" dlg:help-text="&amp;29.FooOptionsDialog.promptForNodeName.HelpText" dlg:value="&amp;30.FooOptionsDialog.promptForNodeName.Label" dlg:checked="false"/>
-  <dlg:combobox dlg:id="linkingInputMode" dlg:tab-index="1" dlg:left="10" dlg:top="55" dlg:width="72" dlg:height="14" dlg:help-text="&amp;33.FooOptionsDialog.linkingInputMode.HelpText" dlg:value="&amp;34.FooOptionsDialog.linkingInputMode.Text" dlg:spin="true"/>
-  <dlg:text dlg:id="linkingModeLabel" dlg:tab-index="2" dlg:left="8" dlg:top="43" dlg:width="73" dlg:height="8" dlg:help-text="&amp;37.FooOptionsDialog.linkingModeLabel.HelpText" dlg:value="&amp;38.FooOptionsDialog.linkingModeLabel.Label"/>
- </dlg:bulletinboard>
-</dlg:window>

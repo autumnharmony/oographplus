@@ -5,6 +5,7 @@
 package ru.ssau.graphplus;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -21,19 +22,19 @@ import com.sun.star.drawing.XShape;
 import com.sun.star.drawing.XShapes;
 import com.sun.star.frame.*;
 import com.sun.star.lang.EventObject;
-import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.*;
 import com.sun.star.uno.*;
 import com.sun.star.uno.Exception;
 import com.sun.star.uno.RuntimeException;
 import com.sun.star.util.URL;
+import ru.ssau.graphplus.codegen.impl.DiagramCodeGenerator;
 import ru.ssau.graphplus.api.DiagramService;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.codegen.CodeGenerator;
 import ru.ssau.graphplus.codegen.impl.*;
-import ru.ssau.graphplus.codegen.impl.analizer.Graph;
+import ru.ssau.graphplus.api.Graph;
 import ru.ssau.graphplus.codegen.impl.recognition.CantRecognizeType;
 import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognition;
 import ru.ssau.graphplus.commons.CommonsModule;
@@ -58,7 +59,6 @@ import ru.ssau.graphplus.validation.Validator;
 import ru.ssau.graphplus.validation.impl.ValidatorImpl;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.logging.Level;
@@ -68,7 +68,7 @@ import static ru.ssau.graphplus.Constants.*;
 
 public class MyDispatch implements XDispatch {
 
-    private final XFrame m_xFrame;
+    private XFrame m_xFrame;
     private final TableInserterImpl tableInserter;
     private final XMultiServiceFactory xMSF;
     private final NodeFactory nodeFactory;
@@ -91,6 +91,9 @@ public class MyDispatch implements XDispatch {
     private final DiagramTypeRecognition diagramTypeRecognition;
     private Injector injector;
 
+    public void setFrame(XFrame m_xFrame) {
+        this.m_xFrame = m_xFrame;
+    }
 
     public MyDispatch(XComponent xDrawDoc, XComponentContext m_xContext, XFrame m_xFrame, XMultiComponentFactory xMCF, XMultiServiceFactory xMSF) {
         this.xDrawDoc = xDrawDoc;
@@ -143,6 +146,7 @@ public class MyDispatch implements XDispatch {
 
 
         if (Boolean.TRUE.equals(Global.loaded)) {
+            System.out.println("WAS LOADED, NEED change doc");
             onLoadHandler();
             Global.loaded = false;
         }
@@ -215,7 +219,7 @@ public class MyDispatch implements XDispatch {
     }
 
     private void onLoadHandler() {
-        xDrawDoc = UnoRuntime.queryInterface(XComponent.class, m_xFrame.getController().getModel());
+//        xDrawDoc = UnoRuntime.queryInterface(XComponent.class, m_xFrame.getController().getModel());
         diagramModel.init(nodeFactory, linkFactory);
     }
 
@@ -230,12 +234,12 @@ public class MyDispatch implements XDispatch {
         documentEventsHandler.registerHandler(ImmutableList.of("OnLoad", "OnLoadFinished"), new DocumentEventHandler() {
             @Override
             public void documentEventOccured(DocumentEvent documentEvent) {
-                onLoadHandler();
+//                onLoadHandler();
             }
 
             @Override
             public void documentEventOccured(String eventName) {
-                onLoadHandler();
+//                onLoadHandler();
             }
         });
 
@@ -254,44 +258,44 @@ public class MyDispatch implements XDispatch {
         documentEventsHandler.registerHandler(ImmutableList.of("OnSave", "OnSaveAs"), new DocumentEventHandler() {
             @Override
             public void documentEventOccured(DocumentEvent documentEvent) {
-//                OOGraph ooGraph = MyComponentFactory.mapMap.get(diagramModel);
-
-                XPropertyContainer userDefinedProperties = null;
-
-                String s = null;
-                try {
-                    diagramModel.refreshModel();
-                    s = StringSerializer.toString(diagramModel);
-
-                    XDocumentPropertiesSupplier xDocumentPropertiesSupplier = UnoRuntime.queryInterface(XDocumentPropertiesSupplier.class, xDrawDoc);
-                    XDocumentProperties documentProperties = xDocumentPropertiesSupplier.getDocumentProperties();
-                    userDefinedProperties = documentProperties.getUserDefinedProperties();
-                    userDefinedProperties.addProperty("DiagramModel", PropertyAttribute.MAYBEVOID, new Any(Type.STRING, s));
-                    //                        documentProperties.storeToStorage();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (IllegalTypeException e) {
-                    e.printStackTrace();
-                } catch (PropertyExistException e) {
-
-                    if (userDefinedProperties != null && s != null) {
-                        try {
-                            XPropertySet xPropertySet = QI.XPropertySet(userDefinedProperties);
-
-                            xPropertySet.setPropertyValue("DiagramModel", s);
-                        } catch (UnknownPropertyException e1) {
-                            e1.printStackTrace();
-                        } catch (PropertyVetoException e1) {
-                            e1.printStackTrace();
-                        } catch (IllegalArgumentException e1) {
-                            e1.printStackTrace();
-                        } catch (WrappedTargetException e1) {
-                            e1.printStackTrace();
-                        }
-                    }
-                }
+////                OOGraph ooGraph = MyComponentFactory.mapMap.get(diagramModel);
+//
+//                XPropertyContainer userDefinedProperties = null;
+//
+//                String s = null;
+//                try {
+////                    diagramModel.refreshModel();
+////                    s = StringSerializer.toString(diagramModel);
+////
+////                    XDocumentPropertiesSupplier xDocumentPropertiesSupplier = UnoRuntime.queryInterface(XDocumentPropertiesSupplier.class, xDrawDoc);
+////                    XDocumentProperties documentProperties = xDocumentPropertiesSupplier.getDocumentProperties();
+////                    userDefinedProperties = documentProperties.getUserDefinedProperties();
+//////                    userDefinedProperties.addProperty("DiagramModel", PropertyAttribute.MAYBEVOID, new Any(Type.STRING, s));
+////                    //                        documentProperties.storeToStorage();
+////                } catch (IOException e) {
+////                    e.printStackTrace();
+////                } catch (IllegalArgumentException e) {
+////                    e.printStackTrace();
+////                } catch (IllegalTypeException e) {
+////                    e.printStackTrace();
+////                } catch (PropertyExistException e) {
+////
+////                    if (userDefinedProperties != null && s != null) {
+////                        try {
+////                            XPropertySet xPropertySet = QI.XPropertySet(userDefinedProperties);
+////
+////                            xPropertySet.setPropertyValue("DiagramModel", s);
+////                        } catch (UnknownPropertyException e1) {
+////                            e1.printStackTrace();
+////                        } catch (PropertyVetoException e1) {
+////                            e1.printStackTrace();
+////                        } catch (IllegalArgumentException e1) {
+////                            e1.printStackTrace();
+////                        } catch (WrappedTargetException e1) {
+////                            e1.printStackTrace();
+////                        }
+////                    }
+////                }
 
             }
 
@@ -582,6 +586,7 @@ public class MyDispatch implements XDispatch {
                         CodeGenerator codeGenerator = codeGeneratorFactory.create(DrawHelper.getPageName(currentDrawPage), diagramType);
                         diagramModel.setGraph(walk);
 
+
                         Set<XShape> usedShapes = new HashSet<>();
                         for (Link link_ : walk.getLinks()) {
                             Node startNode = link_.getStartNode();
@@ -593,44 +598,53 @@ public class MyDispatch implements XDispatch {
                             NodeBase nodeBaseEnd = (NodeBase) endNode;
                             shape = nodeBaseEnd.getShape();
                             usedShapes.add(shape);
+
+                            if (link_ instanceof ShapesProvider) {
+                                ShapesProvider shapesProvider = (ShapesProvider) link_;
+                                if (shapesProvider != null) {
+                                    usedShapes.addAll(Lists.newArrayList(shapesProvider.getShapes()));
+                                }
+                            }
+
                         }
 
 
                         Set<XShape> unusedShapes = new HashSet<>(allShapes);
                         unusedShapes.removeAll(usedShapes);
 
+                        if (Settings.getSettings().isValidationRequired()) {
 
-                        Validator validator = new ValidatorImpl(diagramModel, unusedShapes);
-                        ValidationResult validate = validator.validate(diagramModel);
+                            Validator validator = new ValidatorImpl(diagramModel, unusedShapes);
+                            ValidationResult validate = validator.validate(diagramModel);
 
+                            if (validate.getItems().size() > 0) {
+                                ValidationDialog validationDialog = new ValidationDialog();
+                                XWindow dialog = createWindow(ValidationDialog.VALIDATION_DIALOG_XDL, xModel, m_xFrame, validationDialog.getDialogHandler(), false);
+                                Object instance = xMCF.createInstanceWithContext("com.sun.star.awt.tree.MutableTreeDataModel", m_xContext);
 
-                        if (validate.getItems().size() > 0) {
-                            ValidationDialog validationDialog = new ValidationDialog();
-                            XWindow dialog = createWindow(ValidationDialog.VALIDATION_DIALOG_XDL, xModel, m_xFrame, validationDialog.getDialogHandler(), false);
-                            Object instance = xMCF.createInstanceWithContext("com.sun.star.awt.tree.MutableTreeDataModel", m_xContext);
-
-                            XMutableTreeDataModel treeDataModel = QI.XMutableTreeDataModel(instance);
-
-
-                            validationDialog.init(dialog, validate, treeDataModel, diagramService);
-                            dialog.setVisible(true);
-                        } else {
-
-                            ArrayList<ConnectedShapesComplex> connectedShapesComplexes = new ArrayList<>(diagramWalker.getConnectedShapesComplexes());
-                            ArrayList<ConnectedShapesComplex> inverted = new ArrayList<>();
+                                XMutableTreeDataModel treeDataModel = QI.XMutableTreeDataModel(instance);
 
 
-                            String code = codeGenerator.generateCode(new DiagramCodeSource(diagramModel, connectedShapesComplexes, diagramType));
-                            DiagramCodeGenerator generator = (DiagramCodeGenerator) codeGenerator;
-
-
-                            GetCodeDialog myDialog = new GetCodeDialog(code, oClipboard);
-
-
-                            XDialog dialog = createDialog(GetCodeDialog.GET_CODE_DIALOG_XDL, xModel, m_xFrame, myDialog, false);
-                            myDialog.init(dialog);
-                            dialog.execute();
+                                validationDialog.init(dialog, validate, treeDataModel, diagramService);
+                                dialog.setVisible(true);
+                                return;
+                            }
                         }
+
+
+                        ArrayList<ConnectedShapesComplex> connectedShapesComplexes = new ArrayList<>(diagramWalker.getConnectedShapesComplexes());
+
+                        String code = codeGenerator.generateCode(new DiagramCodeSource(diagramModel, connectedShapesComplexes, diagramType));
+                        DiagramCodeGenerator generator = (DiagramCodeGenerator) codeGenerator;
+
+
+                        GetCodeDialog myDialog = new GetCodeDialog(code, oClipboard);
+
+
+                        XDialog dialog = createDialog(GetCodeDialog.GET_CODE_DIALOG_XDL, xModel, m_xFrame, myDialog, false);
+                        myDialog.init(dialog);
+                        dialog.execute();
+
 
                     } catch (CantRecognizeType cantRecognizeType) {
 

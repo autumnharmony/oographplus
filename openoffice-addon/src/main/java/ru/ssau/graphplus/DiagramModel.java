@@ -12,7 +12,7 @@ import ru.ssau.graphplus.codegen.impl.DiagramWalker;
 import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
-import ru.ssau.graphplus.codegen.impl.analizer.Graph;
+import ru.ssau.graphplus.api.Graph;
 import ru.ssau.graphplus.commons.*;
 import ru.ssau.graphplus.events.*;
 import ru.ssau.graphplus.events.EventListener;
@@ -108,6 +108,9 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
 
     public void setGraph(Graph graph) {
         this.graph = graph;
+        diagramElements.clear();
+        diagramElements.addAll(graph.getNodes());
+        diagramElements.addAll(graph.getLinks());
     }
 
     public DiagramType getDiagramType() {

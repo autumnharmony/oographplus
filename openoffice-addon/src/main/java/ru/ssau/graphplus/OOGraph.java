@@ -103,7 +103,6 @@ public class OOGraph extends ComponentBase implements
         m_aSupportedModules.add("com.sun.star.drawing.DrawingDocument");
 
 
-
     }
 
     private static final String msURLhead = "private:resource/toolpanel/OOGraphPanelFactory";
@@ -114,7 +113,7 @@ public class OOGraph extends ComponentBase implements
             "com.sun.star.task.AsyncJob",
             RU_SSAU_GRAPHPLUS_SIDEBAR_OOGRAPH_PANEL_FACTORY
     };
-//    public static StatusBarInterceptionController aController;
+    //    public static StatusBarInterceptionController aController;
     static Map<String, XDispatch> frameToDispatch = new HashMap<>();
     static Map<XFrame, MyDispatch> dispatchByFrame = new WeakHashMap<>();
     private static List<WeakReference<OOGraph>> instances = new ArrayList<>();
@@ -137,7 +136,6 @@ public class OOGraph extends ComponentBase implements
     public OOGraph(XComponentContext context) {
 
         instances.add(new WeakReference(this));
-
 
 
         m_xContext = context;
@@ -745,7 +743,12 @@ public class OOGraph extends ComponentBase implements
         if (sElementName.equals("LinkNodesPanel")) {
 
             MyDispatch myDispatch1 = dispatchByFrame.get(xFrame);
-
+            if (myDispatch1 == null) {
+                myDispatch1 = dispatchByFrame.values().iterator().next();
+            }
+            if (xFrame == null){
+                xFrame = dispatchByFrame.keySet().iterator().next();
+            }
             LinkNodesPanel aPanel = new LinkNodesPanel(
                     xFrame, xParentWindow, m_xContext, myDispatch1);
             XModel xModel = QI.XModel(myDispatch1.getDiagramModel().getDrawDoc());
@@ -759,7 +762,12 @@ public class OOGraph extends ComponentBase implements
         if (sElementName.equals("InsertNodePanel")) {
 
             MyDispatch myDispatch1 = dispatchByFrame.get(xFrame);
-
+            if (myDispatch1 == null) {
+                myDispatch1 = dispatchByFrame.values().iterator().next();
+            }
+            if (xFrame == null){
+                xFrame = dispatchByFrame.keySet().iterator().next();
+            }
             InsertNodePanel insertNodePanel = new InsertNodePanel(
                     xFrame, xParentWindow, m_xContext, myDispatch1, m_xComponent, myDispatch1.getDiagramService());
 
@@ -778,12 +786,12 @@ public class OOGraph extends ComponentBase implements
 
     @Override
     public boolean callHandlerMethod(XDialog xDialog, Object o, String s) throws WrappedTargetException {
-        return true;  // empty body TODO
+        return true;
     }
 
     @Override
     public String[] getSupportedMethodNames() {
-        return new String[0];  // empty body TODO
+        return new String[0];
     }
 
     static {

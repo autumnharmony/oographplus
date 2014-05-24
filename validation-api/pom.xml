@@ -10,7 +10,8 @@
     <artifactId>validation-api</artifactId>
     <packaging>jar</packaging>
 
-    <name>validation-api</name>
+    <name>graphplus::validation</name>
+
     <url>http://maven.apache.org</url>
 
     <properties>

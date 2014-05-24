@@ -32,10 +32,7 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>org.reflections</groupId>
@@ -57,16 +54,7 @@
 
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.google.collections</groupId>-->
-            <!--<artifactId>google-collections</artifactId>-->
 
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>ru.ssau.graphplus</groupId>-->
-            <!--<artifactId>graphplus-addon</artifactId>-->
-            <!--<version>0.1</version>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>ru.ssau.graphplus</groupId>
@@ -81,13 +69,6 @@
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-assisted-inject</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>

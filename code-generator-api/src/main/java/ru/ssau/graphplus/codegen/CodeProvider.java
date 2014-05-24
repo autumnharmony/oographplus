@@ -6,5 +6,4 @@ package ru.ssau.graphplus.codegen;
 
 public interface CodeProvider {
     String getCode();
-
 }

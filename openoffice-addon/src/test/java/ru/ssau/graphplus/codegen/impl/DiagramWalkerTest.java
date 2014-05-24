@@ -20,7 +20,7 @@ import org.mockito.stubbing.Answer;
 import ru.ssau.graphplus.TestModule;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Node;
-import ru.ssau.graphplus.codegen.impl.analizer.Graph;
+import ru.ssau.graphplus.api.Graph;
 import ru.ssau.graphplus.commons.*;
 
 import java.util.ArrayList;

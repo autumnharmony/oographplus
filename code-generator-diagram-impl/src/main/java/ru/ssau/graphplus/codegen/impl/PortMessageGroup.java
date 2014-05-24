@@ -70,4 +70,8 @@ public class PortMessageGroup extends LinkCodeGroupBase<PortMessageCode> impleme
     }
 
 
+    public String toString(){
+        return super.toString() + " code:" + getCode();
+    }
+
 }

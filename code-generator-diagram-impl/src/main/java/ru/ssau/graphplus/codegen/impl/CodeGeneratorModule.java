@@ -24,7 +24,7 @@ public class CodeGeneratorModule extends AbstractModule {
         bind(MatchFactory.class).to(MatchFactoryImpl.class);
         bind(LinkTypeRecogniser.class).to(LinkTypeRecogniserImpl.class);
         bind(CodeProviderFactory.class).to(CodeProviderFactoryImpl.class);
-        bind(CodeGeneratorFactory.class).toProvider(FactoryProvider.newFactory(CodeGeneratorFactory.class, DiagramCodeGenerator.class));
+
         bind(DiagramTypeRecognition.class).to(DiagramTypeRecognitionImpl.class);
     }
 }

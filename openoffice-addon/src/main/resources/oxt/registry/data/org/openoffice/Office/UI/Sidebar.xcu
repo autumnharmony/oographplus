@@ -32,7 +32,7 @@
             <node oor:name="LinkNodesPanel" oor:op="replace">
                 <prop oor:name="Title" oor:type="xs:string">
                     <value xml:lang="en-US">Links Nodes</value>
-                    <value xml:lang="ru-RU">Соединить узлы</value>
+                    <value xml:lang="ru">Соединить узлы</value>
                 </prop>
                 <prop oor:name="Id" oor:type="xs:string">
                     <value>LinkNodesPanel</value>
@@ -57,7 +57,7 @@
             <node oor:name="InsertNodePanel" oor:op="replace">
                 <prop oor:name="Title" oor:type="xs:string">
                     <value xml:lang="en-US">Insert Node</value>
-                    <value xml:lang="ru-RU">Добавить узел</value>
+                    <value xml:lang="ru">Добавить узел</value>
                 </prop>
                 <prop oor:name="Id" oor:type="xs:string">
                     <value>InsertNodePanel</value>

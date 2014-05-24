@@ -21,48 +21,6 @@
 
     <dependencies>
 
-        <!-- openoffice depends -->
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>juh</artifactId>
-            <scope>system</scope>
-            <systemPath>${oo_artifacts_path}juh.jar</systemPath>
-            <version>3.2.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>jurt</artifactId>
-            <scope>system</scope>
-            <systemPath>${oo_artifacts_path}jurt.jar</systemPath>
-            <version>3.2.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>ridl</artifactId>
-            <scope>system</scope>
-            <systemPath>${oo_artifacts_path}ridl.jar</systemPath>
-            <version>3.2.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>unoil</artifactId>
-            <scope>system</scope>
-            <systemPath>${oo_artifacts_path}unoil.jar</systemPath>
-            <version>3.2.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openoffice</groupId>
-            <artifactId>officebean</artifactId>
-            <version>4.0</version>
-            <scope>system</scope>
-            <systemPath>${oo_artifacts_path}officebean.jar</systemPath>
-        </dependency>
-        <!-- / openoffice depends -->
-
-
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
@@ -112,11 +70,6 @@
             <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-       </dependency>
 
         <dependency>
             <groupId>ru.ssau.graphplus</groupId>
@@ -334,8 +287,8 @@
                     oxtDir: OXT source dir
                  -->
                 <configuration>
-                    <ooo>/opt/openoffice4/</ooo>
-                    <sdk>/opt/openoffice4/sdk</sdk>
+                    <ooo>${ooo_path}</ooo>
+                    <sdk>${sdk_path}</sdk>
                     <oxtDir>src/main/resources/oxt</oxtDir>
                 </configuration>
                 <executions>

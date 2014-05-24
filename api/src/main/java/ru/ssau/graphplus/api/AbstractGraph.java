@@ -2,8 +2,9 @@
  * Copyright (c) 2014. Anton Borisov
  */
 
-package ru.ssau.graphplus.codegen.impl.analizer;
+package ru.ssau.graphplus.api;
 
+import com.google.common.collect.Sets;
 import com.google.common.collect.Table;
 
 import java.util.List;
@@ -24,5 +25,14 @@ public abstract class AbstractGraph<N,L> {
 
     public Set<L> getLinks() {
         return links;
+    }
+
+    protected AbstractGraph() {
+        nodes = Sets.newHashSet();
+        links = Sets.newHashSet();
+    }
+
+    public Table<N, N, List<L>> getTable() {
+        return graph;
     }
 }

@@ -46,10 +46,8 @@ public class MixedLink extends LinkTwoConnectorsAndTextBase implements Serializa
                 xPS2.setPropertyValue("LineStyle", LineStyle.DASH);
                 xPS2.setPropertyValue("LineDashName", "Fine Dashed");
                 xPS2.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
-//                xPS2.setPropertyValue("EdgeKind", ConnectorType.LINE);
-//                xPS2.setPropertyValue("LineEndName", "Circle");
+                xPS2.setPropertyValue("LineEndName", "Arrow");
                 xPS2.setPropertyValue("LineColor", new Integer(0x000000));
-
             }
         };
     }
@@ -80,9 +78,6 @@ public class MixedLink extends LinkTwoConnectorsAndTextBase implements Serializa
         }
         return null;
     }
-
-
-
 
 
 }

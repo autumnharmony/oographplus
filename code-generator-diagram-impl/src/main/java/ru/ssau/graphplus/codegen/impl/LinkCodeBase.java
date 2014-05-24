@@ -13,7 +13,7 @@ import ru.ssau.graphplus.commons.ShapeHelperWrapper;
 import ru.ssau.graphplus.codegen.impl.recognition.LinkTypeRecogniser;
 
 
-public abstract class LinkCodeBase implements LinkCode {
+public abstract class LinkCodeBase extends CodeBase implements LinkCode {
 
     protected final LinkTypeRecogniser linkTypeRecogniser;
     protected final ShapeHelperWrapper shapeHelper;
@@ -74,14 +74,7 @@ public abstract class LinkCodeBase implements LinkCode {
         return c;
     }
 
-    protected String portName(XShape shape) {
-        String string = QI.XText(shape).getString();
-        String[] split = string.split(":");
-        if (split.length == 0) {
-            throw new IllegalArgumentException();
-        }
-        return split[0];
-    }
+
 
     protected String getPortType(XShape shape) {
         String string = QI.XText(shape).getString();

@@ -100,7 +100,7 @@ public class NodeFactory extends AbstractDiagramElementFactory {
         return null;
     }
 
-    private Map<XShape, Node> shapeNodeMap = new HashMap<>();
+    private Map<XShape, Node> shapeNodeMap = new HashMap<XShape,Node>();
 
 
     private Node create(XShape shape) {

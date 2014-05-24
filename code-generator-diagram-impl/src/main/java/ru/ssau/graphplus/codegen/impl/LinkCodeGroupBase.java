@@ -11,8 +11,6 @@ import ru.ssau.graphplus.commons.ShapeHelperWrapper;
 
 import java.util.List;
 
-/**
- */
 public abstract class LinkCodeGroupBase<T> extends LinkCodeBase implements GroupingCode<T>{
 
 

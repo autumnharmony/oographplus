@@ -20,4 +20,6 @@ public interface DiagramModel {
     Collection<Node> getNodes();
 
     DiagramType getDiagramType();
+
+    Graph getGraph();
 }

@@ -18,13 +18,6 @@ import ru.ssau.graphplus.gui.MyDialog;
 
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA.
- * User: anton
- * Date: 4/12/14
- * Time: 9:13 PM
- * To change this template use File | Settings | File Templates.
- */
 public class CreateNodeDialog implements MyDialog<CreateNodeDialog> {
     public static final String CREATE_NODE_DIALOG_XDL = "vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/CreateNodeDialog.xdl";
     private XDialog xDialog;
@@ -56,14 +49,19 @@ public class CreateNodeDialog implements MyDialog<CreateNodeDialog> {
                     @Override
                     public boolean handle(XDialog xDialog, Object o, String s) {
                         try {
-                            QI.XPropertySet(shape).setPropertyValue("Text", QI.XText(xControlContainer.getControl("nodeNameTextField")).getString());
-                        } catch (UnknownPropertyException | PropertyVetoException | com.sun.star.lang.IllegalArgumentException | WrappedTargetException e) {
-
+                            QI.XText(shape).setString(QI.XTextComponent(xControlContainer.getControl("nameTextField")).getText());
                         } finally {
                             xDialog.endExecute();
                             return true;
                         }
 
+                    }
+                })
+                .put(MyDialogHandler.Event.event("cancelExecute"), new MyDialogHandler.EventHandler() {
+                    @Override
+                    public boolean handle(XDialog xDialog, Object o, String s) {
+                        xDialog.endExecute();
+                        return true;
                     }
                 })
                 .build()

@@ -18,7 +18,7 @@ public class LinkCodeBaseImpl extends LinkCodeBase {
     }
 
     public LinkCodeBaseImpl(ConnectedShapesComplex connectedShapesComplex) {
-        super(connectedShapesComplex, null, null);    //To change body of overridden methods use File | Settings | File Templates.
+        super(connectedShapesComplex, null, null);
     }
 
     @Override

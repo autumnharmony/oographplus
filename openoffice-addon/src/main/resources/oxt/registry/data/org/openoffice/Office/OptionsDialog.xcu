@@ -14,7 +14,7 @@
                     </prop>
 
                     <prop oor:name="OptionsPage">
-                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/FooOptionsPage.xdl</value>
+                        <value>vnd.sun.star.extension://ru.ssau.graphplus.oograph/dialogs/OptionsPage.xdl</value>
                     </prop>
 
                     <prop oor:name="EventHandlerService">

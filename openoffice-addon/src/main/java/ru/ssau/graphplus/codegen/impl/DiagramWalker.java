@@ -16,7 +16,7 @@ import com.sun.star.drawing.XShape;
 import ru.ssau.graphplus.api.DiagramType;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
-import ru.ssau.graphplus.codegen.impl.analizer.Graph;
+import ru.ssau.graphplus.api.Graph;
 import ru.ssau.graphplus.codegen.impl.analizer.Walker;
 import ru.ssau.graphplus.codegen.impl.recognition.DiagramTypeRecognitionImpl;
 import ru.ssau.graphplus.commons.*;
@@ -189,6 +189,8 @@ public class DiagramWalker implements Walker<Set<XShape>, Graph> {
 
         graph = HashBasedTable.create();
 
+        normalize(fromTo.values());
+
         for (ConnectedShapesComplex input : fromTo.values()) {
             Collection<Node> c = nodeFactory.create(input);
             nodes.addAll(c);
@@ -210,6 +212,12 @@ public class DiagramWalker implements Walker<Set<XShape>, Graph> {
         Graph nodeLinkGraph = new Graph(graph, nodes, links);
         connectedShapesComplexes = fromTo.values();
         return nodeLinkGraph;
+    }
+
+    private void normalize(Collection<ConnectedShapesComplex> values) {
+       for (ConnectedShapesComplex connectedShapesComplex : values){
+           connectedShapesComplex.normalize();
+       }
     }
 
     public Collection<ConnectedShapesComplex> getConnectedShapesComplexes() {

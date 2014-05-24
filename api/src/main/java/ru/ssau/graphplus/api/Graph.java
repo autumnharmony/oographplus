@@ -2,7 +2,7 @@
  * Copyright (c) 2014. Anton Borisov
  */
 
-package ru.ssau.graphplus.codegen.impl.analizer;
+package ru.ssau.graphplus.api;
 
 import com.google.common.collect.Table;
 import ru.ssau.graphplus.api.Link;

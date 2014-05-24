@@ -80,11 +80,7 @@ public class LinkFactory extends AbstractDiagramElementFactory {
         if (Settings.getSettings().isAddTextToShapeToLink()) {
             switch (type) {
                 case ControlFlow:
-
-
                     link = new ControlLink.ControlLinkTwoConnectorsAndText(xmsf, LINK_PREFIX + getCount());
-
-
                     break;
                 case MixedFlow:
                     link = new MixedLink(xmsf, LINK_PREFIX + getCount());
@@ -97,11 +93,7 @@ public class LinkFactory extends AbstractDiagramElementFactory {
         } else {
             switch (type) {
                 case ControlFlow:
-
-
                     link = new ControlLink.ControlLinkTwoConnectorsAndText(xmsf, LINK_PREFIX + getCount());
-
-
                     break;
                 case MixedFlow:
                     link = new MixedLink(xmsf, LINK_PREFIX + getCount());

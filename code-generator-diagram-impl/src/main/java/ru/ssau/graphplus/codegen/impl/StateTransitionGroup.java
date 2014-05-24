@@ -30,15 +30,21 @@ public class StateTransitionGroup extends LinkCodeBase implements GroupingCode<S
 
         buffer.append(type(from).equals(Node.NodeType.StartMethodOfProcess) ? "+" : "");
         buffer.append(text(from));
-        buffer.append(type(from).equals(Node.NodeType.ClientPort) ? "?" : "");
-        buffer.append(type(from).equals(Node.NodeType.ServerPort) ? "!" : "");
+        buffer.append(type(from).equals(Node.NodeType.ClientPort) ? "!" : "");
+        buffer.append(type(from).equals(Node.NodeType.ServerPort) ? "?" : "");
 
 
-        buffer.append(type(from).equals(Node.NodeType.StartMethodOfProcess) ? "!" : "");
+//        buffer.append(type(from).equals(Node.NodeType.StartMethodOfProcess) ? "!" : "");
+
+
+
 
         int i = 0;
         for (StateTransitionCode stateTransitionCode1 : stateTransitionCode){
             if (i!=0) buffer.append(" | ");
+            XShape to = stateTransitionCode1.to();
+            buffer.append(type(to).equals(Node.NodeType.ServerPort) ? "?" : "!");
+
             buffer.append(stateTransitionCode1.linkText());
             buffer.append(" -> ");
             buffer.append(text(stateTransitionCode1.to()));
@@ -48,6 +54,7 @@ public class StateTransitionGroup extends LinkCodeBase implements GroupingCode<S
 //        buffer.append(" -> ");
 //        buffer.append(text(to()));
 //        buffer.append(type(from));
-        return buffer.toString()+";";
+        buffer.append(";");
+        return buffer.toString();
     }
 }

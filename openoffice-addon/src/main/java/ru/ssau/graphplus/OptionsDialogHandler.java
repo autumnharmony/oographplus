@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 public class OptionsDialogHandler extends WeakBase implements XServiceInfo, XContainerWindowEventHandler {
     public static final String PROMPT_FOR_NODE_NAME = "promptForNodeName";
-    public static String[] SupportedWindowNames = { "FooOptionsPage" };
+    public static String[] SupportedWindowNames = { "OptionsPage" };
 
     static private final String __serviceName = "ru.ssau.graphplus.gui.OptionsDialogHandler";
 
@@ -150,6 +150,13 @@ public class OptionsDialogHandler extends WeakBase implements XServiceInfo, XCon
                 Settings.getSettings().setPromptForNodeName(false);
             }
 
+        aObj = getProperty(xContainer, "validation", "State");
+        if (1 == AnyConverter.toShort(aObj)) {
+            Settings.getSettings().setValidationRequired(true);
+        }
+        else {
+            Settings.getSettings().setValidationRequired(false);
+        }
 
         Object property = getProperty(xContainer, "linkingInputMode", "Text");
         String sLinkingMode = (String) property;

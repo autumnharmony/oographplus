@@ -29,7 +29,15 @@ public class MatchFactoryImpl implements MatchFactory {
         this.linkTypeRecogniser = linkTypeRecogniser;
     }
 
-    Set<Class<? extends Match>> processMatchSet = Sets.<Class<? extends Match>>newHashSet(DataAndControlMixedMatch.class, MethodToMethodOnFail.class, MethodToMethodOnSuccess.class, PortToMethodDefault.class, PortToMethodOnMessage.class, ReadMessageFromPort.class, SendMessageToPort.class);
+    Set<Class<? extends Match>> processMatchSet = Sets.<Class<? extends Match>>newHashSet(
+//            DataAndControlMixedMatch.class,
+            MethodToMethodOnFail.class,
+            MethodToMethodOnSuccess.class,
+            PortToMethodDefault.class,
+            PortToMethodOnMessage.class,
+            ReadMessageFromPort.class,
+            SendMessageToPort.class);
+
     Set<Class<? extends Match>> channelMatchSet = Sets.<Class<? extends Match>>newHashSet(StateTransition.class);
 
 
@@ -76,8 +84,6 @@ public class MatchFactoryImpl implements MatchFactory {
 
         return map;
     }
-
-
 
 
     private Match create(Class<? extends Match> aClass) {

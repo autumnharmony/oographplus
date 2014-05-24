@@ -8,6 +8,9 @@ import com.sun.star.container.XIndexContainer;
 import com.sun.star.drawing.*;
 import com.sun.star.lang.*;
 import com.sun.star.uno.UnoRuntime;
+import ru.ssau.graphplus.codegen.impl.ClientNodeCode;
+import ru.ssau.graphplus.codegen.impl.CodeProviderAnnotation;
+import ru.ssau.graphplus.codegen.impl.ServerNodeCode;
 import ru.ssau.graphplus.commons.PostCreationAction;
 import ru.ssau.graphplus.commons.QI;
 
@@ -15,9 +18,7 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author anton
- */
+@CodeProviderAnnotation(codeProvider = ServerNodeCode.class)
 public class ServerNode extends NodeBase implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -26,6 +26,7 @@ public class StateTransitionCode extends LinkCodeBase {
         buffer.append(text(textShape()));
         buffer.append(" -> ");
         buffer.append(text(to()));
+        buffer.append(";");
         return buffer.toString();
     }
 }

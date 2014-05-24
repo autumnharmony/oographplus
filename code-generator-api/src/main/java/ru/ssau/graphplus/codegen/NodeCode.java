@@ -5,5 +5,5 @@
 package ru.ssau.graphplus.codegen;
 
 public interface NodeCode extends CodeProvider {
-    String getCode();
+
 }
