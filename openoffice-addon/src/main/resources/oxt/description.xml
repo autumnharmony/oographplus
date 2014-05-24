@@ -13,14 +13,29 @@
         <name xlink:href="http://templet.ssau.ru/#rus" lang="ru">Anton Borisov</name>
     </publisher>
 
-    <!--<update-information>-->
-        <!--<src xlink:href="http://templet.ssau.ru/templet_update.xml" />-->
-    <!--</update-information>-->
+<registration>
+<simple-license accept-by="admin" default-license-id="this" suppress-on-update="true" suppress-if-required="true">
+<license-text xlink:href="LICENSE" lang="en" license-id="this" />
+</simple-license>
+</registration>
+
+
+	<update-information>
+	<src xlink:href="https://raw.github.com/autumnharmony/oographplus/master/files/TempletAddon.update.xml"/>
+	</update-information>
+
+
 
     <!--<dependencies>-->
-        <!--<OpenOffice.org-minimal-version value="4.0" d:name="OpenOffice.org 4.0" />-->
+    <!--<OpenOffice.org-minimal-version value="4.0" d:name="OpenOffice.org 4.0" />-->
     <!--</dependencies>-->
     <icon>
-        <default xlink:href="images/templet-logo.png" />
+        <default xlink:href="images/templet-logo.png"/>
     </icon>
+
+    <extension-description>
+        <src lang="en-US" xlink:href="descriptions/desc_en-US.txt"/>
+        <src lang="ru" xlink:href="descriptions/desc_ru.txt"/>
+    </extension-description>
+
 </description>
