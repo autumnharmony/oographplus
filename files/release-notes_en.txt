@@ -1,0 +1,4 @@
+Release notes 0.3
+* added autolayout of complex links
+* improved russian localization
+* added automatic removing of entire complex link after removing her one part
