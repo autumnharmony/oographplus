@@ -323,7 +323,7 @@
                                 </manifestSections>
                             </archive>
                             <useDefaultManifestFile>true</useDefaultManifestFile>
-                            <jarName>graphplus-addon-0.2</jarName>
+                            <jarName>graphplus-addon-0.3</jarName>
 
 
                         </configuration>
