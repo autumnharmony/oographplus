@@ -36,12 +36,12 @@ public class ShapeHelperWrapperImpl implements ShapeHelperWrapper {
 
 
 
-    void shift(Point[] points){
+    void shift(Point[] p){
 
-        Point t2 = points[points.length -1];
-        for (int i = 0; i<points.length; i++){
-            Point t = points[i];
-            points[i] = t2;
+        Point t2 = p[p.length -1];
+        for (int i = 0; i<p.length; i++){
+            Point t = p[i];
+            p[i] = t2;
             t2 = t;
         }
     }

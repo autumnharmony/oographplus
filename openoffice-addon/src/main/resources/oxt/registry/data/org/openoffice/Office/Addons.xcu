@@ -1,5 +1,4 @@
 <?xml version='1.0' encoding='UTF-8'?>
-
 <oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema"
                     oor:name="Addons" oor:package="org.openoffice.Office">
     <node oor:name="AddonUI">
@@ -31,6 +30,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
                             <value/>
                             <value xml:lang="en">Get Code</value>
+                            <value xml:lang="ru">Получить код</value>
                         </prop>
                     </node>
 
@@ -55,6 +55,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
                             <value/>
                             <value xml:lang="en">Entry Vertex</value>
+                            <value xml:lang="ru">Начальный</value>
                         </prop>
                     </node>
 
@@ -72,6 +73,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
                             <value/>
                             <value xml:lang="en">Client Vertex</value>
+                            <value xml:lang="ru">Клиент</value>
                         </prop>
                     </node>
                     <node oor:name="m5" oor:op="replace">
@@ -90,6 +92,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
                             <value/>
                             <value xml:lang="en">Server Vertex</value>
+                            <value xml:lang="ru">Сервер</value>
                         </prop>
                     </node>
                     <node oor:name="m6" oor:op="replace">
@@ -108,6 +111,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
 
                             <value xml:lang="en">Method Vertex</value>
+                            <value xml:lang="ru">Метод</value>
                         </prop>
                     </node>
 
@@ -149,6 +153,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
                             <value/>
                             <value xml:lang="en">Control Edge</value>
+                            <value xml:lang="ru">Поток управления</value>
                         </prop>
                     </node>
 
@@ -168,6 +173,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
                             <value/>
                             <value xml:lang="en">Data Edge</value>
+                            <value xml:lang="ru">Поток данных</value>
                         </prop>
                     </node>
 
@@ -187,9 +193,30 @@
                         <prop oor:name="Title" oor:type="xs:string">
                             <value/>
                             <value xml:lang="en">Mixed Edge</value>
+                            <value xml:lang="en">Смешанный поток</value>
                         </prop>
                     </node>
 
+
+                    <node oor:name="mAB" oor:op="replace">
+                        <prop oor:name="URL" oor:type="xs:string">
+                            <value>ru.ssau.graphplus:Colorize</value>
+                        </prop>
+                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                            <value/>
+                        </prop>
+                        <prop oor:name="Target" oor:type="xs:string">
+                            <value>_self</value>
+                        </prop>
+                        <prop oor:name="Context" oor:type="xs:string">
+                            <value>com.sun.star.drawing.DrawingDocument</value>
+                        </prop>
+                        <prop oor:name="Title" oor:type="xs:string">
+                            <value/>
+                            <value xml:lang="en">Colorize</value>
+                            <value xml:lang="en">Раскрасить</value>
+                        </prop>
+                    </node>
 
                     <node oor:name="mB" oor:op="replace">
                         <prop oor:name="URL" oor:type="xs:string">
@@ -220,6 +247,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
                             <value/>
                             <value xml:lang="en">About</value>
+                            <value xml:lang="ru">О программе</value>
                         </prop>
                     </node>
 
@@ -248,6 +276,7 @@
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
                             <value xml:lang="en">Server Vertex</value>
+                            <value xml:lang="ru">Сервер</value>
                         </prop>
                     </node>
                     <node oor:name="m2" oor:op="replace">
@@ -262,8 +291,8 @@
                             <value>com.sun.star.drawing.DrawingDocument</value>
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
-
-                            <value xml:lang="en">Client Vertex</value>
+                            <value xml:lang="ru">Клиент</value>
+                            <value xml:lang="en">Client</value>
                         </prop>
                     </node>
                     <node oor:name="m3" oor:op="replace">
@@ -278,8 +307,8 @@
                             <value>com.sun.star.drawing.DrawingDocument</value>
                         </prop>
                         <prop oor:name="Title" oor:type="xs:string">
-
                             <value xml:lang="en">Entry Vertex</value>
+                            <value xml:lang="ru">Начальный</value>
                         </prop>
                     </node>
                     <node oor:name="m4" oor:op="replace">
@@ -295,6 +324,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
 
                             <value xml:lang="en">Method Vertex</value>
+                            <value xml:lang="ru">Метод</value>
                         </prop>
                     </node>
                     <node oor:name="m5" oor:op="replace">
@@ -310,6 +340,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
 
                             <value xml:lang="en">Data Edge</value>
+                            <value xml:lang="ru">Поток данных</value>
                         </prop>
                     </node>
                     <node oor:name="m6" oor:op="replace">
@@ -325,6 +356,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
 
                             <value xml:lang="en">Control Edge</value>
+                            <value xml:lang="ru">Поток управления</value>
                         </prop>
                     </node>
                     <node oor:name="m7" oor:op="replace">
@@ -340,6 +372,7 @@
                         <prop oor:name="Title" oor:type="xs:string">
 
                             <value xml:lang="en">Mixed Edge</value>
+                            <value xml:lang="en">Смешанный поток</value>
                         </prop>
                     </node>
                 </node>

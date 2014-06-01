@@ -5,6 +5,8 @@
 package ru.ssau.graphplus.gui;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import com.sun.star.accessibility.XAccessible;
@@ -29,6 +31,9 @@ import ru.ssau.graphplus.events.Event;
 import ru.ssau.graphplus.events.EventListener;
 import ru.ssau.graphplus.events.NodeRemovedEvent;
 import ru.ssau.graphplus.gui.sidebar.PanelBase;
+import ru.ssau.graphplus.link.LinkAdjuster;
+import ru.ssau.graphplus.link.LinkBase;
+import ru.ssau.graphplus.node.NodeBase;
 
 import java.lang.Exception;
 import java.util.Collection;
@@ -36,6 +41,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static ru.ssau.graphplus.MyDialogHandler.Event.event;
+import static ru.ssau.graphplus.api.Link.LinkType.ControlFlow;
+import static ru.ssau.graphplus.api.Link.LinkType.DataFlow;
+import static ru.ssau.graphplus.api.Link.LinkType.MixedFlow;
 
 
 public class LinkNodesPanel extends PanelBase {
@@ -174,16 +182,16 @@ public class LinkNodesPanel extends PanelBase {
     }
 
 
-    private void removeItemFromComboboxes(String item){
-        removeItemFromCombobox(item,aNodeComboBox);
-        removeItemFromCombobox(item,zNodeComboBox);
+    private void removeItemFromComboboxes(String item) {
+        removeItemFromCombobox(item, aNodeComboBox);
+        removeItemFromCombobox(item, zNodeComboBox);
     }
 
     private void removeItemFromCombobox(String item, XComboBox aNodeComboBox) {
         XItemList xItemList = QI.XItemList(QI.XControl(aNodeComboBox).getModel());
-        for (int i = 0; i < xItemList.getItemCount(); i++){
+        for (int i = 0; i < xItemList.getItemCount(); i++) {
             try {
-                if (xItemList.getItemText(i).equals(item)){
+                if (xItemList.getItemText(i).equals(item)) {
                     xItemList.removeItem(i);
                 }
                 break;
@@ -441,8 +449,9 @@ public class LinkNodesPanel extends PanelBase {
                     public boolean handle(XDialog xDialog, Object o, String s) {
                         System.out.println("linkButtonPerformAction");
                         DiagramService diagramService = dispatch.getDiagramService();
+                        String s1 = getMap(Global.locale).inverse().get(linkListBox.getSelectedItem());
 
-                        Link link = diagramService.createLink("", Link.LinkType.valueOf(linkListBox.getSelectedItem()));
+                        Link link = diagramService.createLink("", Link.LinkType.valueOf(s1));
                         diagramService.insertLink(link);
 
                         try {
@@ -451,6 +460,8 @@ public class LinkNodesPanel extends PanelBase {
                         } catch (UnknownPropertyException | WrappedTargetException e) {
                             throw new java.lang.RuntimeException(e);
                         }
+
+                        LinkAdjuster.adjustLink((LinkBase) link, (NodeBase)getaNode(),(NodeBase) getzNode());
                         diagramService.linkNodes(getaNode(), getzNode(), link);
                         return true;
                     }
@@ -513,6 +524,31 @@ public class LinkNodesPanel extends PanelBase {
 
     }
 
+    BiMap<String, String> getMap(String locale){
+        return HashBiMap.create(linkTypeHR.get(locale));
+    }
+
+    private Map<String, Map<String, String>> linkTypeHR = ImmutableMap.<String, Map<String, String>>builder()
+            .put("ru", ImmutableMap.<String,String>builder()
+                    .put(ControlFlow.toString(), "Поток управления")
+                    .put(DataFlow.toString(), "Поток данных")
+                    .put(MixedFlow.toString(), "Cмешанный поток").build())
+            .put("en", ImmutableMap.<String,String>builder()
+                    .put(ControlFlow.toString(), "Control flow")
+                    .put(DataFlow.toString(), "Data flow")
+                    .put(MixedFlow.toString(), "Mixed flow").build()).build();
+
+    private Map<String, Map<String, String>> stringsHR = ImmutableMap.<String, Map<String, String>>builder()
+            .put("ru", ImmutableMap.<String,String>builder()
+                    .put(ControlFlow.toString(), "Поток управления")
+                    .put(DataFlow.toString(), "Поток данных")
+                    .put(MixedFlow.toString(), "Cмешанный поток").build())
+            .put("en", ImmutableMap.<String,String>builder()
+                    .put(ControlFlow.toString(), "Control flow")
+                    .put(DataFlow.toString(), "Data flow")
+                    .put(MixedFlow.toString(), "Mixed flow").build()).build();
+
+
     private boolean setNodeA() {
 
         try {
@@ -525,6 +561,7 @@ public class LinkNodesPanel extends PanelBase {
 
         return true;
     }
+
 
     public void init(LinkNodesPanel linkNodesPanel) {
         this.linkNodesPanel = linkNodesPanel;
@@ -560,9 +597,15 @@ public class LinkNodesPanel extends PanelBase {
         XControl linkTypeListBoxControl = xControlCont.getControl("linkTypeListBox");
         linkTypeListBoxControlModel = linkTypeListBoxControl.getModel();
         linkListBox = QI.XListBox(linkTypeListBoxControl);
+//        XItemList xItemList = QI.XItemList(linkListBox);
         short i = 0;
+        BiMap<String, String> map = getMap(Global.locale);
+
         for (Link.LinkType type : Link.LinkType.values()) {
-            linkListBox.addItem(String.valueOf(type), i++);
+
+            linkListBox.addItem(
+                    map.get(type.toString()), i++);
+//            xItemList.insertItem(i++, );
         }
 
 

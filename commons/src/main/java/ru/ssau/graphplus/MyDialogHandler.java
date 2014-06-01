@@ -87,7 +87,7 @@ public class MyDialogHandler implements XDialogEventHandler, XContainerWindowEve
             EventHandler eventHandler = eventHandlerMap.get(event);
             return eventHandler.handle(null, o, s);
         } catch (Exception ex) {
-            throw new com.sun.star.uno.RuntimeException("error", ex);
+            throw new RuntimeException("error", ex);
         }
     }
 

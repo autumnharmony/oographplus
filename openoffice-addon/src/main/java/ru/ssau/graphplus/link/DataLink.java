@@ -17,50 +17,31 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author anton
- */
-public interface DataLink extends Link,Serializable,ShapesProvider {
+public interface DataLink extends Link, Serializable, ShapesProvider {
 
-
-    class DataLinkTwoConnectors extends LinkTwoConnectorsAndTextBase implements DataLink{
+    class DataLinkTwoConnectors extends LinkTwoConnectorsAndTextBase implements DataLink {
 
         private static final long serialVersionUID = 1L;
-
 
         public DataLinkTwoConnectors(XMultiServiceFactory xmsf, String c) {
             super(xmsf, c);
         }
 
-        DataLinkTwoConnectors() {
-
-        }
-
         public LinkShapes buildShapes(XMultiServiceFactory xMSF) {
             try {
                 LinkShapes linkShapes = super.buildShapes(xMSF);
-
                 Object half1 = xMSF.createInstance("com.sun.star.drawing.ConnectorShape");
                 Object half2 = xMSF.createInstance("com.sun.star.drawing.ConnectorShape");
                 XShape xConnSh1 = QI.XShape(half1);
                 XShape xConnSh2 = QI.XShape(half2);
                 linkShapes.connShape1 = xConnSh1;
                 linkShapes.connShape2 = xConnSh2;
-
-
                 XShape xTextSh = linkShapes.textShape;
-
                 xPS1 = QI.XPropertySet(xConnSh1);
-
-
                 xPS2 = QI.XPropertySet(xConnSh2);
-
-
                 return linkShapes;
             } catch (java.lang.Exception ex) {
                 Logger.getLogger(ControlLink.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (Exception ex) {
-//            Logger.getLogger(ControlLink.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;
         }
@@ -70,17 +51,14 @@ public interface DataLink extends Link,Serializable,ShapesProvider {
             return new LinkStyleBase() {
                 @Override
                 public void applyStyleForHalf1(XPropertySet xPS1) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, com.sun.star.lang.IllegalArgumentException {
-
                     xPS1.setPropertyValue("LineStyle", LineStyle.DASH);
                     xPS1.setPropertyValue("LineDashName", "Fine Dashed");
-
                     xPS1.setPropertyValue("EdgeKind", ConnectorType.LINE);
                     xPS1.setPropertyValue("LineColor", new Integer(0x000000));
                 }
 
                 @Override
                 public void applyStyleForHalf2(XPropertySet xPS2) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
-
                     xPS2.setPropertyValue("EdgeKind", ConnectorType.LINE);
                     xPS2.setPropertyValue("LineEndName", "Arrow");
                     xPS2.setPropertyValue("LineStyle", LineStyle.DASH);
@@ -89,20 +67,13 @@ public interface DataLink extends Link,Serializable,ShapesProvider {
                 }
             };
         }
-
-
-
     }
-    class DataLinkOneConnector extends LinkOneConnectorBase implements DataLink{
+
+    class DataLinkOneConnector extends LinkOneConnectorBase implements DataLink {
         private static final long serialVersionUID = 1L;
 
-
-        public DataLinkOneConnector (XMultiServiceFactory xmsf, String c) {
+        public DataLinkOneConnector(XMultiServiceFactory xmsf, String c) {
             super(xmsf, c);
-        }
-
-        DataLinkOneConnector() {
-
         }
 
         public LinkShapes buildShapes(XMultiServiceFactory xMSF) {
@@ -124,14 +95,11 @@ public interface DataLink extends Link,Serializable,ShapesProvider {
             return new LinkStyleBase() {
                 @Override
                 public void applyStyleForHalf1(XPropertySet xPS1) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, com.sun.star.lang.IllegalArgumentException {
-
                     xPS1.setPropertyValue("LineStyle", LineStyle.DASH);
                     xPS1.setPropertyValue("LineDashName", "Fine Dashed");
-
                     xPS1.setPropertyValue("EdgeKind", ConnectorType.LINE);
                     xPS1.setPropertyValue("LineColor", new Integer(0x000000));
                     xPS1.setPropertyValue("LineEndName", "Arrow");
-
                 }
 
                 @Override
@@ -139,8 +107,5 @@ public interface DataLink extends Link,Serializable,ShapesProvider {
                 }
             };
         }
-
-
-
     }
 }

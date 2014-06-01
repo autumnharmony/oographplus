@@ -30,6 +30,12 @@ public abstract class LinkBase implements ShapesProvider, Link {
         }
     }
 
+    public NodeBase getFrom() {
+        return node1;
+    }
+    public NodeBase getTo() {
+        return node2;
+    }
     protected interface LinkStyle {
         void applyStyleForHalf1(XPropertySet xPropertySet) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, com.sun.star.lang.IllegalArgumentException;
 
@@ -54,20 +60,15 @@ public abstract class LinkBase implements ShapesProvider, Link {
         void apply(LinkStyle linkStyle, LinkBase linkBase);
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof LinkBase)) return false;
-
         LinkBase linkBase = (LinkBase) o;
-
         if (node1 != null ? !node1.equals(linkBase.node1) : linkBase.node1 != null) return false;
         if (node2 != null ? !node2.equals(linkBase.node2) : linkBase.node2 != null) return false;
-
         return true;
     }
-
     @Override
     public int hashCode() {
         int result = node1 != null ? node1.hashCode() : 0;

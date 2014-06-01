@@ -22,13 +22,8 @@ public class MixedLink extends LinkTwoConnectorsAndTextBase implements Serializa
 
     private static final long serialVersionUID = 1L;
 
-
     public MixedLink(XMultiServiceFactory xmsf, String c) {
         super(xmsf, c);
-    }
-
-    MixedLink() {
-
     }
 
     @Override
@@ -36,16 +31,15 @@ public class MixedLink extends LinkTwoConnectorsAndTextBase implements Serializa
         return new LinkStyleBase() {
             @Override
             public void applyStyleForHalf1(XPropertySet xPS1) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, com.sun.star.lang.IllegalArgumentException {
-
                 xPS1.setPropertyValue("LineColor", new Integer(0x000000));
-                xPS1.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
+                xPS1.setPropertyValue("EdgeKind", ConnectorType.LINE);
             }
 
             @Override
             public void applyStyleForHalf2(XPropertySet xPS2) throws UnknownPropertyException, PropertyVetoException, WrappedTargetException, IllegalArgumentException {
                 xPS2.setPropertyValue("LineStyle", LineStyle.DASH);
                 xPS2.setPropertyValue("LineDashName", "Fine Dashed");
-                xPS2.setPropertyValue("EdgeKind", com.sun.star.drawing.ConnectorType.CURVE);
+                xPS2.setPropertyValue("EdgeKind", ConnectorType.LINE);
                 xPS2.setPropertyValue("LineEndName", "Arrow");
                 xPS2.setPropertyValue("LineColor", new Integer(0x000000));
             }
@@ -56,20 +50,13 @@ public class MixedLink extends LinkTwoConnectorsAndTextBase implements Serializa
     public LinkShapes buildShapes(XMultiServiceFactory xMSF) {
         try {
             LinkShapes linkShapes = super.buildShapes(xMSF);
-
             Object half1 = xMSF.createInstance("com.sun.star.drawing.ConnectorShape");
             Object half2 = xMSF.createInstance("com.sun.star.drawing.ConnectorShape");
-
             XShape xConnSh1 = QI.XShape(half1);
             XShape xConnSh2 = QI.XShape(half2);
             XShape xTextSh = linkShapes.textShape;
-
             xPS1 = QI.XPropertySet(xConnSh1);
-
-
             xPS2 = QI.XPropertySet(xConnSh2);
-
-
             linkShapes.connShape1 = xConnSh1;
             linkShapes.connShape2 = xConnSh2;
             return linkShapes;
@@ -78,6 +65,4 @@ public class MixedLink extends LinkTwoConnectorsAndTextBase implements Serializa
         }
         return null;
     }
-
-
 }

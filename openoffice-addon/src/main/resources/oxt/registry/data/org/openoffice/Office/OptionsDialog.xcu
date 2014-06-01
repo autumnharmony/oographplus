@@ -10,7 +10,8 @@
                     </prop>
 
                     <prop oor:name="Label">
-                        <value xml:lang="en_US">Graphplus</value>
+                        <value xml:lang="en_US">Templet Addon</value>
+                        <value xml:lang="ru_RU">Templet Addon</value>
                     </prop>
 
                     <prop oor:name="OptionsPage">

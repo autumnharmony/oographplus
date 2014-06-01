@@ -16,6 +16,7 @@ public interface DiagramService {
     void insertLink(Link link);
 
     void linkNodes(Node node1, Node node2, Link link);
+    void layoutLink(Node node1, Node node2, Link link);
 
     void select(DiagramElement diagramElement);
 }

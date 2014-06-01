@@ -8,7 +8,6 @@ import com.sun.star.drawing.HomogenMatrixLine3;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XMultiServiceFactory;
 import ru.ssau.graphplus.OOGraph;
-import ru.ssau.graphplus.codegen.CodeProvider;
 import ru.ssau.graphplus.codegen.impl.ClientNodeCode;
 import ru.ssau.graphplus.codegen.impl.CodeProviderAnnotation;
 import ru.ssau.graphplus.commons.QI;
@@ -20,24 +19,15 @@ import java.util.logging.Logger;
 @CodeProviderAnnotation(codeProvider = ClientNodeCode.class)
 public class ClientNode extends NodeBase implements Serializable {
 
-    // PolyPolygonDescriptor service included in PolyPolygonShape service
-    public static final String POLY_POLYGON = "PolyPolygon";
+    private static final String POLY_POLYGON = "PolyPolygon";
 
-    public static final String FILL_COLOR = "FillColor";
-    public static final String SIZE = "Size";
-    public static final String TRANSFORMATION = "Transformation";
+    private static final String SIZE = "Size";
+    private static final String TRANSFORMATION = "Transformation";
     private static final long serialVersionUID = 1L;
-
-
-
-    public ClientNode() {
-        super();
-    }
 
     public ClientNode(String id) {
         super(id);
     }
-
 
     public XShape buildShape(XMultiServiceFactory xMSF) {
         try {
@@ -49,7 +39,6 @@ public class ClientNode extends NodeBase implements Serializable {
                             new Point(0, 400),
                             new Point(0, 0)}
             };
-
             Object obj = xMSF.createInstance("com.sun.star.drawing.PolyPolygonShape");
             XPropertySet xPropSet = QI.XPropertySet(obj);
             xPropSet.setPropertyValue(POLY_POLYGON, points);
@@ -59,7 +48,6 @@ public class ClientNode extends NodeBase implements Serializable {
             HomogenMatrix3 hm = new HomogenMatrix3(new HomogenMatrixLine3(-1, 0, 0), new HomogenMatrixLine3(0, 1, 0), new HomogenMatrixLine3(0, 0, 1));
             xPropSet.setPropertyValue(TRANSFORMATION, hm);
             return xShape;
-
         } catch (com.sun.star.uno.Exception ex) {
             Logger.getLogger(OOGraph.class.getName()).log(Level.SEVERE, null, ex);
             return null;

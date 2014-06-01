@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="LinkNodesDialog" dlg:left="0" dlg:top="0" dlg:width="80" dlg:height="129" dlg:closeable="true" dlg:moveable="true" dlg:withtitlebar="false">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="LinkNodesDialog" dlg:left="0" dlg:top="0" dlg:width="80" dlg:height="129" dlg:help-text="&amp;37.LinkNodesDialog.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;38.LinkNodesDialog.Title" dlg:withtitlebar="false">
  <dlg:bulletinboard>
-  <dlg:combobox dlg:id="aNodeComboBox" dlg:tab-index="1" dlg:left="2" dlg:top="4" dlg:width="62" dlg:height="16" dlg:value="from Vertex" dlg:spin="true">
+  <dlg:button dlg:id="aNodeResetButton" dlg:tab-index="1" dlg:left="64" dlg:top="4" dlg:width="12" dlg:height="14" dlg:help-text="&amp;39.LinkNodesDialog.aNodeResetButton.HelpText" dlg:value="&amp;40.LinkNodesDialog.aNodeResetButton.Label" dlg:image-src="vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/cancel.png" dlg:image-position="left-center" dlg:image-align="left">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:aNodeReset" script:language="UNO"/>
+  </dlg:button>
+  <dlg:button dlg:id="zNodeResetButton" dlg:tab-index="2" dlg:left="64" dlg:top="20" dlg:width="12" dlg:height="14" dlg:help-text="&amp;41.LinkNodesDialog.zNodeResetButton.HelpText" dlg:value="&amp;42.LinkNodesDialog.zNodeResetButton.Label" dlg:image-src="vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/cancel.png">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:zNodeReset" script:language="UNO"/>
+  </dlg:button>
+  <dlg:menulist dlg:id="linkTypeListBox" dlg:tab-index="3" dlg:left="2" dlg:top="38" dlg:width="74" dlg:height="40" dlg:help-text="&amp;43.LinkNodesDialog.linkTypeListBox.HelpText"/>
+  <dlg:text dlg:id="state" dlg:tab-index="5" dlg:visible="false" dlg:left="4" dlg:top="93" dlg:width="72" dlg:height="13" dlg:help-text="&amp;44.LinkNodesDialog.state.HelpText" dlg:value="&amp;45.LinkNodesDialog.state.Label"/>
+  <dlg:checkbox dlg:id="addTextShapeToLink" dlg:tab-index="6" dlg:left="4" dlg:top="81" dlg:width="67" dlg:height="8" dlg:help-text="&amp;46.LinkNodesDialog.addTextShapeToLink.HelpText" dlg:value="&amp;47.LinkNodesDialog.addTextShapeToLink.Label" dlg:checked="false">
+   <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.UNO:addTextShapeStatusChanged" script:language="UNO"/>
+  </dlg:checkbox>
+  <dlg:combobox dlg:id="aNodeComboBox" dlg:tab-index="7" dlg:left="2" dlg:top="4" dlg:width="62" dlg:height="15" dlg:help-text="&amp;48.LinkNodesDialog.aNodeComboBox.HelpText" dlg:value="&amp;49.LinkNodesDialog.aNodeComboBox.Text" dlg:spin="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:aNodeComboboxExecute" script:language="UNO"/>
    <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.UNO:aNodeComboboxTextModified" script:language="UNO"/>
    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.UNO:aNodeComboboxItemStatusChanged" script:language="UNO"/>
    <script:event script:event-name="on-focus" script:macro-name="vnd.sun.star.UNO:aNodeReceivedFocus" script:language="UNO"/>
   </dlg:combobox>
-  <dlg:combobox dlg:id="zNodeComboBox" dlg:tab-index="2" dlg:left="2" dlg:top="20" dlg:width="62" dlg:height="15" dlg:value="to Vertex" dlg:spin="true">
+  <dlg:combobox dlg:id="zNodeComboBox" dlg:tab-index="0" dlg:left="2" dlg:top="20" dlg:width="62" dlg:height="15" dlg:help-text="&amp;50.LinkNodesDialog.zNodeComboBox.HelpText" dlg:value="&amp;51.LinkNodesDialog.zNodeComboBox.Text" dlg:spin="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:zNodeComboboxExecute" script:language="UNO"/>
    <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.UNO:zNodeComboboxTextModified" script:language="UNO"/>
    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.UNO:zNodeComboboxItemStatusChanged" script:language="UNO"/>
    <script:event script:event-name="on-focus" script:macro-name="vnd.sun.star.UNO:zNodeReceivedFocus" script:language="UNO"/>
   </dlg:combobox>
-  <dlg:button dlg:id="aNodeResetButton" dlg:tab-index="3" dlg:left="65" dlg:top="4" dlg:width="10" dlg:height="15" dlg:image-src="vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/cancel.png" dlg:image-position="left-center" dlg:image-align="left">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:aNodeReset" script:language="UNO"/>
-  </dlg:button>
-  <dlg:button dlg:id="zNodeResetButton" dlg:tab-index="4" dlg:left="65" dlg:top="20" dlg:width="10" dlg:height="15" dlg:image-src="vnd.sun.star.extension://ru.ssau.graphplus.oograph/images/cancel.png">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:zNodeReset" script:language="UNO"/>
-  </dlg:button>
-  <dlg:menulist dlg:id="linkTypeListBox" dlg:tab-index="5" dlg:left="2" dlg:top="38" dlg:width="73" dlg:height="40"/>
-  <dlg:checkbox dlg:id="addTextShapeToLink" dlg:tab-index="7" dlg:left="4" dlg:top="81" dlg:width="65" dlg:height="10" dlg:value="addTextShapeToLink" dlg:checked="false">
-   <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.UNO:addTextShapeStatusChanged" script:language="UNO"/>
-  </dlg:checkbox>
-  <dlg:button dlg:id="linkButton" dlg:tab-index="6" dlg:left="3" dlg:top="107" dlg:width="70" dlg:height="19" dlg:value="LINK">
+  <dlg:button dlg:id="linkButton" dlg:tab-index="4" dlg:left="3" dlg:top="107" dlg:width="73" dlg:height="19" dlg:help-text="&amp;52.LinkNodesDialog.linkButton.HelpText" dlg:value="&amp;53.LinkNodesDialog.linkButton.Label">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.UNO:linkButtonPerformAction" script:language="UNO"/>
   </dlg:button>
-  <dlg:text dlg:id="state" dlg:tab-index="8" dlg:left="3" dlg:top="97" dlg:width="72" dlg:height="13" dlg:value="state"/>
  </dlg:bulletinboard>
 </dlg:window>

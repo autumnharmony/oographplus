@@ -4,6 +4,6 @@
 
 package ru.ssau.graphplus.events;
 
-public interface EventListener {
-    void onEvent(Event event);
+public interface EventListener<T extends Event> {
+    void onEvent(T event);
 }

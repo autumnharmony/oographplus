@@ -29,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements Link,
-
         Validatable,
         DiagramElement,
         Refreshable<ru.ssau.graphplus.api.DiagramModel>,
@@ -37,10 +36,7 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
         StringSerializable,
         ShapesProvider {
 
-
     protected boolean withTextShape;
-
-
 
     @Override
     public boolean isConnected() {
@@ -50,15 +46,15 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     @Override
     public void setPosition(Point newPosition) {
 
-        Point position1 = connShape1.getPosition();
+        Point position1 = textShape.getPosition();
 
         int dX = newPosition.X - position1.X;
         int dY = newPosition.Y - position1.Y;
 
-        connShape1.setPosition(newPosition);
-
-        Point position2 = connShape2.getPosition();
-        connShape2.setPosition(new Point(position2.X + dX, position2.Y + dY));
+//        connShape1.setPosition(newPosition);
+//
+//        Point position2 = connShape2.getPosition();
+//        connShape2.setPosition(new Point(position2.X + dX, position2.Y + dY));
 
         Point positionT = textShape.getPosition();
         textShape.setPosition(new Point(positionT.X + dX, positionT.Y + dY));
@@ -71,14 +67,11 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
         Point position1 = connShape1.getPosition();
         Point position2 = connShape2.getPosition();
         Point position3 = textShape.getPosition();
-
         int[] xx = {position1.X, position2.X, position3.X};
         int[] yy = {position1.Y, position2.Y, position3.Y};
-
         Arrays.sort(xx);
         Arrays.sort(yy);
         return new Point(xx[0], yy[0]);
-
     }
 
     public void refresh(ru.ssau.graphplus.api.DiagramModel diagramModel) {
@@ -93,7 +86,6 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     protected transient XPropertySet xPStext;
 
     protected transient XPropertySet xPS;
-
 
     protected volatile transient XShape textShape;
     protected transient XShape connShape1;
@@ -132,28 +124,16 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     }
 
     public LinkTwoConnectorsAndTextBase(XMultiServiceFactory xMSF, String id) {
-
 //        withTextShape = Settings.getSettings().isAddTextToShapeToLink();
-
-
         LinkShapes linkShapes = buildShapes(xMSF);
-
         shapes = new ArrayList<XShape>();
         shapes.add(linkShapes.connShape1);
         shapes.add(linkShapes.connShape2);
-
-
         shapes.add(linkShapes.textShape);
-
         this.textShape = linkShapes.textShape;
-
-
         this.connShape1 = linkShapes.connShape1;
         this.connShape2 = linkShapes.connShape2;
-
-
         setId(id);
-
     }
 
     private String name;
@@ -161,13 +141,11 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     @Override
     public String getName() {
         String string = QI.XText(textShape).getString();
-        if (Strings.isNullOrEmpty(string)){
+        if (Strings.isNullOrEmpty(string)) {
             return name;
+        } else {
+            name = string;
         }
-        else {
-            name =  string;
-        }
-
         return name;
     }
 
@@ -185,12 +163,6 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
         return null;
     }
 
-    public java.awt.Point[] getFirstPartPoints() {
-
-        return convertPoints(getPoints(xPS1));
-
-    }
-
     public java.awt.Point[] convertPoints(Point[] points) {
         java.awt.Point[] result = new java.awt.Point[points.length];
         for (int i = 0; i < points.length; i++) {
@@ -199,50 +171,36 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
         return result;
     }
 
-    public java.awt.Point[] getSecondPartPoints() {
-        return convertPoints(getPoints(xPS2));
-    }
-
     @Override
     public void setProps(XShape... params) {
         if (params.length != 3) {
-
             throw new IllegalStateException();
         }
         connShape1 = params[0];
         connShape2 = params[1];
         textShape = params[2];
-
         xPS1 = QI.XPropertySet(connShape1);
         xPS2 = QI.XPropertySet(connShape2);
         xPStext = QI.XPropertySet(textShape);
     }
 
     protected LinkShapes buildShapes(XMultiServiceFactory xMSF) {
-
         LinkShapes linkShapes = new LinkShapes();
-
-
         try {
-
             Object text = xMSF.createInstance("com.sun.star.drawing.TextShape");
             XShape xTextSh = QI.XShape(text);
-
             linkShapes.textShape = xTextSh;
             textShape = xTextSh;
             xPStext = QI.XPropertySet(text);
-
         } catch (Exception ex) {
             Logger.getLogger(LinkTwoConnectorsAndTextBase.class.getName()).log(Level.SEVERE, null, ex);
         }
         return linkShapes;
     }
 
-
     class LinkApplyerImpl implements LinkApplyer {
         @Override
         public void apply(LinkStyle linkStyle, LinkBase link) {
-
             LinkTwoConnectorsAndTextBase linkBase = (LinkTwoConnectorsAndTextBase) link;
             try {
                 linkStyle.applyStyleForHalf1(QI.XPropertySet(linkBase.getConnShape1()));
@@ -262,35 +220,37 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
 
     @Override
     public Rectangle getBound() {
-        Point position = connShape1.getPosition();
-        Point position1 = connShape2.getPosition();
+//        Point position = connShape1.getPosition();
+//        Point position1 = connShape2.getPosition();
         Point position2 = textShape.getPosition();
-
-        int[] xx = {position.X, position1.X, position2.X};
-        Arrays.sort(xx);
-        int[] yy = {position.Y, position1.Y, position2.Y};
-        Arrays.sort(yy);
-
+        int[] xx = {
+//                position.X,
+//                position1.X,
+                position2.X};
+//        Arrays.sort(xx);
+        int[] yy = {
+//                position.Y,
+//                position1.Y,
+                position2.Y};
+//        Arrays.sort(yy);
         int x = xx[0];
         int y = yy[0];
-
-        XShape[] xShapes = {connShape1, connShape2, textShape};
-
+        XShape[] xShapes = {
+//                connShape1,
+//                connShape2,
+                textShape};
         int maxx = 0;
         int maxy = 0;
-
         for (XShape xShape : xShapes) {
             int xw = xShape.getPosition().X + xShape.getSize().Width;
             if (xw > maxx) {
                 maxx = xw;
             }
-
             int yh = xShape.getPosition().Y + xShape.getSize().Height;
             if (yh > maxy) {
                 maxy = yh;
             }
         }
-
         return new Rectangle(x, y, maxx - x, maxy - y);
     }
 
@@ -299,10 +259,8 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
         System.out.println(getClass().getSimpleName() + "link");
         setStartNode(node1);
         setEndNode(node2);
-
         NodeBase nodeBase1 = (NodeBase) node1;
         NodeBase nodeBase2 = (NodeBase) node2;
-
         try {
             xPS1.setPropertyValue("StartShape", nodeBase1.getShape());
             xPS2.setPropertyValue("EndShape", nodeBase2.getShape());
@@ -312,16 +270,12 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     }
 
     public void setProps() {
-
-
         try {
             xPS1.setPropertyValue("EndShape", getTextShape());
             xPS2.setPropertyValue("StartShape", getTextShape());
         } catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException | WrappedTargetException e) {
             throw new RuntimeException(e);
         }
-
-
         try {
             xPS1.setPropertyValue("StartPosition", new Point(0, 200));
             textShape.setPosition(new Point(700, 200));
@@ -330,27 +284,9 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
         } catch (UnknownPropertyException | PropertyVetoException | IllegalArgumentException | WrappedTargetException e) {
             throw new RuntimeException(e);
         }
-
-
         applyStyle(getStyle());
-
-//            MiscHelper.setId(connShape1, getName() + "/conn1");
-//            MiscHelper.setId(connShape2, getName() + "/conn2");
-//            MiscHelper.setId(textShape, getName() + "/text");
-
-//        MiscHelper.setLinkType(connShape1, getType());
-//        MiscHelper.setLinkType(connShape2, getType());
-//        MiscHelper.setLinkType(textShape, getType());
-
-//        MiscHelper.tagShapeAsLink(connShape1);
-//        MiscHelper.tagShapeAsLink(connShape2);
-//        MiscHelper.tagShapeAsLink(textShape);
-
         shapes = Arrays.asList(connShape1, connShape2, textShape);
-
-
     }
-
 
     public void adjustLink(XShape sh1, XShape sh2) {
     }
@@ -358,27 +294,21 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     public LinkTwoConnectorsAndTextBase() {
     }
 
-
-    //    @Override
     public XShape getConnShape1() {
         return connShape1;
     }
 
-    //    @Override
     public XShape getConnShape2() {
         return connShape2;
     }
 
-    //    @Override
     public XShape getTextShape() {
         return textShape;
     }
 
-    //    @Override
     public Iterable<XShape> getShapes() {
         return shapes;
     }
-
 
     public Node getStartNode() {
         return node1;
@@ -400,11 +330,9 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
 
     public void link(XShape sh1, XShape sh2) {
         XText xText = QI.XText(textShape);
-
         // select all text and make active
     }
 
-    //    @Override
     public XShape getStartNodeShape() {
         try {
             return QI.XShape(QI.XPropertySet(connShape1).getPropertyValue(ConnectedShapes.START_SHAPE));
@@ -416,7 +344,6 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
         return null;
     }
 
-    //    @Override
     public XShape getEndNodeShape() {
         try {
             return QI.XShape(QI.XPropertySet(connShape2).getPropertyValue(ConnectedShapes.END_SHAPE));
@@ -431,27 +358,18 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     public boolean isValid() {
         NodeBase node1 = (NodeBase) getStartNode();
         XShape node1Shape = node1.getShape();
-
-
         NodeBase node2 = (NodeBase) getEndNode();
         XShape node2Shape = node2.getShape();
-
         XShape startShape = getStartNodeShape();
         XShape endShape = getEndNodeShape();
-
         if (node1Shape.equals(startShape) && node2Shape.equals(endShape)) {
-
         } else {
             if (endShape != null) {
-
             }
             if (startShape != null) {
-
             }
             return false;
         }
-
-
         return true;
     }
 
@@ -466,8 +384,6 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
                     setStartNode(node);
                 } else {
                     // something wrong in model
-
-
                     DiagramElement diagramELementByShape = diagramModel.getDiagramElementByShape(connShape1StartShape());
                     DiagramElement diagramELementByShape1 = diagramModel.getDiagramElementByShape(connShape1EndShape());
                     NodeBase node = null;
@@ -483,9 +399,7 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
                     }
                 }
             }
-
             Node endNode_ = getEndNode();
-
             NodeBase endNode = (NodeBase) endNode_;
             if (!endNode.getShape().equals(getEndNodeShape())) {
                 DiagramElement diagramElement = diagramModel.getShapeToDiagramElementMap().get(getEndNodeShape());
@@ -494,8 +408,6 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
                     setEndNode(node);
                 } else {
                     // something wrong in model
-
-
                     DiagramElement diagramELementByShape = diagramModel.getDiagramElementByShape(connShape1StartShape());
                     DiagramElement diagramELementByShape1 = diagramModel.getDiagramElementByShape(connShape1EndShape());
                     NodeBase node = null;
@@ -513,7 +425,6 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
             }
         }
     }
-
 
     private XShape getStartEndShape(XShape xShape, String startEnd) {
         try {
@@ -539,14 +450,11 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     }
 
     private XShape connShape2StartShape() {
-
         return getStartShape(getConnShape2());
-
     }
 
     private XShape connShape1EndShape() {
         return getEndShape(getConnShape1());
-
     }
 
     private XShape connShape2EndShape() {
@@ -555,11 +463,10 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
 
     @Override
     public void setName(String name) {
-        if (this.name==null || !this.name.equals(name)){
+        if (this.name == null || !this.name.equals(name)) {
             this.name = name;
         }
-
-        if (!QI.XText(textShape).getString().equals(name)){
+        if (!QI.XText(textShape).getString().equals(name)) {
             QI.XText(textShape).setString(name);
         }
     }
@@ -568,9 +475,7 @@ public abstract class LinkTwoConnectorsAndTextBase extends LinkBase implements L
     public String toString() {
         return getClass().getSimpleName() + "{" +
                 "id='" + id + '\'' +
-                ", linkType=" + getType().toString() +
-                ", node1=" + node1 != null ? node1.getName() : "null" +
-                ", node2=" + node2 != null ? node2.getName() : "null" +
+                "name='"+ name + '\''+
                 '}';
     }
 }

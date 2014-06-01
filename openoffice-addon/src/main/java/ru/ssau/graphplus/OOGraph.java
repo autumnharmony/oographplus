@@ -268,8 +268,8 @@ public class OOGraph extends ComponentBase implements
 
     private FrameObject newFrameCreated(XController xController) throws UnknownPropertyException, WrappedTargetException, com.sun.star.lang.IndexOutOfBoundsException {
 
-        XContextMenuInterception xContMenuInterception =
-                UnoRuntime.queryInterface(XContextMenuInterception.class, xController);
+//        XContextMenuInterception xContMenuInterception =
+//                UnoRuntime.queryInterface(XContextMenuInterception.class, xController);
 
         m_xFrame.addFrameActionListener(new MyFrameActionListener());
 
@@ -281,7 +281,7 @@ public class OOGraph extends ComponentBase implements
 
         DiagramModel diagramModel = myDispatch.getDiagramModel();
         DiagramController diagramController = myDispatch.getDiagramController();//new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel, xDrawDoc, myDispatch);
-        xContMenuInterception.registerContextMenuInterceptor(new ContextMenuInterceptor(m_xContext, diagramController));
+//        xContMenuInterception.registerContextMenuInterceptor(new ContextMenuInterceptor(m_xContext, diagramController));
 
         addDocumentEventListener(m_xComponent);
 

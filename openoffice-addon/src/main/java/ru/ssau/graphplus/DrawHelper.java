@@ -1,11 +1,11 @@
 package ru.ssau.graphplus;
 
+import com.sun.star.beans.PropertyVetoException;
+import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.drawing.*;
 import com.sun.star.frame.XController;
 import com.sun.star.frame.XModel;
-import com.sun.star.lang.WrappedTargetException;
-import com.sun.star.lang.XComponent;
-import com.sun.star.lang.XMultiServiceFactory;
+import com.sun.star.lang.*;
 import com.sun.star.uno.AnyConverter;
 import com.sun.star.uno.UnoRuntime;
 import ru.ssau.graphplus.commons.OOoUtils;
@@ -48,10 +48,8 @@ public class DrawHelper {
             com.sun.star.lang.WrappedTargetException {
         // Now ask the XIndexAccess interface to the drawPages object to get a certian page. 
         Object drawPage = drawDoc_XDrawPages.getByIndex(pageIndex);
-
-        // Get the right interface to the page. 
+        // Get the right interface to the page.
         XDrawPage drawPage_XDrawPage = QI.XDrawPage(drawPage);
-
         return drawPage_XDrawPage;
     }
 
@@ -119,13 +117,10 @@ public class DrawHelper {
         // Get a different interface to the drawDoc. 
         // The parameter passed in to us is the wrong interface to the drawDoc. 
         XDrawPagesSupplier drawDoc_XDrawPagesSupplier = QI.XDrawPagesSupplier(drawDoc);
-
-        // Ask the drawing document to give us it's draw pages object. 
+        // Ask the drawing document to give us it's draw pages object.
         Object drawPages = drawDoc_XDrawPagesSupplier.getDrawPages();
-
-        // Get the XDrawPages interface to the object. 
+        // Get the XDrawPages interface to the object.
         XDrawPages drawPages_XDrawPages = QI.XDrawPages(drawPages);
-
         return drawPages_XDrawPages;
     }
 
@@ -150,13 +145,10 @@ public class DrawHelper {
         // Get a different interface to the drawDoc. 
         // The parameter passed in to us is the wrong interface to the drawDoc. 
         XLayerSupplier drawDoc_XLayerSupplier = QI.XLayerSupplier(drawDoc);
-
-        // Ask the drawing document to give us it's layer manager object. 
+        // Ask the drawing document to give us it's layer manager object.
         Object layerManager = drawDoc_XLayerSupplier.getLayerManager();
-
-        // Get the XLayerManager interface to the object. 
+        // Get the XLayerManager interface to the object.
         XLayerManager layerManager_XLayerManager = QI.XLayerManager(layerManager);
-
         return layerManager_XLayerManager;
     }
 
@@ -186,24 +178,28 @@ public class DrawHelper {
         OOoUtils.setIntProperty(obj, "Height", height);
     }
 
-    public static int getHeight(Object obj)
-            throws com.sun.star.beans.UnknownPropertyException,
-            com.sun.star.lang.WrappedTargetException {
-        return OOoUtils.getIntProperty(obj, "Height");
+    public static int getHeight(Object obj) {
+        try {
+            return OOoUtils.getIntProperty(obj, "Height");
+        } catch (UnknownPropertyException | WrappedTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static void setWidth(Object obj, int width)
-            throws com.sun.star.beans.UnknownPropertyException,
-            com.sun.star.beans.PropertyVetoException,
-            com.sun.star.lang.IllegalArgumentException,
-            com.sun.star.lang.WrappedTargetException {
-        OOoUtils.setIntProperty(obj, "Width", width);
+    public static void setWidth(Object obj, int width) throws PropertyVetoException {
+        try {
+            OOoUtils.setIntProperty(obj, "Width", width);
+        } catch (UnknownPropertyException | WrappedTargetException | com.sun.star.lang.IllegalArgumentException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static int getWidth(Object obj)
-            throws com.sun.star.beans.UnknownPropertyException,
-            com.sun.star.lang.WrappedTargetException {
-        return OOoUtils.getIntProperty(obj, "Width");
+    public static int getWidth(Object obj){
+        try {
+            return OOoUtils.getIntProperty(obj, "Width");
+        } catch (UnknownPropertyException | WrappedTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //----------------------------------------------------------------------
@@ -256,14 +252,11 @@ public class DrawHelper {
             // The parameter passed in to us is the wrong interface to the drawDoc. 
             drawDoc_XMultiServiceFactory = QI.XMultiServiceFactory(drawDoc);
         }
-
-        // Ask MultiServiceFactory to create a shape. 
+        // Ask MultiServiceFactory to create a shape.
         // Yuck, it gives back an Object with no specific interface. 
         Object shape_noInterface = drawDoc_XMultiServiceFactory.createInstance(kind);
-
-        // Get a more useful interface to the shape object. 
+        // Get a more useful interface to the shape object.
         XShape shape = QI.XShape(shape_noInterface);
-
         return shape;
     }
 
@@ -308,19 +301,15 @@ public class DrawHelper {
     }
 
     public static XDrawPage getCurrentDrawPage(XComponent drawDoc) {
-
         try {
             XModel xModel = (XModel) UnoRuntime.queryInterface(XModel.class, drawDoc);
             XController xController = xModel.getCurrentController();
-
-
             XDrawView xDV = (XDrawView) UnoRuntime.queryInterface(XDrawView.class, xController);
             return xDV.getCurrentPage();
         } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }
-
     }
 
     public static void insertShapeOnCurrentPage(XShape xShape, XComponent drawDoc) {
@@ -329,11 +318,9 @@ public class DrawHelper {
         ShapeHelper.insertShape(xShape, drawPage);
     }
 
-    public static void insertShapeFreeSpace(XShape xShape, XComponent drawDoc){
-
-
+    public static void insertShapeFreeSpace(XShape xShape, XComponent drawDoc) {
         XDrawPage currentDrawPage = getCurrentDrawPage(drawDoc);
-        for (int i = 0; i < currentDrawPage.getCount(); i++){
+        for (int i = 0; i < currentDrawPage.getCount(); i++) {
             try {
                 Object byIndex = currentDrawPage.getByIndex(i);
                 XShape xShape1 = QI.XShape(byIndex);
@@ -343,13 +330,11 @@ public class DrawHelper {
                 e.printStackTrace();
             }
         }
-
     }
 
     public static void insertNodeOnCurrentPage(final NodeBase node, XComponent drawDoc) {
         XDrawPage drawPage = getCurrentDrawPage(drawDoc);
 //        XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, drawPage);
-
         //ShapeHelper.insertShape(linkReplace.getShape(), xDP , postCreationAction);
         ShapeHelper.insertShape(node.getShape(), drawPage, new NodeBase.DefaultPostCreationAction());
         //node.setProps();
@@ -358,7 +343,6 @@ public class DrawHelper {
     public static void insertShapesOnCurrentPage(Collection<XShape> shapes, XComponent drawDoc) {
         XDrawPage drawPage = getCurrentDrawPage(drawDoc);
         XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, drawPage);
-
         for (XShape xShape : shapes)
             ShapeHelper.insertShape(xShape, drawPage);
     }
@@ -366,8 +350,7 @@ public class DrawHelper {
     public static void insertShapesOnCurrentPageAndLayer(Collection<XShape> shapes, XComponent drawDoc, XLayerManager xLayerManager, XLayer xLayer) {
         XDrawPage drawPage = getCurrentDrawPage(drawDoc);
         XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, drawPage);
-
-        for (XShape xShape : shapes)                  {
+        for (XShape xShape : shapes) {
             ShapeHelper.insertShape(xShape, drawPage);
             xLayerManager.attachShapeToLayer(xShape, xLayer);
         }
@@ -377,15 +360,12 @@ public class DrawHelper {
         Object o = null;
         try {
             o = AnyConverter.toObject(Object.class, xShape);
-
             int count = xDrawPage.getCount();
             for (int i = 0; i < 0; i++) {
                 Object byIndex = null;
                 try {
                     byIndex = xDrawPage.getByIndex(i);
-
                     XShape xShape1 = QI.XShape(byIndex);
-
                     if (byIndex.equals(o)) {
                         return true;
                     }
@@ -394,12 +374,10 @@ public class DrawHelper {
                 } catch (WrappedTargetException e) {
                     e.printStackTrace();
                 }
-
             }
         } catch (com.sun.star.lang.IllegalArgumentException e) {
             e.printStackTrace();
         }
-
         return false;
     }
 }

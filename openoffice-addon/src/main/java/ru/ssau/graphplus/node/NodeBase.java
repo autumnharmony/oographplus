@@ -5,6 +5,7 @@ import com.sun.star.awt.Rectangle;
 import com.sun.star.awt.Size;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XMultiServiceFactory;
+import com.sun.star.text.XText;
 import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.api.*;
 import ru.ssau.graphplus.api.DiagramElement;
@@ -15,15 +16,14 @@ import ru.ssau.graphplus.commons.QI;
 
 import java.io.Serializable;
 
-
 public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Serializable, Refreshable<DiagramModel>, DeferredInitializable<XShape>, StringSerializable {
-
 
     private static final long serialVersionUID = 1L;
     protected transient PostCreationAction postCreationAction;
     protected transient XShape xShape;
     private String id;
     protected NodeType nodeType;
+    protected static final String FILL_COLOR = "FillColor";
 
     // actually name = ((XNamed) shape).getName()
     // but copy as field needed for serialization purposes
@@ -31,22 +31,14 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
 
     public void setName(String name) {
         this.name = name;
-        if (xShape != null){
+        if (xShape != null) {
             QI.XNamed(xShape).setName(name);
         }
     }
 
-    protected NodeBase(PostCreationAction postCreationAction) {
-        this.postCreationAction = postCreationAction;
-    }
-
-    public NodeBase() {
-    }
-
-    public NodeBase(String id){
+    public NodeBase(String id) {
         this.id = id;
     }
-
 
     @Override
     public Rectangle getBound() {
@@ -58,24 +50,19 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
     @Override
     public String getName() {
         String string = null;
-
-        if (xShape != null){
+        if (xShape != null) {
             string = QI.XText(xShape).getString();
         }
-
-        if (string != null && !string.equals(name)){
+        if (string != null && !string.equals(name)) {
             name = string;
         }
-
         return name;
-
     }
 
     @Override
     public Point getPosition() {
         return xShape.getPosition();
     }
-
 
     @Override
     public Size getSize() {
@@ -112,7 +99,7 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
     }
 
     public void setPosition(int x, int y) {
-        if (xShape!=null){
+        if (xShape != null) {
             xShape.setPosition(new Point(x, y));
         }
     }
@@ -136,6 +123,9 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
         if (postCreationAction != null) {
             postCreationAction.postCreate(getShape());
         }
+
+        QI.XText(getShape()).setString(id);
+        setName(id);
     }
 
     @Override
@@ -164,7 +154,7 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
 
     @Override
     public String toString() {
-        return getClass().getSimpleName()+ "{ name='"+getName()+" id='" + id + "' }";
+        return getClass().getSimpleName() + "{ name='" + getName() + " id='" + id + "' }";
     }
 
     public static class DefaultPostCreationAction implements PostCreationAction {
@@ -182,24 +172,23 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
         public void postCreate(XShape shape) {
             MiscHelper.tagShapeAsNode(shape);
         }
-
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NodeBase)) return false;
-
         NodeBase nodeBase = (NodeBase) o;
-
-        if (!xShape.equals(nodeBase.xShape)) return false;
-
+        if (!id.equals(nodeBase.id)) return false;
+        if (name != null ? !name.equals(nodeBase.name) : nodeBase.name != null) return false;
+        if (nodeType != nodeBase.nodeType) return false;
         return true;
     }
-
     @Override
     public int hashCode() {
-        return xShape.hashCode();
+        int result = id.hashCode();
+        result = 31 * result + (nodeType != null ? nodeType.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 }

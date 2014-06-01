@@ -17,8 +17,8 @@ public class ProcedureNode extends NodeBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String CORNER_RADIUS = "CornerRadius";
-    public static final String FILL_COLOR = "FillColor";
+    private static final String CORNER_RADIUS = "CornerRadius";
+
 
     public ProcedureNode(String id) {
         super(id);
@@ -27,19 +27,15 @@ public class ProcedureNode extends NodeBase implements Serializable {
     public XShape buildShape(XMultiServiceFactory xMSF) {
         try {
             xShape = ShapeHelper.createShape(xMSF, new Point(100, 100), new Size(800, 800), DrawHelper.SHAPE_KIND_RECTANGLE);
-
             XPropertySet xPS = QI.XPropertySet(xShape);
             xPS.setPropertyValue(CORNER_RADIUS, new Integer(500));
             xPS.setPropertyValue(FILL_COLOR, new Integer(0x99CCFF));
-
             return xShape;
         } catch (Exception ex) {
             Logger.getLogger(ProcedureNode.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-
     }
-
 }
 
 

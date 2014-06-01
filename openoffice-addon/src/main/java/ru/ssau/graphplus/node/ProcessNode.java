@@ -13,9 +13,6 @@ import ru.ssau.graphplus.commons.ShapeHelper;
 import java.awt.*;
 import java.io.Serializable;
 
-/**
- * @author anton
- */
 public class ProcessNode extends NodeBase implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,16 +23,12 @@ public class ProcessNode extends NodeBase implements Serializable {
 
     public XShape buildShape(XMultiServiceFactory xMSF) {
         try {
-
             XShape xShape = ShapeHelper.createShape(xMSF, new Point(100, 100), new Size(800, 800), DrawHelper.SHAPE_KIND_RECTANGLE);
             XPropertySet xPS = QI.XPropertySet(xShape);
-//            xPS = ShapeHelper.addPortion(xShape, "process", false);
-            Color color = new Color(0x99CCFF);
             xPS.setPropertyValue("FillColor", new Integer(0x99CCFF));
             return xShape;
         } catch (Exception ex) {
             return null;
         }
     }
-
 }

@@ -36,6 +36,7 @@ public class DiagramServiceImpl implements DiagramService {
 
     private final Layout.Stage stage;
 
+
     @Inject
     public DiagramServiceImpl(NodeFactory nodeFactory, LinkFactory linkFactory, DiagramModel diagramModel, DiagramController diagramController, XComponent xDrawDoc, Layout.Stage stage, Layout layout) {
         this.nodeFactory = nodeFactory;
@@ -119,8 +120,16 @@ public class DiagramServiceImpl implements DiagramService {
         System.out.println(node1.getId());
         System.out.println(node2.getId());
         link.link(node1, node2);
+
+        diagramModel.getGraph().link(node1, node2, link);
+        layoutLink(node1, node2, link);
+    }
+    public void layoutLink(Node node1, Node node2, Link link) {
+
         BetweenNodesLayout betweenNodesLayout = new BetweenNodesLayout(stage, wrapForLayout(node1), wrapForLayout(node2));
         betweenNodesLayout.layout(wrapForLayout(link));
+
+
     }
 
     private Layout.Obj wrapForLayout(DiagramElement diagramElement){

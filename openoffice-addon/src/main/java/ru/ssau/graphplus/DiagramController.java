@@ -1,6 +1,7 @@
 
 package ru.ssau.graphplus;
 
+import com.google.common.collect.Sets;
 import com.sun.star.awt.*;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.document.XUndoManager;
@@ -46,7 +47,6 @@ public class DiagramController implements
     private final XComponent m_xComponent;
     private final XComponent xDrawDoc;
 
-
     private static final InputMode DEFAULT_INPUT_MODE = new InputMode() {
         @Override
         public void onInput(EventObject eventObject) {
@@ -61,13 +61,11 @@ public class DiagramController implements
     private final MyDispatch dispatch;
     private final XUndoManager undoManager;
 
-
     State state;
 
     Map<State, DiagramEventHandler> diagramEventHandlerMap = new HashMap<State, DiagramEventHandler>();
     DiagramEventHandler diagramEventHandler;
     XDrawPage xDP = null;
-
 
     private InputMode inputMode;
     private DiagramModel diagramModel;
@@ -100,7 +98,6 @@ public class DiagramController implements
     XShape toRemove1;
     XShape toRemove2;
 
-
     private transient static List<WeakReference<DiagramController>> instances = new ArrayList<>();
 
     public static List<WeakReference<DiagramController>> getInstances() {
@@ -111,7 +108,6 @@ public class DiagramController implements
 //        OOGraph.LOGGER.info("DiagramController ctor");
         this.undoManager = undoManager;
         dispatch = myDispatch;
-
         inputMode = new InputMode() {
             @Override
             public void onInput(EventObject eventObject) {
@@ -136,10 +132,7 @@ public class DiagramController implements
         whichElementContainsShape = new HashMap();
         positions = new HashMap();
         addSelectionListener();
-
 //        OOGraph.LOGGER.info("adding shape event listeners");
-
-
     }
 
     public void setNodeFactory(NodeFactory nodeFactory) {
@@ -154,7 +147,6 @@ public class DiagramController implements
         return diagramModel;
     }
 
-
     private String getPackageLocation() {
         Object valueByName = m_xContext.getValueByName("/singletons/com.sun.star.deployment.PackageInformationProvider");
         XPackageInformationProvider xPackageInformationProvider = UnoRuntime.queryInterface(XPackageInformationProvider.class, valueByName);
@@ -164,30 +156,26 @@ public class DiagramController implements
     public void configureListeners(Link link) {
     }
 
-
     public void onShapeInserted(com.sun.star.document.EventObject arg0) {
         System.out.println("ShapeInserted");
-
-
     }
 
     private void fireDiagramEvent(DiagramEvent diagramEvent) {
         if (diagramEvent instanceof ElementAddEvent) {
             diagramEventHandler.elementAdded((ElementAddEvent) diagramEvent);
         }
-
     }
 
     public void onShapeModified(XShape shape) {
-
         DiagramElement diagramElementByShape = diagramModel.getDiagramElementByShape(shape);
+        if (diagramElementByShape == null) {
+            return;
+        }
         if (diagramElementByShape instanceof Node) {
-
             NodeBase node = (NodeBase) diagramElementByShape;
             node.setName(QI.XText(node.getShape()).getString());
             diagramModel.fireEvent(new NodeModifiedEvent(node));
         }
-
     }
 //
 //    public void onShapeInserted(XShape shape){
@@ -208,8 +196,6 @@ public class DiagramController implements
 
     public void setState(State state) {
         this.state = state;
-
-
         if (diagramEventHandlerMap.containsKey(state)) {
             diagramEventHandler = diagramEventHandlerMap.get(state);
         } else {
@@ -298,7 +284,6 @@ public class DiagramController implements
         }
         return s;
     }
-
     // XSelectionChangeListener
 
     public int parseInt(String s) {
@@ -313,7 +298,6 @@ public class DiagramController implements
 
     public void disposing(EventObject arg0) {
     }
-
 //    public Linker getLinker() {
 //        return linker;
 //    }
@@ -357,13 +341,9 @@ public class DiagramController implements
     }
 
     public void modified(EventObject arg0) {
-
-
     }
 
     private Collection<Object> checkPositions() {
-
-
         for (int i = 0; i < xDP.getCount(); i++) {
             try {
                 Object byIndex = xDP.getByIndex(i);
@@ -381,58 +361,97 @@ public class DiagramController implements
                 e.printStackTrace();
             }
         }
-
         return Collections.EMPTY_LIST;
-
     }
 
     // unused
     private void chooseNodeType(XShape xShape) {
         new ChooseNodeTypeDialog().chooseNodeType(xMCF, xShape, m_xContext);
     }
-
     //
 
     private void insertLinkShapes(Link link) {
-
         LinkTwoConnectorsAndTextBase link_ = (LinkTwoConnectorsAndTextBase) link;
-
         for (XShape shape : link_.getShapes()) {
             DrawHelper.insertShapeOnCurrentPage(shape, getDiagramModel().getDrawDoc());
         }
     }
 
-    public void onShapeRemoved(XShape xShape) {
+    /**
+     * This class is for removing complex links
+     */
+    private class LinkRemoveGuard {
+        private HashSet<XShape> shapes;
 
+        boolean isFree() {
+            return shapes == null || shapes.isEmpty();
+        }
+
+        boolean workOut(XShape shape) {
+            if (shapes != null) {
+                return shapes.remove(shape);
+            } else {
+                throw new IllegalStateException();
+            }
+        }
+
+        void reset() {
+            shapes.clear();
+        }
+
+        void fill(LinkTwoConnectorsAndTextBase linkTwoConnectorsAndTextBase) {
+            if (!isFree()) {
+                throw new IllegalStateException("not free yet");
+            }
+            Iterable<XShape> shapes = linkTwoConnectorsAndTextBase.getShapes();
+            this.shapes = Sets.newHashSet(shapes);
+        }
+    }
+    private LinkRemoveGuard linkRemoveGuard = new LinkRemoveGuard();
+
+    public void onShapeRemoved(XShape xShape) {
         DiagramElement diagramElementByShape = getDiagramModel().getDiagramElementByShape(xShape);
         if (diagramElementByShape != null) {
             if (diagramElementByShape instanceof Link) {
+                if (diagramElementByShape instanceof LinkTwoConnectorsAndTextBase) {
+                    LinkTwoConnectorsAndTextBase linkBase = (LinkTwoConnectorsAndTextBase) diagramElementByShape;
+                    if (linkRemoveGuard.isFree()){
+                        linkRemoveGuard.fill(linkBase);
+                    }
+                    else {
+                        if (linkRemoveGuard.workOut(xShape)){
+                            return;
+                        }
 
-
-                LinkBase linkBase = (LinkTwoConnectorsAndTextBase) diagramElementByShape;
-
-                diagramModel.removeDiagramElement(diagramElementByShape);
-
-                for (XShape linkShape : linkBase.getShapes()) {
-                    if (!linkShape.equals(xShape)) {
-                        ShapeHelper.removeShape(linkShape, DrawHelper.getCurrentDrawPage(xDrawDoc));
+                    }
+                    diagramModel.removeDiagramElement(diagramElementByShape);
+                    int i = 0;
+                    for (XShape linkShape : linkBase.getShapes()) {
+//                        if (!UnoRuntime.areSame(linkShape,xShape)) {
+                            XDrawPage currentDrawPage = DrawHelper.getCurrentDrawPage(xDrawDoc);
+                            if (ShapeHelper.removeShape(linkShape, currentDrawPage)) {
+                                i++;
+                            } else {
+                                i = ShapeHelper.removeShape(linkBase.getName(), currentDrawPage);
+                            }
+//                        }
+                    }
+                    if (i == 2) {
+                        linkRemoveGuard.reset();
                     }
                 }
             }
-
             if (diagramElementByShape instanceof Node) {
                 diagramModel.removeDiagramElement(diagramElementByShape);
             }
-
         }
-
     }
 
     public void insertLink(Link link) {
         diagramModel.addDiagramElement(link);
     }
 
-    public void insertNode(Node node){
+    public void insertNode(Node node) {
         diagramModel.addDiagramElement(node);
     }
 
@@ -454,16 +473,12 @@ public class DiagramController implements
                 e.printStackTrace();
             }
         }
-
         if (diagramElement instanceof LinkBase) {
             LinkBase linkBase = (LinkBase) diagramElement;
-
             ShapesProvider shapesProvider = linkBase;
-
             try {
                 //            com.sun.star.drawing.ShapeCollection
                 Object shapesCollection = null;
-
                 shapesCollection = xMCF.createInstanceWithContext("com.sun.star.drawing.ShapeCollection", m_xContext);
                 XShapes xShapes = QI.XShapes(shapesCollection);
                 Iterable<XShape> shapes = shapesProvider.getShapes();
@@ -478,15 +493,11 @@ public class DiagramController implements
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         } else {
-
-
             try {
                 ShapesProvider shapesProvider = (ShapesProvider) diagramElement;
                 //            com.sun.star.drawing.ShapeCollection
                 Object shapesCollection = null;
-
                 shapesCollection = xMCF.createInstanceWithContext("com.sun.star.drawing.ShapeCollection", m_xContext);
                 XShapes xShapes = QI.XShapes(shapesCollection);
                 Iterable<XShape> shapes = shapesProvider.getShapes();
@@ -501,7 +512,6 @@ public class DiagramController implements
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
     }
 
@@ -528,12 +538,9 @@ public class DiagramController implements
     @Override
     public void selectionChanged(EventObject eventObject) {
         //TODO implement
-
-
         Object shapeObj = getSelectedShape();
 //        Misc.printInfo(shapeObj);
         XShapes selectedShapes = getSelectedShapes();
-
         if (selectedShapes != null) {
             if (selectedShapes.getCount() == 1) {
                 try {
@@ -542,14 +549,9 @@ public class DiagramController implements
                     DiagramElement diagramElementByShape = getDiagramModel().getDiagramElementByShape(shape);
                     if (diagramElementByShape instanceof Node) {
                         Node nodeByShape = (Node) diagramElementByShape;
-
                         nodeSelectionController.nodeSelected(nodeByShape);
-
-
 //                        LinkNodesDialog.map.get(dispatch).setNodeZ(nodeByShape);
-
                     }
-
                 } catch (IndexOutOfBoundsException e) {
                     e.printStackTrace();
                 } catch (WrappedTargetException e) {
@@ -557,12 +559,8 @@ public class DiagramController implements
                 }
             }
         }
-
-
         inputMode.onInput(eventObject);
-
         DiagramElement diagramElementByShape = getDiagramModel().getDiagramElementByShape(getSelectedShape());
-
 //        OOGraph.aController.displayMessage(diagramElementByShape.toString());
     }
 
@@ -584,6 +582,4 @@ public class DiagramController implements
         InputTwoShapes,
         AddingLink
     }
-
-
 }

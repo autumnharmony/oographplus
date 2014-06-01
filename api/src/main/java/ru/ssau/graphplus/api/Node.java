@@ -4,11 +4,9 @@ import com.sun.star.awt.Point;
 import com.sun.star.awt.Size;
 import com.sun.star.drawing.XShape;
 
-public interface Node extends DiagramElement{
+public interface Node extends DiagramElement {
 
     NodeType getType();
-
-//    XShape getShape();
 
     Size getSize();
 
@@ -16,54 +14,41 @@ public interface Node extends DiagramElement{
 
 
     public enum NodeType {
-
-
-
         // Process Diagram Type
-
         /**
-         ________
-        |        \
-        |         \
-        |________/
-
+         * ________
+         * |        \
+         * |         \
+         * |________/
          */
         ClientPort,
 
         /**
-         ________
-        |        /
-        |       /
-        |       \
-        |________\
+         * ________
+         * |        /
+         * |       /
+         * |       \
+         * |________\
          */
-
         ServerPort,
 
         /**
-         *   __________
-         *  |          |
-         *  |__________|
-         *
+         * __________
+         * |          |
+         * |__________|
          */
         StartMethodOfProcess,
 
-
-        /**      ________
-         *     /        \
-         *    |          |
-         *     \________/
+        /**
+         * ________
+         * /        \
+         * |          |
+         * \________/
          */
         MethodOfProcess,
-
-
-
-//        Channel Diagram Type
 
         ClientPortState,
         ServerPortState,
         StartStateOfClient
-
     }
-
 }

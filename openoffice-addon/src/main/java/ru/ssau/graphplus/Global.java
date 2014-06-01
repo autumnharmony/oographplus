@@ -8,4 +8,5 @@ public class Global {
 
     public static Boolean loaded;
     public static String model;
+    public static String locale;
 }

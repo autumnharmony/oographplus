@@ -40,6 +40,7 @@ import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.container.XEnumeration;
 import com.sun.star.container.XEnumerationAccess;
+import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XDrawPage;
 import com.sun.star.drawing.XShape;
 import com.sun.star.drawing.XShapes;
@@ -52,7 +53,7 @@ import ru.ssau.graphplus.api.Node;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
+import java.util.List;
 
 public class ShapeHelper {
     // __________ static helper methods __________
@@ -77,7 +78,6 @@ public class ShapeHelper {
         return xShape;
     }
 
-
     /**
      * create a Shape
      */
@@ -100,7 +100,6 @@ public class ShapeHelper {
                                      Point aPos, Size aSize, String sShapeType)
             throws java.lang.Exception {
         XShape xShape = null;
-
         Object xObj = xFactory.createInstance(sShapeType);
         xShape = (XShape) UnoRuntime.queryInterface(
                 XShape.class, xObj);
@@ -117,7 +116,6 @@ public class ShapeHelper {
             throws com.sun.star.lang.IllegalArgumentException {
         XText xText = (XText)
                 UnoRuntime.queryInterface(XText.class, xShape);
-
         XTextCursor xTextCursor = xText.createTextCursor();
         //xTextCursor.gotoEnd( true );
         if (bNewParagraph == true) {
@@ -127,7 +125,6 @@ public class ShapeHelper {
         XTextRange xTextRange = (XTextRange)
                 UnoRuntime.queryInterface(XTextRange.class, xTextCursor);
         xTextRange.setString(sText);
-
         //xTextCursor.gotoEnd( true );
         XPropertySet xPropSet = (XPropertySet)
                 UnoRuntime.queryInterface(XPropertySet.class, xTextRange);
@@ -138,11 +135,9 @@ public class ShapeHelper {
             throws com.sun.star.lang.IllegalArgumentException {
         XText xText = (XText)
                 UnoRuntime.queryInterface(XText.class, xShape);
-
         XTextCursor xTextCursor = xText.createTextCursor();
         xTextCursor.gotoStart(true);
 //        true);//gotoEnd( false );
-
         XTextRange xTextRange = (XTextRange)
                 UnoRuntime.queryInterface(XTextRange.class, xTextCursor);
         xTextRange.setString(sText);
@@ -176,14 +171,12 @@ public class ShapeHelper {
         }
     }
 
-
     public static void insertShape(XShape xShape, XShapes xShapes) {
         try {
             xShapes.add(xShape);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     public static void insertShape(XShape xShape, XShapes xShapes, Point point) {
@@ -193,7 +186,6 @@ public class ShapeHelper {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 
     public static void insertShape(XShape xShape, XDrawPage xDP) {
@@ -211,20 +203,34 @@ public class ShapeHelper {
         insertShape(xShape, xShapes);
         postCreationAction.postCreate(xShape);
     }
-
 //    private static Logger logger = Logger.getLogger(ShapeHelper.class.getName());
 
-    public static boolean removeShape(XShape xShape, XDrawPage xDP) {
+    public static int removeShape(String name, XDrawPage xDP) {
 
-//        logger.entering(ShapeHelper.class.getCanonicalName(), "removeShape");
-
+        List<XShape> shapesToRemove = new ArrayList<>();
         for (int i = 0; i < xDP.getCount(); i++) {
             try {
                 Object byIndex = xDP.getByIndex(i);
                 XShape xShape1 = QI.XShape(byIndex);
-                if (xShape.equals(xShape1)) {
-                    xDP.remove(xShape);
-                    return true;
+                if (ShapeHelper.isConnectorShape(xShape1)) {
+                    XConnectorShape xConnectorShape = QI.XConnectorShape(xShape1);
+                    try {
+                        XShape startShape = QI.XShape(QI.XPropertySet(xConnectorShape).getPropertyValue("StartShape"));
+                        XShape endShape = QI.XShape(QI.XPropertySet(xConnectorShape).getPropertyValue("EndShape"));
+                        String s1 = startShape != null ? QI.XText(startShape).getString() : null;
+                        String s2 = endShape != null ? QI.XText(endShape).getString() : null;
+                        if (name.equals(s1) || name.equals(s2)) {
+                            if (startShape != null && ShapeHelper.isTextShape(startShape)) {
+                                shapesToRemove.add(startShape);
+                            }
+                            if (endShape != null && ShapeHelper.isTextShape(endShape)) {
+                                shapesToRemove.add(endShape);
+                            }
+                        }
+                    } catch (UnknownPropertyException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
                 }
 
             } catch (com.sun.star.lang.IndexOutOfBoundsException | WrappedTargetException e) {
@@ -232,14 +238,37 @@ public class ShapeHelper {
                 throw new RuntimeException(e);
             }
         }
+        for (XShape remove : shapesToRemove){
+            xDP.remove(remove);
+        }
 
-//        logger.exiting(ShapeHelper.class.getCanonicalName(), "removeShape");
-        return false;
+        return shapesToRemove.size();
+    }
+
+    public static boolean removeShape(XShape xShape, XDrawPage xDP) {
+//        logger.entering(ShapeHelper.class.getCanonicalName(), "removeShape");
+        XShape shape = null;
+        for (int i = 0; i < xDP.getCount(); i++) {
+            try {
+                Object byIndex = xDP.getByIndex(i);
+                XShape xShape1 = QI.XShape(byIndex);
+                if (UnoRuntime.areSame(xShape,xShape1) || QI.XText(xShape).getString().equals(QI.XText(xShape1).getString())) {
+                    shape = xShape1;
+                    break;
+                }
+            } catch (com.sun.star.lang.IndexOutOfBoundsException | WrappedTargetException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+        }
+        if (shape != null) {
+            xDP.remove(shape);
+            return true;
+        } else return false;
     }
 
     public static Collection<XShape> getShapes(XDrawPage xDrawPage) {
         int count = xDrawPage.getCount();
-
         Collection<XShape> xShapes = new ArrayList();
         for (int i = 0; i < count; i++) {
             try {
@@ -251,14 +280,13 @@ public class ShapeHelper {
             } catch (WrappedTargetException e) {
                 e.printStackTrace();
             }
-
         }
         return xShapes;
     }
 
-
     public static boolean isTextShape(XShape xShape1) {
         //TODO recode contains
+        if (xShape1 == null) return false;
         if (xShape1.getShapeType().contains("Text")) {
             return true;
         }
@@ -273,16 +301,14 @@ public class ShapeHelper {
         return false;
     }
 
-    public static Node.NodeType getNodeType(XShape shape){
+    public static Node.NodeType getNodeType(XShape shape) {
         String nodeType;
-
 //        try {
 //            nodeType = MiscHelper.getNodeType(shape);
 //            return Node.NodeType.valueOf(nodeType);
 //        } catch (Exception ex) {
 //            // so sad
 //        }
-
         String shapeType = shape.getShapeType();
         if (shapeType.contains("Rectangle")) {
             //  procedure or process
@@ -301,7 +327,6 @@ public class ShapeHelper {
                 throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
             }
         }
-
         if (shapeType.contains("PolyPolygonShape")) {
             // client or server
             Object polyPolygon = null;
@@ -312,26 +337,21 @@ public class ShapeHelper {
                     throw new com.sun.star.uno.RuntimeException("Error", new com.sun.star.lang.IllegalArgumentException("Strange polygon argument, i can't get type"));
                 }
                 Point[] sort = sort(points);
-
                 if (sort[3].X > sort[2].X && sort[3].X > sort[4].X) {
                     // >
                     // client
                     return Node.NodeType.ClientPort;
                 }
-
                 if ((sort[3].X < sort[2].X && sort[3].X < sort[4].X) || (sort[3].X < sort[2].X && sort[3].X < sort[1].X)) {
                     // <
                     // server
                     return Node.NodeType.ServerPort;
                 }
-
-
             } catch (UnknownPropertyException e) {
                 throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
             } catch (WrappedTargetException e) {
                 throw new com.sun.star.uno.RuntimeException(e.getMessage(), e);
             }
-
         }
         return null;
     }
@@ -341,11 +361,8 @@ public class ShapeHelper {
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
         Point leftDown;
-
         Point[] newPoints = new Point[point.length];
-
         int leftDownIndex = -1;
-
         for (int i = 0; i < point.length; i++) {
             Point _p = point[i];
             if (_p.X < minX && _p.Y < minY) {
@@ -355,28 +372,21 @@ public class ShapeHelper {
                 leftDownIndex = i;
             }
         }
-
         assert leftDownIndex != -1;
-
         int k = 0;
         for (int j = leftDownIndex; j < point.length; j++) {
             newPoints[k++] = point[j];
         }
-
         for (int j = 0; j < leftDownIndex; j++) {
             newPoints[k++] = point[j];
         }
-
         return newPoints;
-
-
     }
 
     public static String getText(XShape xShape) {
         try {
             return QI.XText(xShape).getString();
         } catch (Exception ex) {
-
             XPropertySet xPropertySet = QI.XPropertySet(xShape);
             try {
                 String text = (String) xPropertySet.getPropertyValue("Text");
@@ -385,7 +395,5 @@ public class ShapeHelper {
                 throw new IllegalArgumentException();
             }
         }
-
-
     }
 }

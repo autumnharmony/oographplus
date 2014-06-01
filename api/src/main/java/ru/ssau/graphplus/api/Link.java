@@ -28,6 +28,4 @@ public interface Link extends
         ControlFlow,
         MixedFlow,
     }
-
-
 }

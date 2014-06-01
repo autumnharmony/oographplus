@@ -41,7 +41,7 @@ public interface Layout {
     void layout(Stage stage, Obj obj);
 
     /**
-     * Change position of obj accroding to positions of other Objs already added on stage
+     * Change position of obj according to positions of other Objs already added on stage
      * @param obj
      */
     void layout(Obj obj);
