@@ -49,7 +49,6 @@ import ru.ssau.graphplus.document.event.handler.DocumentEventHandler;
 import ru.ssau.graphplus.document.event.handler.DocumentEventsHandler;
 import ru.ssau.graphplus.document.event.handler.impl.DocumentEventsHandlerImpl;
 import ru.ssau.graphplus.events.*;
-import ru.ssau.graphplus.events.Event;
 import ru.ssau.graphplus.events.EventListener;
 import ru.ssau.graphplus.gui.DiagramElementObj;
 import ru.ssau.graphplus.gui.Gui;
@@ -69,13 +68,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static ru.ssau.graphplus.Constants.*;
 
 public class MyDispatch implements XDispatch {
 
+    public static final String COM_SUN_STAR_DATATRANSFER_CLIPBOARD_SYSTEM_CLIPBOARD = "com.sun.star.datatransfer.clipboard.SystemClipboard";
     private XFrame m_xFrame;
     private final TableInserterImpl tableInserter;
     private final XMultiServiceFactory xMSF;
@@ -99,6 +98,9 @@ public class MyDispatch implements XDispatch {
     private final DiagramTypeRecognition diagramTypeRecognition;
     private Injector injector;
 
+    public XComponent getDrawDoc() {
+        return xDrawDoc;
+    }
     public void setFrame(XFrame m_xFrame) {
         this.m_xFrame = m_xFrame;
     }
@@ -213,31 +215,43 @@ public class MyDispatch implements XDispatch {
 
                 @Override
                 public void onEvent(NodeModifiedEvent event) {
-                    Node node = event.getNode();
-                    Graph graph = diagramModel.getGraph();
-                    if (graph == null) {
-                        return;
+                    if (Settings.getSettings().isAutolayoutComplexLinks()) {
+                        Node node = event.getNode();
+                        Graph graph = diagramModel.getGraph();
+                        if (graph == null) {
+                            return;
+                        }
+                        Table<Node, Node, List<Link>> table = graph.getTable();
+                        Map<Node, List<Link>> column = table.column(node);
+                        Map<Node, List<Link>> row = table.row(node);
+                        adjust(node, column, row);
+
                     }
-                    Table<Node, Node, List<Link>> table = graph.getTable();
-                    Map<Node, List<Link>> column = table.column(node);
-                    Map<Node, List<Link>> row = table.row(node);
+                }
+
+                private void adjust(Node node, Map<Node, List<Link>> column, Map<Node, List<Link>> row) {
                     for (Map.Entry<Node, List<Link>> entry : column.entrySet()) {
                         for (Link link : entry.getValue()) {
                             Node key = entry.getKey();
-                            LinkAdjuster.adjustLink((LinkBase) link, (NodeBase) key, (NodeBase) node);
+
+                            adjustImpl((LinkBase) link, (NodeBase) key, (NodeBase) node);
                             diagramService.layoutLink(key, node, link);
                         }
                     }
                     for (Map.Entry<Node, List<Link>> entry : row.entrySet()) {
                         for (Link link : entry.getValue()) {
                             Node key = entry.getKey();
-                            LinkAdjuster.adjustLink((LinkBase) link, (NodeBase) node, (NodeBase) key);
-                            diagramService.layoutLink(node, key, link);
+                            adjustImpl((LinkBase) link, (NodeBase) node, (NodeBase) key);
+                            diagramService.layoutLink(key, node, link);
                         }
                     }
                 }
+
+                private void adjustImpl(LinkBase linkBase , NodeBase nodeBase1, NodeBase nodeBase2){
+                    new LinkAdjusterImpl().adjustLink(linkBase, nodeBase1, nodeBase2);
+                }
             });
-            diagramController = new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel, xDrawDoc, this, undoManager);
+            diagramController = new DiagramController(m_xContext, m_xFrame, xMSF, xMCF, diagramModel, xDrawDoc, this);
             Module combine = Modules.combine(new CommonsModule(), new AddonModule(diagramModel, xMSF, xDrawDoc, diagramController), new CodeGeneratorModule());
             try {
                 injector = Guice.createInjector(combine);
@@ -518,9 +532,9 @@ public class MyDispatch implements XDispatch {
                     if (link != null) {
                         link.setProps();
                         if (Settings.getSettings().mouseLinkingMode() && diagramModel.getNodes().size() >= 2) {
-                            getDiagramController().setInputMode(new InputTwoShapesMode(getDiagramController(), link));
+                            getDiagramController().setInputMode(new DiagramController.InputTwoNodesMode(getDiagramController(), link, diagramService));
                         }
-                        statusChangedDisable(url);
+//                        statusChangedDisable(url);
                         getDiagramModel().addDiagramElement(link);
                         diagramController.configureListeners(link);
                         layout.layout(new DiagramElementObj(link));
@@ -548,8 +562,6 @@ public class MyDispatch implements XDispatch {
                         MiscHelper.setId(node.getShape(), node.getId());
                         MiscHelper.tagShapeAsNode(node.getShape());
                         layout.layout(new DiagramElementObj(node));
-
-
 //                        undoManager.addUndoAction(new XUndoAction() {
 //                            @Override
 //                            public String getTitle() {
@@ -575,9 +587,9 @@ public class MyDispatch implements XDispatch {
                     try {
                         Object oClipboard =
                                 xMCF.createInstanceWithContext(
-                                        "com.sun.star.datatransfer.clipboard.SystemClipboard",
+                                        COM_SUN_STAR_DATATRANSFER_CLIPBOARD_SYSTEM_CLIPBOARD,
                                         m_xContext);
-                        XShapes xShapes;// = QI.XShapes(xDrawDoc);
+                        XShapes xShapes;
                         XDrawPage currentDrawPage = DrawHelper.getCurrentDrawPage(xDrawDoc);
                         xShapes = QI.XShapes(currentDrawPage);
                         Set<XShape> allShapes = Sets.newHashSet();
@@ -608,10 +620,8 @@ public class MyDispatch implements XDispatch {
                                 }
                             }
                         }
-                        Set<XShape> unusedShapes = new HashSet<>(allShapes);
-                        unusedShapes.removeAll(usedShapes);
                         if (Settings.getSettings().isValidationRequired()) {
-                            Validator validator = new ValidatorImpl(diagramModel, unusedShapes);
+                            Validator validator = new ValidatorImpl(diagramModel, allShapes, usedShapes);
                             ValidationResult validate = validator.validate(diagramModel);
                             if (validate.getItems().size() > 0) {
                                 ValidationDialog validationDialog = new ValidationDialog();
@@ -634,7 +644,7 @@ public class MyDispatch implements XDispatch {
                         diagramController.setSelectedShape(cantRecognizeType.getShape());
                         throw new java.lang.RuntimeException(cantRecognizeType);
                     } catch (Exception e) {
-                        throw new RuntimeException("", e);
+                        throw new java.lang.RuntimeException(e);
                     }
                 }
                 if (url.Path.compareTo("About") == 0) {

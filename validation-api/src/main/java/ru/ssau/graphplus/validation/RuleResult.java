@@ -14,4 +14,12 @@ package ru.ssau.graphplus.validation;
 public interface RuleResult<T> {
     <T> T getItem();
     String getDescription();
+
+    enum Type {
+        Ok,
+        Warning,
+        Error
+    }
+
+    Type getType();
 }

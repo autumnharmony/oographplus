@@ -13,7 +13,7 @@ public class PortNameRule extends NodeNameRule {
         if ((node.getType().equals(Node.NodeType.ServerPort) || node.getType().equals(Node.NodeType.ClientPort)) && !Strings.isNullOrEmpty(node.getName().trim())){
             Pattern pattern = Pattern.compile("\\w+:\\w+");
             Matcher matcher = pattern.matcher(node.getName());
-            return matcher.matches()? new ResultOk() : new RuleError<>("Port name must be in next format:  ident:ident", node);
+            return matcher.matches()? new ResultOk() : error(node);
         }
         else {
             return new ResultOk();

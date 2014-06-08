@@ -9,13 +9,13 @@ import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.validation.NodeRule;
 import ru.ssau.graphplus.validation.RuleResult;
 
-public class NodeNameRule implements NodeRule {
+public class NodeNameRule extends RuleBase<Node> implements NodeRule {
 
     @Override
     public RuleResult<Node> check(Node node) {
         String name = node.getName();
         if (Strings.isNullOrEmpty(name)){
-            return new RuleError("Node without name", node);
+            return error(node);
         }
         else return new ResultOk();
     }

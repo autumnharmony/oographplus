@@ -4,6 +4,7 @@
 
 package ru.ssau.graphplus.codegen.impl;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import ru.ssau.graphplus.codegen.impl.recognition.LinkTypeRecogniser;
 import ru.ssau.graphplus.commons.ConnectedShapesComplex;
@@ -15,6 +16,7 @@ import static org.mockito.Mockito.mock;
 
 /**
  */
+@Ignore
 public class PortMessageGroupTest {
 //    @Test
 //    public void testGetCode() throws Exception {

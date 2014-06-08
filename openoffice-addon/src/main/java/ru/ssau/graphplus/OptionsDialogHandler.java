@@ -22,6 +22,7 @@ import java.util.Arrays;
 
 public class OptionsDialogHandler extends WeakBase implements XServiceInfo, XContainerWindowEventHandler {
     public static final String PROMPT_FOR_NODE_NAME = "promptForNodeName";
+    public static final String AUTOLAYOUT_COMPLEX_LINKS = "autolayoutComplexLinks";
     public static String[] SupportedWindowNames = { "OptionsPage" };
 
     static private final String __serviceName = "ru.ssau.graphplus.gui.OptionsDialogHandler";
@@ -164,6 +165,14 @@ public class OptionsDialogHandler extends WeakBase implements XServiceInfo, XCon
         Settings.getSettings().setLinkingInputMode(linkingInputMode);
 
 
+        aObj = getProperty(xContainer, AUTOLAYOUT_COMPLEX_LINKS, "State");
+        if (1 == AnyConverter.toShort(aObj)) {
+            Settings.getSettings().setAutolayoutComplexLinks(true);
+        }
+        else {
+            Settings.getSettings().setAutolayoutComplexLinks(false);
+        }
+
         try {
             Settings.getSettings().save();
         }
@@ -184,6 +193,9 @@ public class OptionsDialogHandler extends WeakBase implements XServiceInfo, XCon
 //            for (int x = 0; x < categories.length; x++) {
             Short value = new Short( (short) (Settings.getSettings().promptForNodeName() ? 1 : 0) );
             setProperty(xContainer, PROMPT_FOR_NODE_NAME, "State", value);
+
+        value = new Short( (short) (Settings.getSettings().isAutolayoutComplexLinks() ? 1 : 0) );
+        setProperty(xContainer, AUTOLAYOUT_COMPLEX_LINKS, "State", value);
 
         Settings.LinkingInputMode[] values = Settings.LinkingInputMode.values();
         Iterable<String> transform = Iterables.transform(Arrays.asList(values), new Function<Settings.LinkingInputMode, String>() {

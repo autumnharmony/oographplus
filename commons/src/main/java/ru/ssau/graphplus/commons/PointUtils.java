@@ -52,4 +52,18 @@ public class PointUtils {
     public static double distance(Point position, Point point) {
         return Math.sqrt(Math.pow(position.X - point.X, 2)+Math.pow(position.Y - point.Y, 2));
     }
+
+    public static java.awt.Point convert(Point point){
+        return new java.awt.Point(point.X,point.Y);
+    }
+
+    public static Point2D convert2D(Point point){
+        return new Point2D.Double(point.X,point.Y);
+    }
+
+
+    public static Point2D convert2D(java.awt.Point point){
+        return new Point2D.Double(point.getX(),point.getY());
+    }
+
 }

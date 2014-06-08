@@ -10,8 +10,8 @@
         <node oor:name="DeckList">
             <node oor:name="OOGraphDeck" oor:op="replace">
                 <prop oor:name="Title" oor:type="xs:string">
-                    <value xml:lang="en-US">Graphplus</value>
-                    <value>Graphplus</value>
+                    <value xml:lang="en-US">TEMPLET Addon</value>
+                    <value xml:lang="en-US">TEMPLET Addon</value>
                 </prop>
                 <prop oor:name="Id" oor:type="xs:string">
                     <value>OOGraphDeck</value>

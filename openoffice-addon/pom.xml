@@ -13,7 +13,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <description>Graphplus Openoffice Addon</description>
+    <description>Templet Openoffice/LibreOffice Addon</description>
     <properties>
         <project_dir>${project.basedir}</project_dir>
         <oxt_path>${project.basedir}${file.separator}target${file.separator}${artifactId}-${version}.oxt</oxt_path>
@@ -67,7 +67,7 @@
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
+            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -332,26 +332,7 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>native2ascii-maven-plugin</artifactId>
-                <version>1.0-alpha-1</version>
-                <executions>
-                    <execution>
-                        <id>native2ascii-utf8-resources</id>
-                        <goals>
-                            <goal>native2ascii</goal>
-                        </goals>
-                        <configuration>
-                            <dest>target/resources</dest>
-                            <src>src/main/resources</src>
-                            <encoding>UTF8</encoding>
-                            <includes>*.properties</includes>
-                        </configuration>
-                    </execution>
 
-                </executions>
-            </plugin>
 
         </plugins>
 

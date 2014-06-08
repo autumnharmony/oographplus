@@ -12,6 +12,8 @@ public interface ValidationResult {
 
     Collection<Item> getItems();
 
+
+
     public interface Item {
 
         String getShortDescription();
@@ -20,5 +22,6 @@ public interface ValidationResult {
 
         DiagramElement getDiagramElement();
 
+        RuleResult.Type getType();
     }
 }

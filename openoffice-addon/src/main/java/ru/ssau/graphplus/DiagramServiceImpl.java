@@ -14,6 +14,7 @@ import ru.ssau.graphplus.api.DiagramElement;
 import ru.ssau.graphplus.api.DiagramService;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
+import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.commons.ShapeHelper;
 import ru.ssau.graphplus.gui.BetweenNodesLayout;
 import ru.ssau.graphplus.gui.DiagramElementObj;
@@ -75,6 +76,11 @@ public class DiagramServiceImpl implements DiagramService {
     }
 
     @Override
+    public Node createNode(Node.NodeType nodeType){
+        return nodeFactory.create(nodeType);
+    }
+
+    @Override
     public Link createLink(String name, Link.LinkType linkType) {
         return linkFactory.create(linkType, Settings.getSettings().isAddTextToShapeToLink() ? LinkFactory.LinkConnectors.TwoConnectorsShape : LinkFactory.LinkConnectors.OneConnectorShape);
     }
@@ -90,7 +96,8 @@ public class DiagramServiceImpl implements DiagramService {
         }
 
         diagramController.insertNode(nodeBase);
-
+        QI.XText(nodeBase.getShape()).setString(node.getId());
+        QI.XNamed(nodeBase.getShape()).setName(node.getId());
         layout.layout(new DiagramElementObj(node));
     }
 

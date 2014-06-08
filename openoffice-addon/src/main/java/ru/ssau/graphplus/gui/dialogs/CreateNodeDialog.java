@@ -6,10 +6,7 @@ package ru.ssau.graphplus.gui.dialogs;
 
 import com.google.common.collect.ImmutableMap;
 import com.sun.star.awt.*;
-import com.sun.star.beans.PropertyVetoException;
-import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.drawing.XShape;
-import com.sun.star.lang.*;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import ru.ssau.graphplus.*;

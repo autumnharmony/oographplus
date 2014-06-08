@@ -2,15 +2,15 @@
  * Copyright (c) 2013. Anton Borisov
  */
 
-package java.graphplus.link;
+package graphplus.link;
 
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XComponent;
 //import ooo.connector.BootstrapSocketConnector;
 import org.junit.Ignore;
+import ru.ssau.graphplus.DiagramController;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
-import ru.ssau.graphplus.link.InputTwoShapesMode;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.mock;
 @Ignore
 public class InputTwoShapesModeTest {
 
-    private InputTwoShapesMode inputTwoShapesMode;
+    private DiagramController.InputTwoNodesMode inputTwoNodesMode;
 
     private XShape selectedShape;
     private XComponent xDoc;
@@ -116,10 +116,10 @@ public class InputTwoShapesModeTest {
 //
 //        when(controller.getDiagramModel()).thenReturn(model);
 //
-//        inputTwoShapesMode = new InputTwoShapesMode();
-//        inputTwoShapesMode.setDiagramController(controller);
+//        inputTwoNodesMode = new InputTwoNodesMode();
+//        inputTwoNodesMode.setDiagramController(controller);
 //        link = linkFactory.create(Link.LinkType.Link, xDoc);
-//        inputTwoShapesMode.setLink(link);
+//        inputTwoNodesMode.setLink(link);
 //
 //    }
 //
@@ -135,15 +135,15 @@ public class InputTwoShapesModeTest {
 //
 //        selectedShape =  first;
 //
-//        inputTwoShapesMode.onInput(null);
+//        inputTwoNodesMode.onInput(null);
 //
-//        Assert.assertEquals(inputTwoShapesMode.firstShape, first);
+//        Assert.assertEquals(inputTwoNodesMode.firstShape, first);
 //
 //        selectedShape = second;
 //
-//        inputTwoShapesMode.onInput(null);
+//        inputTwoNodesMode.onInput(null);
 //
-//        Assert.assertEquals(inputTwoShapesMode.secondShape, second);
+//        Assert.assertEquals(inputTwoNodesMode.secondShape, second);
 //
 //        Assert.assertEquals(link.getStartNode(),firstNode);
 //        Assert.assertEquals(link.getEndNode(), secondNode);

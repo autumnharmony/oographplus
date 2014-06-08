@@ -44,6 +44,10 @@ public class ValidationResultImpl implements ValidationResult {
                     public DiagramElement getDiagramElement() {
                         return (DiagramElement) input.getItem();
                     }
+                    @Override
+                    public RuleResult.Type getType() {
+                        return input.getType();
+                    }
 
                     public String toString(){
                         return input.getDescription();

@@ -5,6 +5,7 @@ import com.sun.star.container.XNamed;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
+import com.sun.star.uno.UnoRuntime;
 import ru.ssau.graphplus.AbstractDiagramElementFactory;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.commons.*;
@@ -52,13 +53,17 @@ public class NodeFactory extends AbstractDiagramElementFactory {
             node.setShape(xShape);
             return node;
         } catch (Exception ex) {
-            Logger.getLogger(NodeFactory.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
         } finally {
         }
-        return null;
+
     }
 
     public NodeBase create(NodeType type, XShape shape) {
+        ShapeWrapper wrap = ShapeWrapper.wrap(shape);
+        if (shapeNodeMap.containsKey(wrap) && shapeNodeMap.get(wrap).getType().equals(type)){
+            return shapeNodeMap.get(wrap);
+        }
         try {
             NodeBase node = null;
             switch (type) {
@@ -76,24 +81,57 @@ public class NodeFactory extends AbstractDiagramElementFactory {
                     break;
                 default:
             }
+
             node.setShape(shape);
+            node.setName(node.getId());
             return node;
         } catch (Exception ex) {
-            Logger.getLogger(NodeFactory.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(ex);
         } finally {
         }
-        return null;
     }
 
-    private Map<XShape, Node> shapeNodeMap = new HashMap<XShape, Node>();
+    private Map<ShapeWrapper, NodeBase> shapeNodeMap = new HashMap<ShapeWrapper, NodeBase>();
 
-    private Node create(XShape shape) {
-        if (shapeNodeMap.containsKey(shape)) {
-            return shapeNodeMap.get(shape);
+
+    static class ShapeWrapper {
+
+        private ShapeWrapper(XShape shape) {
+            this.shape = shape;
+        }
+
+        public XShape shape;
+
+
+        static ShapeWrapper wrap(XShape shape){
+            return new ShapeWrapper(shape);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            XShape shape1 = UnoRuntime.queryInterface(XShape.class, obj);
+            if (shape1 == null){
+                return false;
+            }
+            return UnoRuntime.areSame(this.shape, obj);
+        }
+
+        @Override
+        public int hashCode() {
+            return shape.hashCode();
+        }
+    }
+
+
+    public Node create(XShape shape) {
+        ShapeWrapper wrap = ShapeWrapper.wrap(shape);
+        if (shapeNodeMap.containsKey(wrap)) {
+            return shapeNodeMap.get(wrap);
         } else {
             NodeType nodeType = shapeHelper.getNodeType(shape);
             NodeBase nodeBase = create(nodeType, shape);
             nodeBase.setName(ShapeHelper.getText(QI.XShape(shape)));
+            shapeNodeMap.put(ShapeWrapper.wrap(shape), nodeBase);
             return nodeBase;
         }
     }

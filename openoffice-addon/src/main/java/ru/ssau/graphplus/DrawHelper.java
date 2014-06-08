@@ -6,14 +6,18 @@ import com.sun.star.drawing.*;
 import com.sun.star.frame.XController;
 import com.sun.star.frame.XModel;
 import com.sun.star.lang.*;
+import com.sun.star.lang.IndexOutOfBoundsException;
 import com.sun.star.uno.AnyConverter;
 import com.sun.star.uno.UnoRuntime;
+import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.commons.OOoUtils;
 import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.commons.ShapeHelper;
 import ru.ssau.graphplus.node.NodeBase;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class DrawHelper {
 
@@ -312,6 +316,8 @@ public class DrawHelper {
         }
     }
 
+
+
     public static void insertShapeOnCurrentPage(XShape xShape, XComponent drawDoc) {
         XDrawPage drawPage = getCurrentDrawPage(drawDoc);
         XShapes xShapes = (XShapes) UnoRuntime.queryInterface(XShapes.class, drawPage);
@@ -379,5 +385,22 @@ public class DrawHelper {
             e.printStackTrace();
         }
         return false;
+    }
+    public static Collection<XShape> getShapesByDrawPage(XDrawPage currentDrawPage) {
+        XShapes xShapes = QI.XShapes(currentDrawPage);
+        List<XShape> xShapeList = new ArrayList<>();
+        for (int i = 0; i < xShapes.getCount(); i++){
+            XShape byIndex = null;
+            try {
+                byIndex = QI.XShape(xShapes.getByIndex(i));
+                xShapeList.add(byIndex);
+            } catch (IndexOutOfBoundsException | WrappedTargetException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+        return xShapeList;
     }
 }

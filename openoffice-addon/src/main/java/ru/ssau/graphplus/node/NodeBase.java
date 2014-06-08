@@ -15,9 +15,13 @@ import ru.ssau.graphplus.commons.PostCreationAction;
 import ru.ssau.graphplus.commons.QI;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Serializable, Refreshable<DiagramModel>, DeferredInitializable<XShape>, StringSerializable {
 
+    private static Set<NodeBase> instances = Collections.newSetFromMap(new WeakHashMap<NodeBase, Boolean>());
     private static final long serialVersionUID = 1L;
     protected transient PostCreationAction postCreationAction;
     protected transient XShape xShape;
@@ -38,6 +42,7 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
 
     public NodeBase(String id) {
         this.id = id;
+        instances.add(this);
     }
 
     @Override
@@ -123,7 +128,6 @@ public abstract class NodeBase implements Node, ShapeBuilder, DiagramElement, Se
         if (postCreationAction != null) {
             postCreationAction.postCreate(getShape());
         }
-
         QI.XText(getShape()).setString(id);
         setName(id);
     }

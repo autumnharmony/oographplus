@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class NodeConnectedRule implements NodeRule {
+public class NodeConnectedRule extends RuleBase<Node> implements NodeRule {
 
     private DiagramModel diagramModel;
 
@@ -35,8 +35,6 @@ public class NodeConnectedRule implements NodeRule {
     public RuleResult<Node> check(Node node) {
         if (connectedNodes.contains(node)) {
             return new ResultOk();
-        } else {
-            return new RuleError("Not connected node", node);
-        }
+        } else return warning(node);
     }
 }

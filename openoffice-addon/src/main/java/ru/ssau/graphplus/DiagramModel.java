@@ -154,7 +154,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
                             final String string = xText.getString();
                             final DiagramElement diagramElement1 = shapeToDiagramElementMap.get(endShape);
                             Optional<Link> linkByName = getLinkByName(string);
-                            if (linkByName.isPresent()){
+                            if (linkByName.isPresent()) {
                                 return linkByName.get();
                             }
                             if (diagramElement1 == null) {
@@ -163,7 +163,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
                                     public boolean apply(Node input) {
                                         NodeBase nodeBase = (NodeBase) input;
                                         XShape shape = nodeBase.getShape();
-                                        return UnoRuntime.areSame(shape,endShape);
+                                        return UnoRuntime.areSame(shape, endShape);
                                     }
                                 });
                                 if (!nodeOptional.isPresent()) {
@@ -192,7 +192,7 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
                             final String string = xText.getString();
                             final DiagramElement diagramElement1 = shapeToDiagramElementMap.get(startShape);
                             Optional<Link> linkByName = getLinkByName(string);
-                            if (linkByName.isPresent()){
+                            if (linkByName.isPresent()) {
                                 return linkByName.get();
                             }
                             if (diagramElement1 == null) {
@@ -201,14 +201,13 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
                                     public boolean apply(Node input) {
                                         NodeBase nodeBase = (NodeBase) input;
                                         XShape shape = nodeBase.getShape();
-                                        return UnoRuntime.areSame(shape,startShape);
+                                        return UnoRuntime.areSame(shape, startShape);
                                     }
                                 });
                                 if (!nodeOptional.isPresent()) {
                                     return null;
                                 }
                             }
-
                             List<Link> links = Iterables.find(graph.getTable().values(), new Predicate<List<Link>>() {
                                 @Override
                                 public boolean apply(List<Link> input) {
@@ -238,8 +237,8 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         return diagramElement;
     }
     public Optional<Node> getNodeByName(String string) {
-        for (Node node : getNodes()){
-            if (node.getName().equals(string)){
+        for (Node node : getNodes()) {
+            if (node.getName().equals(string)) {
                 return Optional.of(node);
             }
         }
@@ -247,8 +246,8 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
     }
 
     public Optional<Link> getLinkByName(String string) {
-        for (Link link : getLinks()){
-            if (link.getName().equals(string)){
+        for (Link link : getLinks()) {
+            if (link.getName().equals(string)) {
                 return Optional.of(link);
             }
         }
@@ -270,6 +269,19 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
         for (EventListener eventListener : eventListeners1) {
             eventListener.onEvent(event);
         }
+    }
+
+    public Collection<Node> getNodesByShapes(Collection<XShape> xShapes) {
+        List<Node> nodes = new ArrayList<>();
+        for (XShape shape : xShapes) {
+            for (Node node : getNodes()) {
+                NodeBase nodeBase = (NodeBase) node;
+                if (UnoRuntime.areSame(nodeBase.getShape(),shape)){
+                    nodes.add(node);
+                }
+            }
+        }
+        return nodes;
     }
 
     public DiagramModel addDiagramElement(DiagramElement de) {
@@ -307,8 +319,6 @@ public class DiagramModel implements ru.ssau.graphplus.api.DiagramModel, Seriali
             shapeToDiagramElementMap.remove(link.getTextShape());
             connectedShapes.remove(QI.XConnectorShape(link.getConnShape1()));
             connectedShapes.remove(QI.XConnectorShape(link.getConnShape2()));
-
-
             fireEvent(new LinkRemovedEvent(link));
         }
         if (de instanceof Node) {

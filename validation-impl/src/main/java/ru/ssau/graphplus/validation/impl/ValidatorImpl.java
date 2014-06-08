@@ -12,14 +12,12 @@ import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.validation.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ValidatorImpl implements Validator {
 
     private final Collection<XShape> unusedShapes;
+    private final Collection<XShape> unconnectedShapes;
     Set<NodeRule> nodesRules;
     Set<LinkRule> linksRules = Sets.<LinkRule>newHashSet(
             //new LinkNameRule(),
@@ -60,9 +58,9 @@ public class ValidatorImpl implements Validator {
             }
         }
 
-        for (XShape unusedShape : unusedShapes){
-            results.add(new RuleError("Unused shape", new UnknownSingleShapedDiagramElement(unusedShape)));
-        }
+//        for (XShape unusedShape : unusedShapes){
+//            results.add(new RuleError("Unused shape", new UnknownSingleShapedDiagramElement(unusedShape)));
+//        }
 
         System.out.println("Validation completed");
 
@@ -71,9 +69,13 @@ public class ValidatorImpl implements Validator {
 
     private DiagramModel diagramModel;
 
-    public ValidatorImpl(DiagramModel diagramModel, Collection<XShape> unusedShapes) {
+    public ValidatorImpl(DiagramModel diagramModel, Collection<XShape> all, Set<XShape> usedShapes) {
         this.diagramModel = diagramModel;
 
+        unconnectedShapes = Sets.newHashSet();
+
+        Set<XShape> unusedShapes = new HashSet<>(all);
+        unusedShapes.removeAll(usedShapes);
         this.unusedShapes = unusedShapes;
         nodesRules = Sets.<NodeRule>newHashSet(new NodeNameRule(), new NodeConnectedRule(diagramModel));
         if (diagramModel.getDiagramType().equals(DiagramType.Process)) {

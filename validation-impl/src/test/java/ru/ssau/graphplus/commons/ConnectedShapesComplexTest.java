@@ -11,9 +11,9 @@ import com.sun.star.drawing.XConnectorShape;
 import com.sun.star.drawing.XShape;
 import com.sun.star.lang.WrappedTargetException;
 import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.internal.matchers.TypeSafeMatcher;
 
 import java.util.Map;
 

@@ -4,46 +4,42 @@
 
 package ru.ssau.graphplus.gui;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
 import com.sun.star.accessibility.XAccessible;
 import com.sun.star.awt.*;
-import com.sun.star.beans.Pair;
 import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.beans.UnknownPropertyException;
+import com.sun.star.drawing.XShape;
 import com.sun.star.frame.XController;
 import com.sun.star.frame.XFrame;
 import com.sun.star.lang.*;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.IndexOutOfBoundsException;
 import com.sun.star.ui.LayoutSize;
-import com.sun.star.uno.*;
 import com.sun.star.uno.RuntimeException;
+import com.sun.star.uno.UnoRuntime;
+import com.sun.star.uno.XComponentContext;
 import ru.ssau.graphplus.*;
 import ru.ssau.graphplus.api.DiagramService;
+import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.commons.QI;
-import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.events.Event;
 import ru.ssau.graphplus.events.EventListener;
 import ru.ssau.graphplus.events.NodeRemovedEvent;
 import ru.ssau.graphplus.gui.sidebar.PanelBase;
-import ru.ssau.graphplus.link.LinkAdjuster;
+import ru.ssau.graphplus.link.LinkAdjusterImpl;
 import ru.ssau.graphplus.link.LinkBase;
 import ru.ssau.graphplus.node.NodeBase;
 
-import java.lang.Exception;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import static ru.ssau.graphplus.MyDialogHandler.Event.event;
-import static ru.ssau.graphplus.api.Link.LinkType.ControlFlow;
-import static ru.ssau.graphplus.api.Link.LinkType.DataFlow;
-import static ru.ssau.graphplus.api.Link.LinkType.MixedFlow;
+import static ru.ssau.graphplus.api.Link.LinkType.*;
 
 
 public class LinkNodesPanel extends PanelBase {
@@ -420,13 +416,7 @@ public class LinkNodesPanel extends PanelBase {
                     @Override
                     public boolean handle(XDialog xDialog, Object o, String s) {
 
-                        zNodeComboBox.removeItems((short) 0, zNodeComboBox.getItemCount());
-                        short i = 0;
-                        zNodeComboBox.setDropDownLineCount((short) diagramModel.getNodes().size());
-                        for (Node node : diagramModel.getNodes()) {
-                            zNodeComboBox.addItem(Strings.isNullOrEmpty(node.getName()) ? node.getId() : node.getName(), i++);
-                        }
-                        return true;
+                        return nodeComboboxReceivedFocus(zNodeComboBox);
                     }
                 })
 
@@ -434,13 +424,7 @@ public class LinkNodesPanel extends PanelBase {
                 .put(event("aNodeReceivedFocus"), new MyDialogHandler.EventHandler() {
                     @Override
                     public boolean handle(XDialog xDialog, Object o, String s) {
-                        aNodeComboBox.removeItems((short) 0, aNodeComboBox.getItemCount());
-                        short i = 0;
-                        aNodeComboBox.setDropDownLineCount((short) diagramModel.getNodes().size());
-                        for (Node node : diagramModel.getNodes()) {
-                            aNodeComboBox.addItem(Strings.isNullOrEmpty(node.getName()) ? node.getId() : node.getName(), i++);
-                        }
-                        return true;
+                        return nodeComboboxReceivedFocus(aNodeComboBox);
                     }
                 })
 
@@ -460,8 +444,7 @@ public class LinkNodesPanel extends PanelBase {
                         } catch (UnknownPropertyException | WrappedTargetException e) {
                             throw new java.lang.RuntimeException(e);
                         }
-
-                        LinkAdjuster.adjustLink((LinkBase) link, (NodeBase)getaNode(),(NodeBase) getzNode());
+                        new LinkAdjusterImpl().adjustLink((LinkBase) link, (NodeBase) getaNode(), (NodeBase) getzNode());
                         diagramService.linkNodes(getaNode(), getzNode(), link);
                         return true;
                     }
@@ -477,6 +460,35 @@ public class LinkNodesPanel extends PanelBase {
                 })
                 .build()));
     }
+    private boolean nodeComboboxReceivedFocus(XComboBox nodeComboBox) {
+        nodeComboBox.removeItems((short) 0, nodeComboBox.getItemCount());
+        short i = 0;
+        nodeComboBox.setDropDownLineCount((short) diagramModel.getNodes().size());
+        Collection<Node> nodes = diagramModel.getNodes();
+
+        XComponent drawDoc = dispatch.getDrawDoc();
+        Collection<Node> nodesFromCurrentPage = exclude(nodes, DrawHelper.getShapesByDrawPage(DrawHelper.getCurrentDrawPage(drawDoc)));
+
+
+        for (Node node : nodesFromCurrentPage) {
+            nodeComboBox.addItem(Strings.isNullOrEmpty(node.getName()) ? node.getId() : node.getName(), i++);
+        }
+        return true;
+    }
+    private Collection<Node> exclude(Collection<Node> nodes, final Collection<XShape> shapesByDrawPage) {
+        return Collections2.filter(nodes, new Predicate<Node>() {
+            @Override
+            public boolean apply(Node input) {
+                for (XShape shape : shapesByDrawPage){
+                    if (input.getName().equals(QI.XText(shape).getString())){
+                        return true;
+                    }
+
+                }
+                return false;
+            }
+        });
+    }
 
     private boolean aNodeItemStatusChanged() {
         setNodeA();
@@ -484,30 +496,25 @@ public class LinkNodesPanel extends PanelBase {
     }
 
     private boolean aNodeTextModified() {
-//        setNodeA();
+        setNodeA();
 
         return true;
     }
 
     private boolean zNodeItemStatusChanged() {
         setNodeZ();
-        // TODO
         return true;
     }
 
     private boolean zNodeTextModified() {
-//        setNodeZ();
-        // TODO
         return true;
     }
 
     private boolean onZNodeCBExecute() {
-//        setNodeZ();
         return true;
     }
 
     private boolean onANodeCBExecute() {
-//        setNodeA();
         return true;
     }
 
@@ -550,7 +557,6 @@ public class LinkNodesPanel extends PanelBase {
 
 
     private boolean setNodeA() {
-
         try {
             Object text = QI.XPropertySet(aModel).getPropertyValue("Text");
             setNodeA((String) text);

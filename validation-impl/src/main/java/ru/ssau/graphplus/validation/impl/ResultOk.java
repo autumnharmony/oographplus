@@ -24,4 +24,8 @@ public class ResultOk implements RuleResult {
     public String getDescription() {
         return "Ok";
     }
+    @Override
+    public Type getType() {
+        return Type.Ok;
+    }
 }

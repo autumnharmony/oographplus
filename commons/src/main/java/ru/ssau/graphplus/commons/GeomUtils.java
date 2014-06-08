@@ -1,5 +1,8 @@
 package ru.ssau.graphplus.commons;
 
+import com.sun.star.awt.Point;
+
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -402,6 +405,14 @@ public class GeomUtils
         k = yy / xx;
         b = a.y - k * a.x;
         return new double[]{k, b};
+    }
+
+    public static boolean pointLiesOnLine(Point2D point, Line2D line){
+        return new math.geom2d.line.Line2D(point(line.getP1()), point(line.getP2())).contains(point(point));
+    }
+
+    private static math.geom2d.Point2D point(Point2D point2D){
+        return new math.geom2d.Point2D(point2D.getX(), point2D.getY());
     }
 
 

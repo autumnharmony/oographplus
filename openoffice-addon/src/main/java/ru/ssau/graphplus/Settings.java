@@ -16,6 +16,7 @@ import java.util.Properties;
 public class Settings {
 
     public static final String ADD_TEXT_SHAPE_TO_LINK = "addTextShapeToLink";
+    public static final String AUTOLAYOUT_COMPLEX_LINKS = "autolayoutComplexLinks";
     public static final String PROMPT_FOR_NODE_NAME = "promptForNodeName";
     public static final String LINKING_INPUT_MODE = "linkingInputMode";
     public static final String VALIDATION = "validation";
@@ -24,22 +25,18 @@ public class Settings {
     private File file;
     private Properties config;
     private boolean validationRequired;
+    private boolean autolayoutComplexLinks;
     private boolean promptForNodeName;
     private LinkingInputMode linkingInputMode;
     private boolean addTextToShapeToLink;
-
     public Settings(File _file) {
         config = new Properties();
         file = _file;
     }
-
     private Settings() {
     }
-
     public synchronized static Settings getSettings() {
         if (singleton == null) {
-
-
             String home = System.getProperty("user.home");
             Path settings = Paths.get(home + File.separator + ".graphplus" + File.separator + "settings.properties");
             try {
@@ -53,13 +50,15 @@ public class Settings {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
         }
         return singleton;
-
     }
-
+    public boolean isAutolayoutComplexLinks() {
+        return autolayoutComplexLinks;
+    }
+    public void setAutolayoutComplexLinks(boolean autolayoutComplexLinks) {
+        this.autolayoutComplexLinks = autolayoutComplexLinks;
+    }
     public boolean isValidationRequired() {
         return validationRequired;
     }
@@ -73,13 +72,13 @@ public class Settings {
             config.load(new FileInputStream(file));
             setPromptForNodeName(Boolean.parseBoolean(config.getProperty(PROMPT_FOR_NODE_NAME)));
             setAddTextToShapeToLink(Boolean.parseBoolean(config.getProperty(ADD_TEXT_SHAPE_TO_LINK)));
+            setAutolayoutComplexLinks(Boolean.parseBoolean(config.getProperty(AUTOLAYOUT_COMPLEX_LINKS)));
             String linkingInputModeString = config.getProperty(LINKING_INPUT_MODE);
             linkingInputMode = Strings.isNullOrEmpty(linkingInputModeString) || linkingInputModeString.equals("null") ? LinkingInputMode.Silent : LinkingInputMode.valueOf(linkingInputModeString);
             validationRequired = "on".equals(config.getProperty(VALIDATION)) ? true : false;
         } catch (FileNotFoundException e) {
             // first time run
             // ignore
-
             try {
                 FileOutputStream out = null;
                 out = new FileOutputStream(file);
@@ -87,7 +86,6 @@ public class Settings {
             } catch (IOException e1) {
                 throw new RuntimeException(e1);
             }
-
         } catch (Exception ex) {
             throw new RuntimeException("Could not load properties", ex);
         }
@@ -99,6 +97,7 @@ public class Settings {
             config.setProperty(LINKING_INPUT_MODE, String.valueOf(linkingInputMode));
             config.setProperty(ADD_TEXT_SHAPE_TO_LINK, String.valueOf(addTextToShapeToLink));
             config.setProperty(VALIDATION, validationRequired ? "on" : "off");
+            config.setProperty(AUTOLAYOUT_COMPLEX_LINKS, String.valueOf(autolayoutComplexLinks));
             FileOutputStream out = new FileOutputStream(file);
             config.store(out, GRAPHPLUS_PROPERTIES);
             out.flush();
@@ -150,7 +149,6 @@ public class Settings {
     }
 
     private void fireChangeEvent(String name, String value) {
-
     }
 
     public enum LinkingInputMode {

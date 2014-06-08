@@ -4,7 +4,6 @@ package ru.ssau.graphplus;
 import com.google.common.collect.Sets;
 import com.sun.star.awt.*;
 import com.sun.star.deployment.XPackageInformationProvider;
-import com.sun.star.document.XUndoManager;
 import com.sun.star.drawing.*;
 import com.sun.star.frame.*;
 import com.sun.star.lang.EventObject;
@@ -21,11 +20,11 @@ import com.sun.star.util.XModifyListener;
 import com.sun.star.view.XSelectionChangeListener;
 import com.sun.star.view.XSelectionSupplier;
 import ru.ssau.graphplus.api.DiagramElement;
+import ru.ssau.graphplus.api.DiagramService;
 import ru.ssau.graphplus.api.Link;
 import ru.ssau.graphplus.commons.QI;
 import ru.ssau.graphplus.commons.ShapeHelper;
 import ru.ssau.graphplus.events.*;
-import ru.ssau.graphplus.gui.dialogs.ChooseNodeTypeDialog;
 import ru.ssau.graphplus.link.*;
 import ru.ssau.graphplus.api.Node;
 import ru.ssau.graphplus.node.NodeBase;
@@ -39,31 +38,18 @@ import java.util.*;
  */
 public class DiagramController implements
         XModifyListener,
-//        XDispatch,
         XSelectionChangeListener {
 
-    //    private static ConnectorShapeListener connectorShapeListener;
-    private static URL lastURL;
-    private final XComponent m_xComponent;
     private final XComponent xDrawDoc;
 
     private static final InputMode DEFAULT_INPUT_MODE = new InputMode() {
         @Override
-        public void onInput(EventObject eventObject) {
+        public void onInput(Event eventObject) {
             // consume
-        }
-
-        @Override
-        public void setDiagramController(DiagramController diagramController) {
-            //nothing
         }
     };
     private final MyDispatch dispatch;
-    private final XUndoManager undoManager;
 
-    State state;
-
-    Map<State, DiagramEventHandler> diagramEventHandlerMap = new HashMap<State, DiagramEventHandler>();
     DiagramEventHandler diagramEventHandler;
     XDrawPage xDP = null;
 
@@ -78,10 +64,9 @@ public class DiagramController implements
     private XFrame m_xFrame = null;
     private XController m_xController = null;
     private XSelectionSupplier m_xSelectionSupplier = null;
-    private Map<String, XShape> elements = null;
+
     private XMultiServiceFactory xMSF = null;
     private XMultiComponentFactory xMCF = null;
-    private Map<XShape, DiagramElement> whichElementContainsShape = null;
     private List<String> historyOfActions = new ArrayList<String>();
     private Map<Object, Point> positions = null;
 
@@ -89,47 +74,33 @@ public class DiagramController implements
         return m_xSelectionSupplier;
     }
 
-    public static URL getLastURL() {
-        return lastURL;
-    }
-
-    boolean flag;
-
-    XShape toRemove1;
-    XShape toRemove2;
-
     private transient static List<WeakReference<DiagramController>> instances = new ArrayList<>();
 
     public static List<WeakReference<DiagramController>> getInstances() {
         return Collections.unmodifiableList(instances);
     }
 
-    public DiagramController(XComponentContext xContext, XFrame xFrame, XMultiServiceFactory xMSF_, XMultiComponentFactory xMCF_, final DiagramModel diagramModel, XComponent xDoc, MyDispatch myDispatch, XUndoManager undoManager) {
-//        OOGraph.LOGGER.info("DiagramController ctor");
-        this.undoManager = undoManager;
+    public DiagramController(XComponentContext xContext, XFrame xFrame, XMultiServiceFactory xMSF_, XMultiComponentFactory xMCF_, final DiagramModel diagramModel, XComponent xDoc, MyDispatch myDispatch) {
+
+
         dispatch = myDispatch;
         inputMode = new InputMode() {
-            @Override
-            public void onInput(EventObject eventObject) {
-                // nothing
-            }
 
-            @Override
-            public void setDiagramController(DiagramController diagramController) {
-                // nothing
+            public void onInput(Event eventObject) {
+
             }
         };
         xDrawDoc = xDoc;
         this.diagramModel = diagramModel;
-        this.m_xComponent = xDoc;
+
         m_xContext = xContext;
         m_xFrame = xFrame;
         m_xController = m_xFrame.getController();
         xMCF = xMCF_;
         xMSF = xMSF_;
         xDP = DrawHelper.getCurrentDrawPage(xDrawDoc);
-        elements = new HashMap();
-        whichElementContainsShape = new HashMap();
+
+
         positions = new HashMap();
         addSelectionListener();
 //        OOGraph.LOGGER.info("adding shape event listeners");
@@ -177,64 +148,7 @@ public class DiagramController implements
             diagramModel.fireEvent(new NodeModifiedEvent(node));
         }
     }
-//
-//    public void onShapeInserted(XShape shape){
-//        DiagramElement diagramElementByShape = diagramModel.getDiagramElementByShape(shape);
-//        if (diagramElementByShape instanceof Node){
-//            diagramModel.fireEvent(new NodeAddedEvent((Node) diagramElementByShape));
-//        }
-//
-//    }
 
-    public void setStatusIndicator(XStatusIndicator statusIndicator) {
-        this.statusIndicator = statusIndicator;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-        if (diagramEventHandlerMap.containsKey(state)) {
-            diagramEventHandler = diagramEventHandlerMap.get(state);
-        } else {
-            switch (state) {
-                case AddingLink:
-                    AddingLink addingLink = new AddingLink();
-                    diagramEventHandlerMap.put(state, addingLink);
-                    break;
-                default:
-                    diagramEventHandlerMap.put(state, new DiagramEventHandler() {
-                        @Override
-                        public void elementAdded(ElementAddEvent event) {
-                            System.out.println("elementAdded");
-                            // ignore
-                        }
-
-                        @Override
-                        public void elementModified(ElementModifyEvent event) {
-                            System.out.println("elementModified");
-                            // ignore
-                        }
-
-                        @Override
-                        public void onEvent(Event event) {
-                            // empty body TODO
-                        }
-                    });
-                    break;
-            }
-        }
-    }
-
-    public List<String> getHistoryOfActions() {
-        return historyOfActions;
-    }
-
-    public Map<String, XShape> getElements() {
-        return elements;
-    }
 
     private void addSelectionListener() {
         if (m_xSelectionSupplier == null) {
@@ -298,13 +212,6 @@ public class DiagramController implements
 
     public void disposing(EventObject arg0) {
     }
-//    public Linker getLinker() {
-//        return linker;
-//    }
-//
-//    public void setLinker(Linker linker) {
-//        this.linker = linker;
-//    }
 
     public XShapes getSelectedShapes() {
         try {
@@ -339,42 +246,8 @@ public class DiagramController implements
             System.err.println(ex.getLocalizedMessage());
         }
     }
-
-    public void modified(EventObject arg0) {
-    }
-
-    private Collection<Object> checkPositions() {
-        for (int i = 0; i < xDP.getCount(); i++) {
-            try {
-                Object byIndex = xDP.getByIndex(i);
-                XShape xShape = QI.XShape(byIndex);
-                if (!positions.get(byIndex).equals(xShape.getPosition())) {
-                    DiagramElement diagramElement = whichElementContainsShape.get(xShape);
-                    if (diagramElement instanceof Node) {
-                        Node node = (Node) diagramElement;
-                        //  TODO adjust all related links
-                    }
-                }
-            } catch (IndexOutOfBoundsException e) {
-                break;
-            } catch (WrappedTargetException e) {
-                e.printStackTrace();
-            }
-        }
-        return Collections.EMPTY_LIST;
-    }
-
-    // unused
-    private void chooseNodeType(XShape xShape) {
-        new ChooseNodeTypeDialog().chooseNodeType(xMCF, xShape, m_xContext);
-    }
-    //
-
-    private void insertLinkShapes(Link link) {
-        LinkTwoConnectorsAndTextBase link_ = (LinkTwoConnectorsAndTextBase) link;
-        for (XShape shape : link_.getShapes()) {
-            DrawHelper.insertShapeOnCurrentPage(shape, getDiagramModel().getDrawDoc());
-        }
+    @Override
+    public void modified(EventObject eventObject) {
     }
 
     /**
@@ -415,30 +288,30 @@ public class DiagramController implements
             if (diagramElementByShape instanceof Link) {
                 if (diagramElementByShape instanceof LinkTwoConnectorsAndTextBase) {
                     LinkTwoConnectorsAndTextBase linkBase = (LinkTwoConnectorsAndTextBase) diagramElementByShape;
-                    if (linkRemoveGuard.isFree()){
-                        linkRemoveGuard.fill(linkBase);
-                    }
-                    else {
-                        if (linkRemoveGuard.workOut(xShape)){
-                            return;
-                        }
-
-                    }
+//                    if (linkRemoveGuard.isFree()){
+//                        linkRemoveGuard.fill(linkBase);
+//                    }
+//                    else {
+//                        if (linkRemoveGuard.workOut(xShape)){
+//                            return;
+//                        }
+//
+//                    }
                     diagramModel.removeDiagramElement(diagramElementByShape);
                     int i = 0;
                     for (XShape linkShape : linkBase.getShapes()) {
 //                        if (!UnoRuntime.areSame(linkShape,xShape)) {
                             XDrawPage currentDrawPage = DrawHelper.getCurrentDrawPage(xDrawDoc);
                             if (ShapeHelper.removeShape(linkShape, currentDrawPage)) {
-                                i++;
+//                                i++;
                             } else {
-                                i = ShapeHelper.removeShape(linkBase.getName(), currentDrawPage);
+//                                i = ShapeHelper.removeShape(linkBase.getName(), currentDrawPage);
                             }
 //                        }
                     }
-                    if (i == 2) {
-                        linkRemoveGuard.reset();
-                    }
+//                    if (i == 2) {
+//                        linkRemoveGuard.reset();
+//                    }
                 }
             }
             if (diagramElementByShape instanceof Node) {
@@ -531,15 +404,9 @@ public class DiagramController implements
 
     NodeSelectionController nodeSelectionController = new NodeSelectionControllerImpl();
 
-    public void addNodeSelectionListener(NodeSelectionListener nodeSelectionListener) {
-        nodeSelectionController.addNodeSelectionListener(nodeSelectionListener);
-    }
-
     @Override
     public void selectionChanged(EventObject eventObject) {
-        //TODO implement
         Object shapeObj = getSelectedShape();
-//        Misc.printInfo(shapeObj);
         XShapes selectedShapes = getSelectedShapes();
         if (selectedShapes != null) {
             if (selectedShapes.getCount() == 1) {
@@ -550,22 +417,19 @@ public class DiagramController implements
                     if (diagramElementByShape instanceof Node) {
                         Node nodeByShape = (Node) diagramElementByShape;
                         nodeSelectionController.nodeSelected(nodeByShape);
-//                        LinkNodesDialog.map.get(dispatch).setNodeZ(nodeByShape);
                     }
-                } catch (IndexOutOfBoundsException e) {
-                    e.printStackTrace();
-                } catch (WrappedTargetException e) {
+                    inputMode.onInput(DiagramElementSelected.create(diagramElementByShape));
+                } catch (IndexOutOfBoundsException | WrappedTargetException e) {
                     e.printStackTrace();
                 }
             }
         }
-        inputMode.onInput(eventObject);
+
         DiagramElement diagramElementByShape = getDiagramModel().getDiagramElementByShape(getSelectedShape());
 //        OOGraph.aController.displayMessage(diagramElementByShape.toString());
     }
 
     public void setInputMode(InputMode inputMode) {
-        inputMode.setDiagramController(this);
         this.inputMode = inputMode;
     }
 
@@ -577,9 +441,58 @@ public class DiagramController implements
         dispatch.statusChangedEnable(lastURL);
     }
 
-    public enum State {
-        Nothing,
-        InputTwoShapes,
-        AddingLink
+    /**
+     * User: anton
+     * Date: 5/18/13
+     * Time: 6:09 PM
+     */
+    public static class InputTwoNodesMode implements InputMode {
+
+        private Link link;
+        private DiagramService diagramService;
+        private Node first;
+        private Node second;
+        private DiagramController diagramController;
+
+        public InputTwoNodesMode(DiagramController diagramController, Link link, DiagramService diagramService) {
+            this();
+            this.link = link;
+            this.diagramService = diagramService;
+            this.diagramController = diagramController;
+        }
+
+        public InputTwoNodesMode() {
+
+        }
+
+        enum State {
+            Nothing,
+            First,
+            Second,
+        }
+
+        State state = State.Nothing;
+
+        @Override
+        public void onInput(Event eventObject) {
+
+            if (eventObject instanceof NodeSelectedEvent){
+                NodeSelectedEvent nodeSelectedEvent = (NodeSelectedEvent) eventObject;
+                if (state.equals(State.Nothing)){
+                    state = State.First;
+                    first = nodeSelectedEvent.getNode();
+                }
+                else if (state.equals(State.First)){
+                    second = nodeSelectedEvent.getNode();
+                    diagramService.linkNodes(first, second, link);
+                    diagramService.layoutLink(first, second, link);
+                    state = State.Nothing;
+                    diagramController.setInputMode(DEFAULT_INPUT_MODE);
+                }
+            }
+
+        }
+
+
     }
 }

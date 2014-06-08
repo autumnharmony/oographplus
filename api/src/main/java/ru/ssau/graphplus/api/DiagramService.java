@@ -10,6 +10,7 @@ public interface DiagramService {
     void removeDiagramElement(DiagramElement diagramElement);
 
     Node createNode(String name, Node.NodeType nodeType);
+    Node createNode(Node.NodeType nodeType);
     Link createLink(String name, Link.LinkType linkType);
 
     void insertNode(Node node);

@@ -1,6 +1,6 @@
 package ru.ssau.graphplus;
 
-import com.sun.star.lang.EventObject;
+import ru.ssau.graphplus.events.Event;
 
 /**
 * User: anton
@@ -8,7 +8,5 @@ import com.sun.star.lang.EventObject;
 * Time: 6:10 PM
 */
 public interface InputMode {
-    void onInput(EventObject eventObject);
-
-    void setDiagramController(DiagramController diagramController);
+    void onInput(Event eventObject);
 }
